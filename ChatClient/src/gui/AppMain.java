@@ -7,7 +7,9 @@ package gui;
 
 import utils.EmailValidator;
 import chatclient.ClientConnection;
+import java.util.ArrayList;
 import java.util.Hashtable;
+import javax.swing.DefaultListModel;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
@@ -52,15 +54,7 @@ public class AppMain extends javax.swing.JFrame {
         jLabel12 = new javax.swing.JLabel();
         label3 = new java.awt.Label();
         errorLabel = new javax.swing.JLabel();
-        mainPanel = new javax.swing.JPanel();
-        createGroupChatBtn = new javax.swing.JButton();
-        deleteFriendBtn = new javax.swing.JButton();
-        jLabel14 = new javax.swing.JLabel();
-        statusComboBox = new javax.swing.JComboBox<>();
-        nameLabel = new javax.swing.JLabel();
-        addFriendBtn = new javax.swing.JButton();
-        jScrollPane2 = new javax.swing.JScrollPane();
-        contactsList = new javax.swing.JList<>();
+        mainPanel = new gui.MainPanel();
         registerPanel = new javax.swing.JPanel();
         emailReg = new javax.swing.JTextField();
         jLabel6 = new javax.swing.JLabel();
@@ -139,7 +133,7 @@ public class AppMain extends javax.swing.JFrame {
                     .addGroup(lognPanelLayout.createSequentialGroup()
                         .addGap(183, 183, 183)
                         .addComponent(label3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap(95, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         lognPanelLayout.setVerticalGroup(
             lognPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -160,93 +154,10 @@ public class AppMain extends javax.swing.JFrame {
                 .addGroup(lognPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(loginBtn)
                     .addComponent(signUpBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(201, Short.MAX_VALUE))
+                .addContainerGap(207, Short.MAX_VALUE))
         );
 
         panelGroup.add(lognPanel, "loginPanel");
-
-        createGroupChatBtn.setText("Create Group Chat");
-        createGroupChatBtn.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                createGroupChatBtnActionPerformed(evt);
-            }
-        });
-
-        deleteFriendBtn.setText("Delete friend");
-
-        jLabel14.setFont(new java.awt.Font("Ubuntu", 3, 15)); // NOI18N
-        jLabel14.setText("Friends list");
-
-        statusComboBox.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Online", "Away", "Busy", " " }));
-        statusComboBox.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                statusComboBoxActionPerformed(evt);
-            }
-        });
-
-        nameLabel.setText("Mostafa Medhat");
-
-        addFriendBtn.setText("Add Friend");
-        addFriendBtn.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                addFriendBtnActionPerformed(evt);
-            }
-        });
-
-        contactsList.setModel(new javax.swing.AbstractListModel<String>() {
-            String[] strings = { "Item 1", "Item 2", "Item 3", "Item 4", "Item 5" };
-            public int getSize() { return strings.length; }
-            public String getElementAt(int i) { return strings[i]; }
-        });
-        jScrollPane2.setViewportView(contactsList);
-
-        javax.swing.GroupLayout mainPanelLayout = new javax.swing.GroupLayout(mainPanel);
-        mainPanel.setLayout(mainPanelLayout);
-        mainPanelLayout.setHorizontalGroup(
-            mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(mainPanelLayout.createSequentialGroup()
-                .addGap(12, 12, 12)
-                .addGroup(mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jScrollPane2)
-                    .addGroup(mainPanelLayout.createSequentialGroup()
-                        .addComponent(nameLabel)
-                        .addGap(18, 18, 18)
-                        .addComponent(statusComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 28, Short.MAX_VALUE)
-                        .addComponent(addFriendBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 114, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(18, 18, 18)
-                        .addComponent(deleteFriendBtn))
-                    .addGroup(mainPanelLayout.createSequentialGroup()
-                        .addGroup(mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel14)
-                            .addComponent(createGroupChatBtn))
-                        .addGap(0, 0, Short.MAX_VALUE)))
-                .addContainerGap())
-        );
-        mainPanelLayout.setVerticalGroup(
-            mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(mainPanelLayout.createSequentialGroup()
-                .addGap(18, 18, 18)
-                .addGroup(mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addGroup(mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                        .addGroup(mainPanelLayout.createSequentialGroup()
-                            .addGap(68, 68, 68)
-                            .addComponent(jLabel14))
-                        .addGroup(mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(statusComboBox)
-                            .addComponent(nameLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
-                    .addGroup(mainPanelLayout.createSequentialGroup()
-                        .addGroup(mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(addFriendBtn)
-                            .addComponent(deleteFriendBtn))
-                        .addGap(61, 61, 61)))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED, 18, Short.MAX_VALUE)
-                .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 501, Short.MAX_VALUE)
-                .addGap(30, 30, 30)
-                .addComponent(createGroupChatBtn)
-                .addGap(58, 58, 58))
-        );
-
         panelGroup.add(mainPanel, "mainPanel");
 
         jLabel6.setFont(new java.awt.Font("Ubuntu", 0, 18)); // NOI18N
@@ -337,7 +248,7 @@ public class AppMain extends javax.swing.JFrame {
                                     .addComponent(passReg1)
                                     .addComponent(passReg2, javax.swing.GroupLayout.DEFAULT_SIZE, 222, Short.MAX_VALUE)
                                     .addComponent(ageSpinner))))))
-                .addContainerGap(59, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         registerPanelLayout.setVerticalGroup(
             registerPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -376,7 +287,7 @@ public class AppMain extends javax.swing.JFrame {
                     .addComponent(ageSpinner, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
                 .addComponent(registerBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 41, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(56, Short.MAX_VALUE))
+                .addContainerGap(135, Short.MAX_VALUE))
         );
 
         panelGroup.add(registerPanel, "registerPanel");
@@ -395,6 +306,7 @@ public class AppMain extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void registerBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_registerBtnActionPerformed
+<<<<<<< HEAD
     //((java.awt.CardLayout) (jPanel1.getLayout())).next(jPanel1);
     // CODE WHEN I PRESS CREATE BUTTON
                  
@@ -451,6 +363,59 @@ public class AppMain extends javax.swing.JFrame {
                          JFrame frame = new JFrame("JOptionPane showMessageDialog example");
                          JOptionPane.showMessageDialog(frame,"Password dosen't match");
                    }
+=======
+
+        //((java.awt.CardLayout) (jPanel1.getLayout())).next(jPanel1);
+        // CODE WHEN I PRESS CREATE BUTTON
+        if (firstNameReg.getText().equals("") || lastNameReg.getText().equals("") || emailReg.getText().equals("") || passReg1.getText().equals("")) {
+            // create a jframe
+            JFrame frame = new JFrame("JOptionPane showMessageDialog example");
+            // show a joptionpane dialog using showMessageDialog
+            JOptionPane.showMessageDialog(frame, "Please Enter your Full information");
+        } else //another check for the password itself
+        if (passReg1.getText().equals(passReg2.getText())) {
+            System.out.println("matched");
+
+            //check for Email validation
+            EmailValidator emailValidator = new EmailValidator();
+            //trim() ->> Returns a copy of the string, with leading and trailing whitespace omitted.
+            if (!emailValidator.validate(emailReg.getText().trim())) {
+                JFrame frame = new JFrame("JOptionPane showMessageDialog example");
+                JOptionPane.showMessageDialog(frame, "Invalid Email ID");
+            } else {
+                //check on age
+                int age = (Integer) ageSpinner.getValue();
+                System.out.println(age);
+
+                if (age < 18 || age > 80) {
+                    JFrame frame = new JFrame("JOptionPane showMessageDialog example");
+                    JOptionPane.showMessageDialog(frame, "Age must be between 18 ~ 80");
+                } else {
+                    System.out.println(firstNameReg.getText());
+                    //////////////////////////////////////////////////////Testing getting the object
+                    Hashtable<String, String> userData = new Hashtable<>();
+                    //putting all the values into the Hashtable
+                    userData.put("firstName", firstNameReg.getText());
+                    userData.put("lastName", lastNameReg.getText());
+                    userData.put("email", emailBox.getText());
+                    userData.put("password", passReg1.getText());
+                    //check for casting the integer into string
+                    userData.put("age", (String) ageSpinner.getValue());
+                    //creating a message type
+                    Message register = new Message(MessageType.REGISTER, userData);
+
+                    //call clientConnection Class to send the message to the server through the sendClientMsg
+                    clientConnection.sendClientMsg(register);
+                    //it's already sent handle it through clientHandler on server
+                    //////////////////////////////////////////////////////////////////////
+                    ((java.awt.CardLayout) (panelGroup.getLayout())).next(panelGroup);
+                }
+            }
+        } else {
+            System.out.println("Not matched");
+            JFrame frame = new JFrame("JOptionPane showMessageDialog example");
+            JOptionPane.showMessageDialog(frame, "Password dosen't match");
+>>>>>>> c1e49da1fe569cd39502e61aea6856bdf9b4a1d4
         }
     }//GEN-LAST:event_registerBtnActionPerformed
 
@@ -464,14 +429,6 @@ public class AppMain extends javax.swing.JFrame {
         //((java.awt.CardLayout) (jPanel1.getLayout())).next(jPanel1);
     }//GEN-LAST:event_loginBtnActionPerformed
 
-    private void addFriendBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addFriendBtnActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_addFriendBtnActionPerformed
-
-    private void statusComboBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_statusComboBoxActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_statusComboBoxActionPerformed
-
     private void signUpBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_signUpBtnActionPerformed
         // TODO add your handling code here:
         ((java.awt.CardLayout) (panelGroup.getLayout())).next(panelGroup);
@@ -480,11 +437,6 @@ public class AppMain extends javax.swing.JFrame {
     private void firstNameRegActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_firstNameRegActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_firstNameRegActionPerformed
-
-    private void createGroupChatBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_createGroupChatBtnActionPerformed
-        // TODO add your handling code here:
-        ((java.awt.CardLayout) (panelGroup.getLayout())).next(panelGroup);
-    }//GEN-LAST:event_createGroupChatBtnActionPerformed
 
     /**
      * @param args the command line arguments
@@ -522,10 +474,6 @@ public class AppMain extends javax.swing.JFrame {
         });
     }
 
-    public void setNameLabel(User user) {
-        nameLabel.setText(user.getFirstName() + " " + user.getLastName());
-    }
-
     public void setErrorLabel(String errorMsg) {
         errorLabel.setVisible(true);
         errorLabel.setText(errorMsg);
@@ -535,12 +483,12 @@ public class AppMain extends javax.swing.JFrame {
         return panelGroup;
     }
 
+    public JPanel getMainPanel() {
+        return mainPanel;
+    }
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton addFriendBtn;
     private javax.swing.JSpinner ageSpinner;
-    private javax.swing.JList<String> contactsList;
-    private javax.swing.JButton createGroupChatBtn;
-    private javax.swing.JButton deleteFriendBtn;
     private javax.swing.JLabel doersChat;
     private javax.swing.JTextField emailBox;
     private javax.swing.JTextField emailReg;
@@ -548,7 +496,6 @@ public class AppMain extends javax.swing.JFrame {
     private javax.swing.JTextField firstNameReg;
     private javax.swing.JLabel jLabel11;
     private javax.swing.JLabel jLabel12;
-    private javax.swing.JLabel jLabel14;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
@@ -559,14 +506,12 @@ public class AppMain extends javax.swing.JFrame {
     private javax.swing.JMenu jMenu2;
     private javax.swing.JMenuBar jMenuBar1;
     private javax.swing.JMenuItem jMenuItem1;
-    private javax.swing.JScrollPane jScrollPane2;
     private java.awt.Label label1;
     private java.awt.Label label3;
     private javax.swing.JTextField lastNameReg;
     private javax.swing.JButton loginBtn;
     private javax.swing.JPanel lognPanel;
-    private javax.swing.JPanel mainPanel;
-    private javax.swing.JLabel nameLabel;
+    private gui.MainPanel mainPanel;
     private javax.swing.JPanel panelGroup;
     private javax.swing.JPasswordField passReg1;
     private javax.swing.JPasswordField passReg2;
@@ -575,7 +520,6 @@ public class AppMain extends javax.swing.JFrame {
     private javax.swing.JButton registerBtn;
     private javax.swing.JPanel registerPanel;
     private javax.swing.JButton signUpBtn;
-    private javax.swing.JComboBox<String> statusComboBox;
     private java.awt.Label welcomeLabel;
     // End of variables declaration//GEN-END:variables
 }

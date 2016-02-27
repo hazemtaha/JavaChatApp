@@ -6,6 +6,7 @@
 package chatclient;
 
 import gui.AppMain;
+import gui.MainPanel;
 import gui.PrivateChatWindow;
 import java.awt.CardLayout;
 import java.io.EOFException;
@@ -71,7 +72,8 @@ public class ClientConnection extends Thread {
                                     user = (User) msg.getData();
                                     JPanel prentPanel = ((AppMain) chatApp).getPanelGroup();
                                     ((CardLayout) prentPanel.getLayout()).show(prentPanel, "mainPanel");
-                                    ((AppMain) chatApp).setNameLabel(user);
+                                    ((MainPanel) ((AppMain) chatApp).getMainPanel()).setNameLabel(user);
+                                    ((MainPanel) ((AppMain) chatApp).getMainPanel()).loadContacts(user);
                                     break;
                                 case MessageType.AUTH_NO:
                                     ((AppMain) chatApp).setErrorLabel("Invalid email or password");
