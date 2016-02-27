@@ -23,7 +23,7 @@ import utils.interfaces.MessageType;
  */
 public class AppMain extends javax.swing.JFrame {
 
-    ClientConnection clientConnection;
+    private ClientConnection clientConnection;
 
     /**
      * Creates new form RegLogList
@@ -54,7 +54,7 @@ public class AppMain extends javax.swing.JFrame {
         jLabel12 = new javax.swing.JLabel();
         label3 = new java.awt.Label();
         errorLabel = new javax.swing.JLabel();
-        mainPanel = new gui.MainPanel();
+        mainPanel = new gui.MainPanel(this);
         registerPanel = new javax.swing.JPanel();
         emailReg = new javax.swing.JTextField();
         jLabel6 = new javax.swing.JLabel();
@@ -200,7 +200,7 @@ public class AppMain extends javax.swing.JFrame {
         doersChat.setFont(new java.awt.Font("UnPilgi", 0, 24)); // NOI18N
         doersChat.setText("Doers Chat");
 
-        picture.setIcon(new javax.swing.ImageIcon(getClass().getResource("/gui/chat-people.png"))); // NOI18N
+        picture.setIcon(new javax.swing.ImageIcon(getClass().getResource("/gui/resources/chat-people.png"))); // NOI18N
 
         javax.swing.GroupLayout registerPanelLayout = new javax.swing.GroupLayout(registerPanel);
         registerPanel.setLayout(registerPanelLayout);
@@ -315,8 +315,7 @@ public class AppMain extends javax.swing.JFrame {
             // show a joptionpane dialog using showMessageDialog
             JOptionPane.showMessageDialog(frame, "Please Enter your Full information");
         } else //another check for the password itself
-        {
-            if (passReg1.getText().equals(passReg2.getText())) {
+         if (passReg1.getText().equals(passReg2.getText())) {
                 System.out.println("matched");
 
                 //check for Email validation
@@ -359,7 +358,6 @@ public class AppMain extends javax.swing.JFrame {
                 JFrame frame = new JFrame("JOptionPane showMessageDialog example");
                 JOptionPane.showMessageDialog(frame, "Password dosen't match");
             }
-        }
     }//GEN-LAST:event_registerBtnActionPerformed
 
     private void loginBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_loginBtnActionPerformed
@@ -430,6 +428,9 @@ public class AppMain extends javax.swing.JFrame {
         return mainPanel;
     }
 
+    public ClientConnection getConnection() {
+        return clientConnection;
+    }
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JSpinner ageSpinner;
     private javax.swing.JLabel doersChat;

@@ -5,9 +5,12 @@
  */
 package gui;
 
+import chatclient.ClientConnection;
 import java.util.ArrayList;
 import javax.swing.DefaultListModel;
 import utils.User;
+import utils.interfaces.UserStatues;
+import utils.listhandlers.ContactCellRenderer;
 
 /**
  *
@@ -16,12 +19,17 @@ import utils.User;
 public class MainPanel extends javax.swing.JPanel {
 
     private DefaultListModel listModel;
+    private ArrayList<PrivateChatWindow> chats;
+    private AppMain parent;
+    PrivateChatWindow chatRoom;
 
     /**
      * Creates new form MainPanel
      */
-    public MainPanel() {
+    public MainPanel(AppMain parent) {
         initComponents();
+        this.parent = parent;
+        chats = new ArrayList<>();
     }
 
     /**
@@ -71,6 +79,11 @@ public class MainPanel extends javax.swing.JPanel {
             }
         });
 
+        contactsList.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                contactsListMouseClicked(evt);
+            }
+        });
         jScrollPane2.setViewportView(contactsList);
 
         javax.swing.GroupLayout mainPanelLayout = new javax.swing.GroupLayout(mainPanel);
@@ -155,6 +168,17 @@ public class MainPanel extends javax.swing.JPanel {
         // TODO add your handling code here:
     }//GEN-LAST:event_addFriendBtnActionPerformed
 
+    private void contactsListMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_contactsListMouseClicked
+        if (evt.getClickCount() == 2 && contactsList.getSelectedValue() instanceof User) {
+            User user = (User) contactsList.getSelectedValue();
+            if (user.getStatus() == UserStatues.AVAILABLE) {
+                chatRoom = new PrivateChatWindow(user, this);
+                chatRoom.setVisible(true);
+            }
+        }
+
+    }//GEN-LAST:event_contactsListMouseClicked
+
     public void setNameLabel(User user) {
         nameLabel.setText(user.getFirstName() + " " + user.getLastName());
     }
@@ -164,13 +188,21 @@ public class MainPanel extends javax.swing.JPanel {
         listModel = new DefaultListModel();
         for (User contact : contacts) {
             listModel.addElement(contact);
-
         }
         contactsList.setModel(listModel);
+        contactsList.setCellRenderer(new ContactCellRenderer());
+    }
+
+    public ClientConnection getConnection() {
+        return parent.getConnection();
+    }
+
+    public PrivateChatWindow getChatRoom() {
+        return chatRoom;
     }
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton addFriendBtn;
-    private javax.swing.JList<String> contactsList;
+    private javax.swing.JList<User> contactsList;
     private javax.swing.JButton createGroupChatBtn;
     private javax.swing.JButton deleteFriendBtn;
     private javax.swing.JLabel jLabel14;

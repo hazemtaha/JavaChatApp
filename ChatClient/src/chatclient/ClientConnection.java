@@ -33,10 +33,10 @@ public class ClientConnection extends Thread {
     private Socket socket;
     private ObjectInputStream objReader;
     private ObjectOutputStream objWriter;
-    private JFrame chatApp;
+    private AppMain chatApp;
     private User user;
 
-    public ClientConnection(JFrame chatApp) {
+    public ClientConnection(AppMain chatApp) {
 //        try {
         this.chatApp = chatApp;
 //            socket = new Socket(InetAddress.getLocalHost(), 8000);
@@ -79,7 +79,8 @@ public class ClientConnection extends Thread {
                                     ((AppMain) chatApp).setErrorLabel("Invalid email or password");
                                     break;
                                 case MessageType.MESSAGE:
-                                    ((PrivateChatWindow) chatApp).AppendMsg(msg);
+                                    ((MainPanel) chatApp.getMainPanel()).getChatRoom().AppendMsg(msg);
+
                                     break;
                             }
                         }

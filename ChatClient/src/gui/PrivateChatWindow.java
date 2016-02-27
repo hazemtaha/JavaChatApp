@@ -22,40 +22,20 @@ import utils.interfaces.MessageType;
  */
 public class PrivateChatWindow extends javax.swing.JFrame {
 
-    ClientConnection clientConnection;
+    private ClientConnection clientConnection;
+    private User chatUser;
+    private MainPanel parent;
 
     /**
      * Creates new form Registeration
      */
-    public PrivateChatWindow() {
+    public PrivateChatWindow(User chatUser, MainPanel parent) {
         initComponents();
+        this.parent = parent;
         chatBox.setEnabled(false);
-        clientConnection = new ClientConnection(this);
-        initTests();
-    }
-
-    public void initTests() {
-//
-//        System.out.println("Run");
-////        PrivateChatWindowTest chatApp = new PrivateChatWindowTest();
-//        System.out.println("Runed");
-//        clientConnection.start();
-//        Hashtable<String, String> credintials = new Hashtable<>();
-//        credintials.put("email", "sasa@mail.com");
-//        credintials.put("password", "123");
-//        Message login = new Message(MessageType.LOGIN, credintials);
-//        Thread th = new Thread(new Runnable() {
-//            @Override
-//            public void run() {
-//                try {
-//                    Thread.sleep(5000);
-//                    clientConnection.sendClientMsg(login);
-//                } catch (InterruptedException ex) {
-//                    Logger.getLogger(ChatClient.class.getName()).log(Level.SEVERE, null, ex);
-//                }
-//            }
-//        });
-//        th.start();
+        clientConnection = parent.getConnection();
+        this.chatUser = chatUser;
+        setNameLabel(chatUser);
     }
 
     /**
@@ -75,8 +55,6 @@ public class PrivateChatWindow extends javax.swing.JFrame {
         sendFileBtn = new javax.swing.JButton();
         groupChatBtn = new javax.swing.JButton();
         nameLabel = new javax.swing.JLabel();
-
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
         sendButton.setText("Send");
         sendButton.setFocusable(false);
@@ -156,12 +134,12 @@ public class PrivateChatWindow extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void msgBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_msgBoxActionPerformed
-        // TODO add your handling code here:
+        sendButtonActionPerformed(evt);
     }//GEN-LAST:event_msgBoxActionPerformed
 
     private void sendButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_sendButtonActionPerformed
         ArrayList<Integer> reciever = new ArrayList<Integer>();
-        reciever.add(new Integer(2));
+        reciever.add(chatUser.getId());
         clientConnection.sendClientMsg(new Message(MessageType.MESSAGE, msgBox.getText(), reciever));
         msgBox.setText("");
     }//GEN-LAST:event_sendButtonActionPerformed
