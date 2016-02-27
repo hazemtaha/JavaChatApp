@@ -5,6 +5,7 @@
  */
 package gui;
 
+import utils.EmailValidator;
 import chatclient.ClientConnection;
 import java.util.Hashtable;
 import javax.swing.JFrame;
@@ -72,12 +73,12 @@ public class AppMain extends javax.swing.JFrame {
         jLabel3 = new javax.swing.JLabel();
         label1 = new java.awt.Label();
         jLabel8 = new javax.swing.JLabel();
-        PassReg1 = new javax.swing.JPasswordField();
-        PassReg2 = new javax.swing.JPasswordField();
-        WelcomeLabel = new java.awt.Label();
-        DoersChat = new javax.swing.JLabel();
-        Picture = new javax.swing.JLabel();
-        Age = new javax.swing.JSpinner();
+        passReg1 = new javax.swing.JPasswordField();
+        passReg2 = new javax.swing.JPasswordField();
+        welcomeLabel = new java.awt.Label();
+        doersChat = new javax.swing.JLabel();
+        picture = new javax.swing.JLabel();
+        ageSpinner = new javax.swing.JSpinner();
         jMenuBar1 = new javax.swing.JMenuBar();
         jMenu1 = new javax.swing.JMenu();
         jMenu2 = new javax.swing.JMenu();
@@ -282,13 +283,13 @@ public class AppMain extends javax.swing.JFrame {
         jLabel8.setFont(new java.awt.Font("Ubuntu", 0, 18)); // NOI18N
         jLabel8.setText("Age :");
 
-        WelcomeLabel.setFont(new java.awt.Font("Impact", 1, 24)); // NOI18N
-        WelcomeLabel.setText("Welcome to Doers Chat Messenger");
+        welcomeLabel.setFont(new java.awt.Font("Impact", 1, 24)); // NOI18N
+        welcomeLabel.setText("Welcome to Doers Chat Messenger");
 
-        DoersChat.setFont(new java.awt.Font("UnPilgi", 0, 24)); // NOI18N
-        DoersChat.setText("Doers Chat");
+        doersChat.setFont(new java.awt.Font("UnPilgi", 0, 24)); // NOI18N
+        doersChat.setText("Doers Chat");
 
-        Picture.setIcon(new javax.swing.ImageIcon(getClass().getResource("/gui/chat-people.png"))); // NOI18N
+        picture.setIcon(new javax.swing.ImageIcon(getClass().getResource("/gui/chat-people.png"))); // NOI18N
 
         javax.swing.GroupLayout registerPanelLayout = new javax.swing.GroupLayout(registerPanel);
         registerPanel.setLayout(registerPanelLayout);
@@ -298,13 +299,13 @@ public class AppMain extends javax.swing.JFrame {
                 .addGroup(registerPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(registerPanelLayout.createSequentialGroup()
                         .addGap(180, 180, 180)
-                        .addComponent(DoersChat))
+                        .addComponent(doersChat))
                     .addGroup(registerPanelLayout.createSequentialGroup()
                         .addGap(172, 172, 172)
-                        .addComponent(Picture))
+                        .addComponent(picture))
                     .addGroup(registerPanelLayout.createSequentialGroup()
                         .addGap(63, 63, 63)
-                        .addComponent(WelcomeLabel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(welcomeLabel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(registerPanelLayout.createSequentialGroup()
                         .addGap(172, 172, 172)
                         .addComponent(label1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
@@ -333,20 +334,20 @@ public class AppMain extends javax.swing.JFrame {
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                                 .addGroup(registerPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                                     .addComponent(registerBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 127, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(PassReg1)
-                                    .addComponent(PassReg2, javax.swing.GroupLayout.DEFAULT_SIZE, 222, Short.MAX_VALUE)
-                                    .addComponent(Age))))))
+                                    .addComponent(passReg1)
+                                    .addComponent(passReg2, javax.swing.GroupLayout.DEFAULT_SIZE, 222, Short.MAX_VALUE)
+                                    .addComponent(ageSpinner))))))
                 .addContainerGap(59, Short.MAX_VALUE))
         );
         registerPanelLayout.setVerticalGroup(
             registerPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(registerPanelLayout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(Picture)
+                .addComponent(picture)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(DoersChat, javax.swing.GroupLayout.PREFERRED_SIZE, 46, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(doersChat, javax.swing.GroupLayout.PREFERRED_SIZE, 46, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(2, 2, 2)
-                .addComponent(WelcomeLabel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(welcomeLabel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(label1, javax.swing.GroupLayout.PREFERRED_SIZE, 57, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(28, 28, 28)
@@ -364,15 +365,15 @@ public class AppMain extends javax.swing.JFrame {
                 .addGap(18, 18, 18)
                 .addGroup(registerPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel6)
-                    .addComponent(PassReg1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(passReg1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
                 .addGroup(registerPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel7)
-                    .addComponent(PassReg2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(passReg2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
                 .addGroup(registerPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel8)
-                    .addComponent(Age, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(ageSpinner, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
                 .addComponent(registerBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 41, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(56, Short.MAX_VALUE))
@@ -397,14 +398,14 @@ public class AppMain extends javax.swing.JFrame {
     //((java.awt.CardLayout) (jPanel1.getLayout())).next(jPanel1);
     // CODE WHEN I PRESS CREATE BUTTON
                  
-        if(firstNameReg.getText().equals("") || lastNameReg.getText().equals("") || emailReg.getText().equals("") || PassReg1.getText().equals("")){
+        if(firstNameReg.getText().equals("") || lastNameReg.getText().equals("") || emailReg.getText().equals("") || passReg1.getText().equals("")){
         // create a jframe
         JFrame frame = new JFrame("JOptionPane showMessageDialog example");
         // show a joptionpane dialog using showMessageDialog
         JOptionPane.showMessageDialog(frame,"Please Enter your Full information");
         }else{ 
                  //another check for the password itself
-                 if(PassReg1.getText().equals(PassReg2.getText())){
+                 if(passReg1.getText().equals(passReg2.getText())){
                     System.out.println("matched");
                     
                             //check for Email validation
@@ -415,7 +416,7 @@ public class AppMain extends javax.swing.JFrame {
                               JOptionPane.showMessageDialog(frame,"Invalid Email ID");   
                                } else {           
                                                 //check on age
-                                                int age = (Integer) Age.getValue();
+                                                int age = (Integer) ageSpinner.getValue();
                                                 System.out.println(age);
                                                 
                                                 if(age < 18 || age > 80){
@@ -516,16 +517,12 @@ public class AppMain extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JSpinner Age;
-    private javax.swing.JLabel DoersChat;
-    private javax.swing.JPasswordField PassReg1;
-    private javax.swing.JPasswordField PassReg2;
-    private javax.swing.JLabel Picture;
-    private java.awt.Label WelcomeLabel;
     private javax.swing.JButton addFriendBtn;
+    private javax.swing.JSpinner ageSpinner;
     private javax.swing.JList<String> contactsList;
     private javax.swing.JButton createGroupChatBtn;
     private javax.swing.JButton deleteFriendBtn;
+    private javax.swing.JLabel doersChat;
     private javax.swing.JTextField emailBox;
     private javax.swing.JTextField emailReg;
     private javax.swing.JLabel errorLabel;
@@ -552,10 +549,14 @@ public class AppMain extends javax.swing.JFrame {
     private javax.swing.JPanel mainPanel;
     private javax.swing.JLabel nameLabel;
     private javax.swing.JPanel panelGroup;
+    private javax.swing.JPasswordField passReg1;
+    private javax.swing.JPasswordField passReg2;
     private javax.swing.JTextField passwordBox;
+    private javax.swing.JLabel picture;
     private javax.swing.JButton registerBtn;
     private javax.swing.JPanel registerPanel;
     private javax.swing.JButton signUpBtn;
     private javax.swing.JComboBox<String> statusComboBox;
+    private java.awt.Label welcomeLabel;
     // End of variables declaration//GEN-END:variables
 }
