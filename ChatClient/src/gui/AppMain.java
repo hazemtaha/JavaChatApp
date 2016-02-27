@@ -343,7 +343,7 @@ public class AppMain extends javax.swing.JFrame {
                         userData.put("email", emailBox.getText());
                         userData.put("password", passReg1.getText());
                         //check for casting the integer into string
-                        userData.put("age", (String) ageSpinner.getValue());
+                      //  userData.put("age", (String) ageSpinner.getValue());
                         //creating a message type
                         Message register = new Message(MessageType.REGISTER, userData);
 
@@ -374,7 +374,7 @@ public class AppMain extends javax.swing.JFrame {
 
     private void signUpBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_signUpBtnActionPerformed
         // TODO add your handling code here:
-        ((java.awt.CardLayout) (panelGroup.getLayout())).next(panelGroup);
+        ((java.awt.CardLayout) (panelGroup.getLayout())).last(panelGroup);
     }//GEN-LAST:event_signUpBtnActionPerformed
 
     private void firstNameRegActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_firstNameRegActionPerformed

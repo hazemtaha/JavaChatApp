@@ -24,10 +24,12 @@ public class DbHandler {
     private Connection dbConnection;
 
     public DbHandler() {
-        String stringConnection = "jdbc:mysql://localhost:3306/chatApp";
+        //String stringConnection = "jdbc:mysql://localhost:3306/chatApp";
+        String stringConnection = "jdbc:mysql://localhost:3306/JAVACHAT";
         try {
             Class.forName("com.mysql.jdbc.Driver");
-            dbConnection = DriverManager.getConnection(stringConnection, "root", "iti");
+           // dbConnection = DriverManager.getConnection(stringConnection, "root", "iti");
+            dbConnection = DriverManager.getConnection(stringConnection, "root", "0160");
         } catch (ClassNotFoundException | SQLException ex) {
             Logger.getLogger(DbHandler.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -65,8 +67,8 @@ public class DbHandler {
             register.setString(2, lastName);
             register.setString(3, email);
             register.setString(4, password);
-            
-            generateList(register.executeQuery());
+         
+            register.executeUpdate();
          
             
           }catch (SQLException ex) {
