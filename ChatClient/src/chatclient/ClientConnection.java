@@ -37,17 +37,7 @@ public class ClientConnection extends Thread {
     private User user;
 
     public ClientConnection(AppMain chatApp) {
-//        try {
         this.chatApp = chatApp;
-//            socket = new Socket(InetAddress.getLocalHost(), 8000);
-//            objWriter = new ObjectOutputStream(socket.getOutputStream());
-//            objWriter.flush();
-//            objReader = new ObjectInputStream(socket.getInputStream());
-//            //        start(); //shoud be called when instanciated
-//        } catch (IOException ex) {
-//            Logger.getLogger(ClientConnection.class.getName()).log(Level.SEVERE, null, ex);
-//        }
-
     }
 
     @Override
@@ -79,8 +69,17 @@ public class ClientConnection extends Thread {
                                     ((AppMain) chatApp).setErrorLabel("Invalid email or password");
                                     break;
                                 case MessageType.MESSAGE:
-                                    ((MainPanel) chatApp.getMainPanel()).getChatRoom().AppendMsg(msg);
-
+                                    Integer recieverId = msg.getReciever().get(0);
+                                    MainPanel mainPanel = (MainPanel) chatApp.getMainPanel();
+                                    PrivateChatWindow chatRoom;
+                                    if (mainPanel.isOpened(recieverId) == null) {
+                                        chatRoom = new PrivateChatWindow(msg.getSender(), mainPanel);
+                                    } else {
+                                        chatRoom = mainPanel.isOpened(recieverId);
+                                    }
+                                    chatRoom.setVisible(true);
+                                    chatRoom.AppendMsg(msg);
+                                    //((MainPanel) chatApp.getMainPanel()).getChatRoom().AppendMsg(msg);
                                     break;
                             }
                         }

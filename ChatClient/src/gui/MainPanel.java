@@ -21,11 +21,14 @@ public class MainPanel extends javax.swing.JPanel {
     private DefaultListModel listModel;
     private ArrayList<PrivateChatWindow> chats;
     private AppMain parent;
-    PrivateChatWindow chatRoom;
+    private PrivateChatWindow chatRoom;
 
     /**
      * Creates new form MainPanel
      */
+    public MainPanel() {
+    }
+
     public MainPanel(AppMain parent) {
         initComponents();
         this.parent = parent;
@@ -171,13 +174,35 @@ public class MainPanel extends javax.swing.JPanel {
     private void contactsListMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_contactsListMouseClicked
         if (evt.getClickCount() == 2 && contactsList.getSelectedValue() instanceof User) {
             User user = (User) contactsList.getSelectedValue();
-            if (user.getStatus() == UserStatues.AVAILABLE) {
+//            if (user.getStatus() == UserStatues.AVAILABLE) {
+            if (isOpened(user.getId()) == null) {
                 chatRoom = new PrivateChatWindow(user, this);
-                chatRoom.setVisible(true);
+                chats.add(chatRoom);
+            } else {
+                chatRoom = isOpened(user.getId());
             }
+            chatRoom.setVisible(true);
+//            }
         }
 
     }//GEN-LAST:event_contactsListMouseClicked
+
+    public PrivateChatWindow isOpened(int chatId) {
+        for (PrivateChatWindow chat : chats) {
+            if (chat.getChatId() == chatId) {
+                return chat;
+            }
+        }
+        return null;
+    }
+
+    public void addChat(PrivateChatWindow chatWindow) {
+        chats.add(chatWindow);
+    }
+
+    public void removeChat(PrivateChatWindow chatWindow) {
+        chats.remove(chatWindow);
+    }
 
     public void setNameLabel(User user) {
         nameLabel.setText(user.getFirstName() + " " + user.getLastName());
@@ -197,9 +222,9 @@ public class MainPanel extends javax.swing.JPanel {
         return parent.getConnection();
     }
 
-    public PrivateChatWindow getChatRoom() {
-        return chatRoom;
-    }
+//    public PrivateChatWindow getChatRoom() {
+//        return chatRoom;
+//    }
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton addFriendBtn;
     private javax.swing.JList<User> contactsList;

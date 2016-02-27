@@ -32,9 +32,9 @@ public class PrivateChatWindow extends javax.swing.JFrame {
     public PrivateChatWindow(User chatUser, MainPanel parent) {
         initComponents();
         this.parent = parent;
+        this.chatUser = chatUser;
         chatBox.setEnabled(false);
         clientConnection = parent.getConnection();
-        this.chatUser = chatUser;
         setNameLabel(chatUser);
     }
 
@@ -55,6 +55,12 @@ public class PrivateChatWindow extends javax.swing.JFrame {
         sendFileBtn = new javax.swing.JButton();
         groupChatBtn = new javax.swing.JButton();
         nameLabel = new javax.swing.JLabel();
+
+        addWindowListener(new java.awt.event.WindowAdapter() {
+            public void windowClosing(java.awt.event.WindowEvent evt) {
+                formWindowClosing(evt);
+            }
+        });
 
         sendButton.setText("Send");
         sendButton.setFocusable(false);
@@ -143,6 +149,10 @@ public class PrivateChatWindow extends javax.swing.JFrame {
         clientConnection.sendClientMsg(new Message(MessageType.MESSAGE, msgBox.getText(), reciever));
         msgBox.setText("");
     }//GEN-LAST:event_sendButtonActionPerformed
+
+    private void formWindowClosing(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosing
+        parent.removeChat(this);
+    }//GEN-LAST:event_formWindowClosing
 
     /**
      * @param args the command line arguments
@@ -249,6 +259,10 @@ public class PrivateChatWindow extends javax.swing.JFrame {
 
     public void setNameLabel(User user) {
         nameLabel.setText(user.getFirstName() + " " + user.getLastName());
+    }
+
+    public int getChatId() {
+        return chatUser.getId();
     }
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JTextArea chatBox;
