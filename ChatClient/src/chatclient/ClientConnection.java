@@ -5,7 +5,9 @@
  */
 package chatclient;
 
+import gui.AppMain;
 import gui.PrivateChatWindow;
+import java.awt.CardLayout;
 import java.io.EOFException;
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -16,6 +18,7 @@ import java.net.Socket;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JFrame;
+import javax.swing.JPanel;
 import utils.Message;
 import utils.User;
 import utils.interfaces.MessageType;
@@ -66,10 +69,13 @@ public class ClientConnection extends Thread {
                                 case MessageType.AUTH_YES:
                                     System.out.println("Authorized");
                                     user = (User) msg.getData();
-                                    ((PrivateChatWindow) chatApp).setNameLabel(user);
+                                    JPanel prentPanel = ((AppMain) chatApp).getPanelGroup();
+                                    ((CardLayout) prentPanel.getLayout()).show(prentPanel, "mainPanel");
+                                    ((AppMain) chatApp).setNameLabel(user);
                                     break;
                                 case MessageType.AUTH_NO:
-                                    System.out.println("Not Authorized");
+                                    ((AppMain) chatApp).setErrorLabel("Invalid email or password");
+//                                    System.out.println("Not Authorized");
                                     break;
                                 case MessageType.MESSAGE:
                                     ((PrivateChatWindow) chatApp).AppendMsg(msg);

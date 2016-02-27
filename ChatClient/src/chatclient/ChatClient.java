@@ -6,11 +6,6 @@
 package chatclient;
 
 import gui.PrivateChatWindow;
-import java.util.Hashtable;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import utils.Message;
-import utils.interfaces.MessageType;
 
 /**
  *

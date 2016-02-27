@@ -35,27 +35,27 @@ public class PrivateChatWindow extends javax.swing.JFrame {
     }
 
     public void initTests() {
-
-        System.out.println("Run");
-//        PrivateChatWindowTest chatApp = new PrivateChatWindowTest();
-        System.out.println("Runed");
-        clientConnection.start();
-        Hashtable<String, String> credintials = new Hashtable<>();
-        credintials.put("email", "sasa@mail.com");
-        credintials.put("password", "123");
-        Message login = new Message(MessageType.LOGIN, credintials);
-        Thread th = new Thread(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    Thread.sleep(5000);
-                    clientConnection.sendClientMsg(login);
-                } catch (InterruptedException ex) {
-                    Logger.getLogger(ChatClient.class.getName()).log(Level.SEVERE, null, ex);
-                }
-            }
-        });
-        th.start();
+//
+//        System.out.println("Run");
+////        PrivateChatWindowTest chatApp = new PrivateChatWindowTest();
+//        System.out.println("Runed");
+//        clientConnection.start();
+//        Hashtable<String, String> credintials = new Hashtable<>();
+//        credintials.put("email", "sasa@mail.com");
+//        credintials.put("password", "123");
+//        Message login = new Message(MessageType.LOGIN, credintials);
+//        Thread th = new Thread(new Runnable() {
+//            @Override
+//            public void run() {
+//                try {
+//                    Thread.sleep(5000);
+//                    clientConnection.sendClientMsg(login);
+//                } catch (InterruptedException ex) {
+//                    Logger.getLogger(ChatClient.class.getName()).log(Level.SEVERE, null, ex);
+//                }
+//            }
+//        });
+//        th.start();
     }
 
     /**
