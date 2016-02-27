@@ -326,7 +326,7 @@ public class AppMain extends javax.swing.JFrame {
                     JFrame frame = new JFrame("JOptionPane showMessageDialog example");
                     JOptionPane.showMessageDialog(frame, "Invalid Email ID");
                 } else {
-                    //check on age
+                    //check on age || casting the string into integer to be able to check
                     Integer age = Integer.valueOf(ageField.getText());
 
                    if (age < 18 || age > 80) {
@@ -345,7 +345,7 @@ public class AppMain extends javax.swing.JFrame {
                         //check for casting the integer into string
                         try{
                         userData.put("age",ageField.getText());
-                        }catch(Exception z){}
+                        }catch(Exception ex){}
                         //creating a message type
                         Message register = new Message(MessageType.REGISTER, userData);
 

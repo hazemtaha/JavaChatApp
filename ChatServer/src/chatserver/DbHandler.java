@@ -54,7 +54,7 @@ public class DbHandler {
         return null;
     }
     
-    
+    //*/*/******************************************************
     //New method Declaration to enter the data into the database 
     
     public void register(String firstName, String lastName, String email, String password, String age) {
@@ -79,7 +79,22 @@ public class DbHandler {
         
         
     }
-
+    
+    //***/*/**********//Select EMAIL Column to validate Existing user++++++++++++++++++++++++++++++++
+    public User getEmailList(){
+        try{
+            User email = new User();
+            PreparedStatement mail = dbConnection.prepareStatement("select EMAIL from user");
+            ArrayList<User> emailList = generateList(mail.executeQuery());
+            email.setEmailList(emailList);
+            return email;
+    
+           } catch (SQLException ex){
+            Logger.getLogger(DbHandler.class.getName()).log(Level.SEVERE, null, ex);
+              }
+        return null;
+    }
+////////////////////////////////************************++++++++++++++++++++++++++++++++++++++++++++
     public void updateStatus(User user) {
         try {
             PreparedStatement upStatus = dbConnection.prepareStatement("update users set status = ? where u_id = ?");
