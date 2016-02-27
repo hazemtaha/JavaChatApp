@@ -59,16 +59,14 @@ public class ClientHandler extends Thread {
                     System.out.println(msg.getType());
                     // here we'll handle different kind of requests based on the message type
                     switch (msg.getType()) {
-                        case MessageType.TEST:
-                            System.out.println(msg.getData());
-                            break;
                         case MessageType.LOGIN:
                             Hashtable<String, String> credentials
                                     = (Hashtable< String, String>) msg.getData();
                             user = dbHandler.login(credentials.get("email"), credentials.get("password"));
                             if (user != null) {
+                                user = dbHandler.getContactList(user);
                                 user.setStatus(UserStatues.AVAILABLE);
-                                System.out.println("Id :" + user.getId());
+                                System.out.println("Contact List Size : " + user.getContactList().size());
                                 dbHandler.updateStatus(user);
                                 visitors.remove(this);
                                 clients.put(user.getId(), this);
