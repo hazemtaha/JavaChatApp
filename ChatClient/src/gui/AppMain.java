@@ -424,7 +424,23 @@ public class AppMain extends javax.swing.JFrame {
                                                     JOptionPane.showMessageDialog(frame,"Age must be between 18 ~ 80");
                                                 }else {
                                                 System.out.println(firstNameReg.getText());  
-                                                ((java.awt.CardLayout)(panelGroup.getLayout())).next(panelGroup);
+                                                //////////////////////////////////////////////////////Testing getting the object
+                                                 Hashtable<String, String> userData = new Hashtable<>();
+                                                 //putting all the values into the Hashtable
+                                                 userData.put("firstName", firstNameReg.getText());
+                                                 userData.put("lastName", lastNameReg.getText());
+                                                 userData.put("email", emailBox.getText());
+                                                 userData.put("password", passReg1.getText());
+                                                //check for casting the integer into string
+                                                 userData.put("age", (String) ageSpinner.getValue());
+                                                 //creating a message type 
+                                                 Message register = new Message(MessageType.REGISTER, userData);
+                                                 
+                                                 //call clientConnection Class to send the message to the server through the sendClientMsg
+                                                 clientConnection.sendClientMsg(register);
+                                                 //it's already sent handle it through clientHandler on server
+                                                //////////////////////////////////////////////////////////////////////
+                                                 ((java.awt.CardLayout)(panelGroup.getLayout())).next(panelGroup);
                                                       }
                                       }    
                    }else{
