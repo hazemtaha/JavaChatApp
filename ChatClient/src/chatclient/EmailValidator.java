@@ -1,0 +1,44 @@
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+package chatclient;
+
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
+
+/**
+ *
+ * @author mostafaz
+ */
+public class EmailValidator {
+    
+   private Pattern pattern;
+   private Matcher matcher;
+
+private static final String EMAIL_PATTERN = 
+    "^[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*@"
+    + "[A-Za-z0-9-]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$";
+
+//Compiles method the given regular expression into a pattern.
+public EmailValidator() {
+    pattern = Pattern.compile(EMAIL_PATTERN);
+                        }
+
+/**
+ * Validate hex with regular expression
+ * 
+ * @param EmailParam
+ *            EmailParam for validation
+ * @return true valid EmailParam, false invalid EmailParam
+ */
+public boolean validate(final String EmailParam) {
+   //Creates a matcher that will match the given input against this pattern.
+    matcher = pattern.matcher(EmailParam);
+    //Attempts to match the entire region against the pattern.
+    return matcher.matches();
+                                                   }
+
+                            }
