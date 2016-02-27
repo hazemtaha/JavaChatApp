@@ -63,6 +63,21 @@ public class DbHandler {
         }
     }
 
+    public User getContactList(User user) {
+        try {
+            PreparedStatement query = dbConnection.prepareStatement(""
+                    + "select users.* from users,contact_list where "
+                    + "contact_list.friend_id = users.u_id and contact_list.u_id = ?");
+            query.setInt(1, user.getId());
+            ArrayList<User> contactList = generateList(query.executeQuery());
+            user.setContactList(contactList);
+            return user;
+        } catch (SQLException ex) {
+            Logger.getLogger(DbHandler.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return null;
+    }
+
     public ArrayList<User> generateList(ResultSet rs) {
         if (rs != null) {
             try {
