@@ -24,12 +24,10 @@ public class DbHandler {
     private Connection dbConnection;
 
     public DbHandler() {
-        //String stringConnection = "jdbc:mysql://localhost:3306/chatApp";
-        String stringConnection = "jdbc:mysql://localhost:3306/JAVACHAT";
+        String stringConnection = "jdbc:mysql://localhost:3306/chatApp";
         try {
             Class.forName("com.mysql.jdbc.Driver");
-           // dbConnection = DriverManager.getConnection(stringConnection, "root", "iti");
-            dbConnection = DriverManager.getConnection(stringConnection, "root", "0160");
+            dbConnection = DriverManager.getConnection(stringConnection, "root", "iti");
         } catch (ClassNotFoundException | SQLException ex) {
             Logger.getLogger(DbHandler.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -54,23 +52,21 @@ public class DbHandler {
         return null;
     }
     
-    //*/*/******************************************************
+    
     //New method Declaration to enter the data into the database 
     
-    public void register(String firstName, String lastName, String email, String password, String age) {
+    public void register(String firstName, String lastName, String email, String password) {
         //open the connection with the database
         //as we will put try and catch for any exceptions through our connection
         try{
             Statement stmt = dbConnection.createStatement();
-            PreparedStatement register = dbConnection.prepareStatement("insert into user (FIRST_NAME, LAST_NAME, EMAIL, PASSWORD, AGE) values (?, ?, ?, ?, ?)"); 
+            PreparedStatement register = dbConnection.prepareStatement("insert into user (ID, FIRST_NAME, LAST_NAME, EMAIL, PASSWORD, AGE) values (1, ?, ?, ?, ?, 23)"); 
             register.setString(1, firstName);
             register.setString(2, lastName);
             register.setString(3, email);
             register.setString(4, password);
-            register.setString(5, age);
-            //excute the query
             
-            register.executeUpdate();
+            generateList(register.executeQuery());
          
             
           }catch (SQLException ex) {
@@ -79,22 +75,7 @@ public class DbHandler {
         
         
     }
-    
-    //***/*/**********//Select EMAIL Column to validate Existing user++++++++++++++++++++++++++++++++
-    public User getEmailList(){
-        try{
-            User email = new User();
-            PreparedStatement mail = dbConnection.prepareStatement("select EMAIL from user");
-            ArrayList<User> emailList = generateList(mail.executeQuery());
-            email.setEmailList(emailList);
-            return email;
-    
-           } catch (SQLException ex){
-            Logger.getLogger(DbHandler.class.getName()).log(Level.SEVERE, null, ex);
-              }
-        return null;
-    }
-////////////////////////////////************************++++++++++++++++++++++++++++++++++++++++++++
+
     public void updateStatus(User user) {
         try {
             PreparedStatement upStatus = dbConnection.prepareStatement("update users set status = ? where u_id = ?");
@@ -135,6 +116,4 @@ public class DbHandler {
         }
         return null;
     }
-
-  
 }

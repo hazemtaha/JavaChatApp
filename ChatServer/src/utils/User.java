@@ -21,7 +21,6 @@ public class User implements Serializable {
     private String password;
     private int status;
     private ArrayList<User> contactList;
-    private ArrayList<User> emailList;
 
     public User(User user) {
         this.id = user.getId();
@@ -31,11 +30,6 @@ public class User implements Serializable {
         this.password = user.getPassword();
         this.status = user.getStatus();
         this.contactList = user.getContactList();
-        this.emailList = user.getEmailList();
-    }
-    //create a constructor for the email
-    public User(){
-        this.emailList = this.getEmailList();
     }
 
     public User(int id, String firstName, String lastName, String email, String password, int status, ArrayList<User> contactList) {
@@ -117,15 +111,6 @@ public class User implements Serializable {
     @Override
     public String toString() {
         return firstName + " " + lastName;
-    }
-    //get the email list
-    public ArrayList<User> getEmailList(){
-        return emailList;
-    }
-    
-    //create a method to recieve email List to be able to check on email    
-    public void setEmailList(ArrayList<User> emailList) {
-        this.emailList = emailList;
     }
 
 }

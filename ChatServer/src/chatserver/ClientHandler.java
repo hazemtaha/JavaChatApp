@@ -75,26 +75,21 @@ public class ClientHandler extends Thread {
                                 sendMsg(new Message(MessageType.AUTH_NO));
                             }
                             break;
-         
+                            
+                        //case in Regiser Type @mos
+                        case MessageType.REGISTER:
+                            //recieving the incoming message into the new Hashtable
+                            Hashtable<String, String> userData = (Hashtable< String, String>) msg.getData();
+                            
+                            
+                            
+                            
+                            break;
+                            
                         case MessageType.MESSAGE:
                             msg.setSender(user);
                             echoChatMsg(msg);
                             break;
-                            //////////******************************************++++++++++++++++++++++++++++++
-                           //case in Regiser Type @mos
-                        case MessageType.REGISTER:
-                            //recieving the incoming message into the new Hashtable
-                            Hashtable<String, String> userData = (Hashtable< String, String>) msg.getData();
-                            //we already take an object from the User Class and DbHandler class
-                            //user = dbHandler.register(userData.get("FirstName"));
-                            dbHandler.register(userData.get("firstName"), userData.get("lastName"), userData.get("email"), userData.get("password"), userData.get("age"));   
-                             String mail = userData.get("email");
-                             user = dbHandler.getEmailList();
-                         //   if(user.contains(mail)){
-                           //   System.out.println("user already exist");
-                             //}  
-                            
-                            break;   
                     }
                 }
             } catch (EOFException ex) {
