@@ -14,7 +14,7 @@ import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import utils.User;
-
+import java.sql.Statement;
 /**
  *
  * @author kan
@@ -50,6 +50,30 @@ public class DbHandler {
         }
 
         return null;
+    }
+    
+    
+    //New method Declaration to enter the data into the database 
+    
+    public void register(String firstName, String lastName, String email, String password) {
+        //open the connection with the database
+        //as we will put try and catch for any exceptions through our connection
+        try{
+            Statement stmt = dbConnection.createStatement();
+            PreparedStatement register = dbConnection.prepareStatement("insert into user (ID, FIRST_NAME, LAST_NAME, EMAIL, PASSWORD, AGE) values (1, ?, ?, ?, ?, 23)"); 
+            register.setString(1, firstName);
+            register.setString(2, lastName);
+            register.setString(3, email);
+            register.setString(4, password);
+            
+            generateList(register.executeQuery());
+         
+            
+          }catch (SQLException ex) {
+            Logger.getLogger(DbHandler.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
+        
     }
 
     public void updateStatus(User user) {

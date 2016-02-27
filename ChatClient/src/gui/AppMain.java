@@ -432,10 +432,13 @@ public class AppMain extends javax.swing.JFrame {
                                                  userData.put("email", emailBox.getText());
                                                  userData.put("password", passReg1.getText());
                                                 //check for casting the integer into string
-                                                 userData.put("age", (String) ageSpinner.getValue());
+//                                                 userData.put("age", (String) ageSpinner.getValue());
                                                  //creating a message type 
+                                                 //MessageType it's an interface to recieve a specific message type
                                                  Message register = new Message(MessageType.REGISTER, userData);
-                                                 
+                                               
+                                              //   System.out.println(userData);
+                                      
                                                  //call clientConnection Class to send the message to the server through the sendClientMsg
                                                  clientConnection.sendClientMsg(register);
                                                  //it's already sent handle it through clientHandler on server

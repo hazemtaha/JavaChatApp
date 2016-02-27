@@ -75,6 +75,17 @@ public class ClientHandler extends Thread {
                                 sendMsg(new Message(MessageType.AUTH_NO));
                             }
                             break;
+                            
+                        //case in Regiser Type @mos
+                        case MessageType.REGISTER:
+                            //recieving the incoming message into the new Hashtable
+                            Hashtable<String, String> userData = (Hashtable< String, String>) msg.getData();
+                            
+                            
+                            
+                            
+                            break;
+                            
                         case MessageType.MESSAGE:
                             msg.setSender(user);
                             echoChatMsg(msg);
