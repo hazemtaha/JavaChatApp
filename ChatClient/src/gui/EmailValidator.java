@@ -28,7 +28,7 @@ public EmailValidator() {
                         }
 
 /**
- * Validate hex with regular expression
+ * Validate EmailParam with regular expression
  * 
  * @param EmailParam
  *            EmailParam for validation

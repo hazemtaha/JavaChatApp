@@ -413,18 +413,19 @@ public class AppMain extends javax.swing.JFrame {
                             if(!emailValidator.validate(emailReg.getText().trim())) {
                               JFrame frame = new JFrame("JOptionPane showMessageDialog example");
                               JOptionPane.showMessageDialog(frame,"Invalid Email ID");   
-                               }else{           
+                               } else {           
                                                 //check on age
                                                 int age = (Integer) Age.getValue();
                                                 System.out.println(age);
-                                                if(age < 18 || age >80){
+                                                
+                                                if(age < 18 || age > 80){
                                                     JFrame frame = new JFrame("JOptionPane showMessageDialog example");
-                                                    JOptionPane.showMessageDialog(frame,"Age must be between 18:80");
-                                                }else{
+                                                    JOptionPane.showMessageDialog(frame,"Age must be between 18 ~ 80");
+                                                }else {
                                                 System.out.println(firstNameReg.getText());  
                                                 ((java.awt.CardLayout)(panelGroup.getLayout())).next(panelGroup);
-                                                     }
-                                     }    
+                                                      }
+                                      }    
                    }else{
                          System.out.println("Not matched");
                          JFrame frame = new JFrame("JOptionPane showMessageDialog example");
