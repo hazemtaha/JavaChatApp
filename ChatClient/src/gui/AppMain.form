@@ -57,7 +57,7 @@
         <Container class="javax.swing.JPanel" name="lognPanel">
           <Constraints>
             <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignCardLayout" value="org.netbeans.modules.form.compat2.layouts.DesignCardLayout$CardConstraintsDescription">
-              <CardConstraints cardName="card3"/>
+              <CardConstraints cardName="loginPanel"/>
             </Constraint>
           </Constraints>
 
@@ -176,7 +176,7 @@
         <Container class="javax.swing.JPanel" name="mainPanel">
           <Constraints>
             <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignCardLayout" value="org.netbeans.modules.form.compat2.layouts.DesignCardLayout$CardConstraintsDescription">
-              <CardConstraints cardName="card4"/>
+              <CardConstraints cardName="mainPanel"/>
             </Constraint>
           </Constraints>
 
@@ -317,7 +317,7 @@
         <Container class="javax.swing.JPanel" name="registerPanel">
           <Constraints>
             <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignCardLayout" value="org.netbeans.modules.form.compat2.layouts.DesignCardLayout$CardConstraintsDescription">
-              <CardConstraints cardName="card2"/>
+              <CardConstraints cardName="registerPanel"/>
             </Constraint>
           </Constraints>
 

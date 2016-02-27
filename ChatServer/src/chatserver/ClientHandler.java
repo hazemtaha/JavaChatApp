@@ -63,20 +63,15 @@ public class ClientHandler extends Thread {
                             System.out.println(msg.getData());
                             break;
                         case MessageType.LOGIN:
-//                            System.out.println("Entered");
                             Hashtable<String, String> credentials
                                     = (Hashtable< String, String>) msg.getData();
-//                            System.out.println(credentials.get("email"));
                             user = dbHandler.login(credentials.get("email"), credentials.get("password"));
-                            System.out.println(user.getFirstName());
                             if (user != null) {
                                 user.setStatus(UserStatues.AVAILABLE);
                                 System.out.println("Id :" + user.getId());
                                 dbHandler.updateStatus(user);
                                 visitors.remove(this);
                                 clients.put(user.getId(), this);
-                                System.out.println("Size in Initialization : " + clients.size());
-                                System.out.println("Last Value : " + clients.get(user.getId()));
                                 sendMsg(new Message(MessageType.AUTH_YES, user));
                             } else {
                                 sendMsg(new Message(MessageType.AUTH_NO));

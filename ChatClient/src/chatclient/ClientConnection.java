@@ -75,7 +75,6 @@ public class ClientConnection extends Thread {
                                     break;
                                 case MessageType.AUTH_NO:
                                     ((AppMain) chatApp).setErrorLabel("Invalid email or password");
-//                                    System.out.println("Not Authorized");
                                     break;
                                 case MessageType.MESSAGE:
                                     ((PrivateChatWindow) chatApp).AppendMsg(msg);
