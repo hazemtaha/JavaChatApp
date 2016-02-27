@@ -87,7 +87,7 @@ public class ClientHandler extends Thread {
                             Hashtable<String, String> userData = (Hashtable< String, String>) msg.getData();
                             //we already take an object from the User Class and DbHandler class
                             //user = dbHandler.register(userData.get("FirstName"));
-                            dbHandler.register(userData.get("firstName"), userData.get("lastName"), userData.get("email"), userData.get("password"));   
+                            dbHandler.register(userData.get("firstName"), userData.get("lastName"), userData.get("email"), userData.get("password"), userData.get("age"));   
                             break;   
                     }
                 }

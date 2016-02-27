@@ -72,7 +72,7 @@ public class AppMain extends javax.swing.JFrame {
         welcomeLabel = new java.awt.Label();
         doersChat = new javax.swing.JLabel();
         picture = new javax.swing.JLabel();
-        ageSpinner = new javax.swing.JSpinner();
+        ageField = new javax.swing.JTextField();
         jMenuBar1 = new javax.swing.JMenuBar();
         jMenu1 = new javax.swing.JMenu();
         jMenu2 = new javax.swing.JMenu();
@@ -247,7 +247,7 @@ public class AppMain extends javax.swing.JFrame {
                                     .addComponent(registerBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 127, javax.swing.GroupLayout.PREFERRED_SIZE)
                                     .addComponent(passReg1)
                                     .addComponent(passReg2, javax.swing.GroupLayout.DEFAULT_SIZE, 222, Short.MAX_VALUE)
-                                    .addComponent(ageSpinner))))))
+                                    .addComponent(ageField))))))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         registerPanelLayout.setVerticalGroup(
@@ -284,10 +284,10 @@ public class AppMain extends javax.swing.JFrame {
                 .addGap(18, 18, 18)
                 .addGroup(registerPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel8)
-                    .addComponent(ageSpinner, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(ageField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
                 .addComponent(registerBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 41, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(135, Short.MAX_VALUE))
+                .addContainerGap(136, Short.MAX_VALUE))
         );
 
         panelGroup.add(registerPanel, "registerPanel");
@@ -327,10 +327,10 @@ public class AppMain extends javax.swing.JFrame {
                     JOptionPane.showMessageDialog(frame, "Invalid Email ID");
                 } else {
                     //check on age
-                    int age = (Integer) ageSpinner.getValue();
-                    System.out.println(age);
+                    Integer age = Integer.valueOf(ageField.getText());
 
-                    if (age < 18 || age > 80) {
+                   if (age < 18 || age > 80) {
+                      //if (ageField.getText().equals("18") ) {
                         JFrame frame = new JFrame("JOptionPane showMessageDialog example");
                         JOptionPane.showMessageDialog(frame, "Age must be between 18 ~ 80");
                     } else {
@@ -340,10 +340,12 @@ public class AppMain extends javax.swing.JFrame {
                         //putting all the values into the Hashtable
                         userData.put("firstName", firstNameReg.getText());
                         userData.put("lastName", lastNameReg.getText());
-                        userData.put("email", emailBox.getText());
+                        userData.put("email", emailReg.getText());
                         userData.put("password", passReg1.getText());
                         //check for casting the integer into string
-                      //  userData.put("age", (String) ageSpinner.getValue());
+                        try{
+                        userData.put("age",ageField.getText());
+                        }catch(Exception z){}
                         //creating a message type
                         Message register = new Message(MessageType.REGISTER, userData);
 
@@ -431,7 +433,7 @@ public class AppMain extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JSpinner ageSpinner;
+    private javax.swing.JTextField ageField;
     private javax.swing.JLabel doersChat;
     private javax.swing.JTextField emailBox;
     private javax.swing.JTextField emailReg;

@@ -57,17 +57,19 @@ public class DbHandler {
     
     //New method Declaration to enter the data into the database 
     
-    public void register(String firstName, String lastName, String email, String password) {
+    public void register(String firstName, String lastName, String email, String password, String age) {
         //open the connection with the database
         //as we will put try and catch for any exceptions through our connection
         try{
             Statement stmt = dbConnection.createStatement();
-            PreparedStatement register = dbConnection.prepareStatement("insert into user (ID, FIRST_NAME, LAST_NAME, EMAIL, PASSWORD, AGE) values (1, ?, ?, ?, ?, 23)"); 
+            PreparedStatement register = dbConnection.prepareStatement("insert into user (FIRST_NAME, LAST_NAME, EMAIL, PASSWORD, AGE) values (?, ?, ?, ?, ?)"); 
             register.setString(1, firstName);
             register.setString(2, lastName);
             register.setString(3, email);
             register.setString(4, password);
-         
+            register.setString(5, age);
+            //excute the query
+            
             register.executeUpdate();
          
             
@@ -118,4 +120,6 @@ public class DbHandler {
         }
         return null;
     }
+
+  
 }
