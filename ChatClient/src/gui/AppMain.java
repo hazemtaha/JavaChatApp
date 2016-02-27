@@ -306,64 +306,6 @@ public class AppMain extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void registerBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_registerBtnActionPerformed
-<<<<<<< HEAD
-    //((java.awt.CardLayout) (jPanel1.getLayout())).next(jPanel1);
-    // CODE WHEN I PRESS CREATE BUTTON
-                 
-        if(firstNameReg.getText().equals("") || lastNameReg.getText().equals("") || emailReg.getText().equals("") || passReg1.getText().equals("")){
-        // create a jframe
-        JFrame frame = new JFrame("JOptionPane showMessageDialog example");
-        // show a joptionpane dialog using showMessageDialog
-        JOptionPane.showMessageDialog(frame,"Please Enter your Full information");
-        }else{ 
-                 //another check for the password itself
-                 if(passReg1.getText().equals(passReg2.getText())){
-                    System.out.println("matched");
-                    
-                            //check for Email validation
-                            EmailValidator emailValidator = new EmailValidator();
-                            //trim() ->> Returns a copy of the string, with leading and trailing whitespace omitted.
-                            if(!emailValidator.validate(emailReg.getText().trim())) {
-                              JFrame frame = new JFrame("JOptionPane showMessageDialog example");
-                              JOptionPane.showMessageDialog(frame,"Invalid Email ID");   
-                               } else {           
-                                                //check on age
-                                                int age = (Integer) ageSpinner.getValue();
-                                                System.out.println(age);
-                                                
-                                                if(age < 18 || age > 80){
-                                                    JFrame frame = new JFrame("JOptionPane showMessageDialog example");
-                                                    JOptionPane.showMessageDialog(frame,"Age must be between 18 ~ 80");
-                                                }else {
-                                                System.out.println(firstNameReg.getText());  
-                                                //////////////////////////////////////////////////////Testing getting the object
-                                                 Hashtable<String, String> userData = new Hashtable<>();
-                                                 //putting all the values into the Hashtable
-                                                 userData.put("firstName", firstNameReg.getText());
-                                                 userData.put("lastName", lastNameReg.getText());
-                                                 userData.put("email", emailBox.getText());
-                                                 userData.put("password", passReg1.getText());
-                                                //check for casting the integer into string
-//                                                 userData.put("age", (String) ageSpinner.getValue());
-                                                 //creating a message type 
-                                                 //MessageType it's an interface to recieve a specific message type
-                                                 Message register = new Message(MessageType.REGISTER, userData);
-                                               
-                                              //   System.out.println(userData);
-                                      
-                                                 //call clientConnection Class to send the message to the server through the sendClientMsg
-                                                 clientConnection.sendClientMsg(register);
-                                                 //it's already sent handle it through clientHandler on server
-                                                //////////////////////////////////////////////////////////////////////
-                                                 ((java.awt.CardLayout)(panelGroup.getLayout())).next(panelGroup);
-                                                      }
-                                      }    
-                   }else{
-                         System.out.println("Not matched");
-                         JFrame frame = new JFrame("JOptionPane showMessageDialog example");
-                         JOptionPane.showMessageDialog(frame,"Password dosen't match");
-                   }
-=======
 
         //((java.awt.CardLayout) (jPanel1.getLayout())).next(jPanel1);
         // CODE WHEN I PRESS CREATE BUTTON
@@ -373,49 +315,50 @@ public class AppMain extends javax.swing.JFrame {
             // show a joptionpane dialog using showMessageDialog
             JOptionPane.showMessageDialog(frame, "Please Enter your Full information");
         } else //another check for the password itself
-        if (passReg1.getText().equals(passReg2.getText())) {
-            System.out.println("matched");
+        {
+            if (passReg1.getText().equals(passReg2.getText())) {
+                System.out.println("matched");
 
-            //check for Email validation
-            EmailValidator emailValidator = new EmailValidator();
-            //trim() ->> Returns a copy of the string, with leading and trailing whitespace omitted.
-            if (!emailValidator.validate(emailReg.getText().trim())) {
-                JFrame frame = new JFrame("JOptionPane showMessageDialog example");
-                JOptionPane.showMessageDialog(frame, "Invalid Email ID");
-            } else {
-                //check on age
-                int age = (Integer) ageSpinner.getValue();
-                System.out.println(age);
-
-                if (age < 18 || age > 80) {
+                //check for Email validation
+                EmailValidator emailValidator = new EmailValidator();
+                //trim() ->> Returns a copy of the string, with leading and trailing whitespace omitted.
+                if (!emailValidator.validate(emailReg.getText().trim())) {
                     JFrame frame = new JFrame("JOptionPane showMessageDialog example");
-                    JOptionPane.showMessageDialog(frame, "Age must be between 18 ~ 80");
+                    JOptionPane.showMessageDialog(frame, "Invalid Email ID");
                 } else {
-                    System.out.println(firstNameReg.getText());
-                    //////////////////////////////////////////////////////Testing getting the object
-                    Hashtable<String, String> userData = new Hashtable<>();
-                    //putting all the values into the Hashtable
-                    userData.put("firstName", firstNameReg.getText());
-                    userData.put("lastName", lastNameReg.getText());
-                    userData.put("email", emailBox.getText());
-                    userData.put("password", passReg1.getText());
-                    //check for casting the integer into string
-                    userData.put("age", (String) ageSpinner.getValue());
-                    //creating a message type
-                    Message register = new Message(MessageType.REGISTER, userData);
+                    //check on age
+                    int age = (Integer) ageSpinner.getValue();
+                    System.out.println(age);
 
-                    //call clientConnection Class to send the message to the server through the sendClientMsg
-                    clientConnection.sendClientMsg(register);
-                    //it's already sent handle it through clientHandler on server
-                    //////////////////////////////////////////////////////////////////////
-                    ((java.awt.CardLayout) (panelGroup.getLayout())).next(panelGroup);
+                    if (age < 18 || age > 80) {
+                        JFrame frame = new JFrame("JOptionPane showMessageDialog example");
+                        JOptionPane.showMessageDialog(frame, "Age must be between 18 ~ 80");
+                    } else {
+                        System.out.println(firstNameReg.getText());
+                        //////////////////////////////////////////////////////Testing getting the object
+                        Hashtable<String, String> userData = new Hashtable<>();
+                        //putting all the values into the Hashtable
+                        userData.put("firstName", firstNameReg.getText());
+                        userData.put("lastName", lastNameReg.getText());
+                        userData.put("email", emailBox.getText());
+                        userData.put("password", passReg1.getText());
+                        //check for casting the integer into string
+                        userData.put("age", (String) ageSpinner.getValue());
+                        //creating a message type
+                        Message register = new Message(MessageType.REGISTER, userData);
+
+                        //call clientConnection Class to send the message to the server through the sendClientMsg
+                        clientConnection.sendClientMsg(register);
+                        //it's already sent handle it through clientHandler on server
+                        //////////////////////////////////////////////////////////////////////
+                        ((java.awt.CardLayout) (panelGroup.getLayout())).next(panelGroup);
+                    }
                 }
+            } else {
+                System.out.println("Not matched");
+                JFrame frame = new JFrame("JOptionPane showMessageDialog example");
+                JOptionPane.showMessageDialog(frame, "Password dosen't match");
             }
-        } else {
-            System.out.println("Not matched");
-            JFrame frame = new JFrame("JOptionPane showMessageDialog example");
-            JOptionPane.showMessageDialog(frame, "Password dosen't match");
->>>>>>> c1e49da1fe569cd39502e61aea6856bdf9b4a1d4
         }
     }//GEN-LAST:event_registerBtnActionPerformed
 
