@@ -5,8 +5,6 @@
  */
 package chatclient;
 
-import gui.PrivateChatWindow;
-
 /**
  *
  * @author kan
@@ -17,9 +15,6 @@ public class ChatClient {
      * @param args the command line arguments
      */
     public static void main(String[] args) {
-
-        PrivateChatWindow privateChatBox = new PrivateChatWindow();
-        privateChatBox.setVisible(true);
     }
 
 }

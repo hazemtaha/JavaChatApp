@@ -28,6 +28,7 @@ public class AppMain extends javax.swing.JFrame {
     public AppMain() {
         initComponents();
         clientConnection = new ClientConnection(this);
+        clientConnection.start();
     }
 
     /**
@@ -161,7 +162,7 @@ public class AppMain extends javax.swing.JFrame {
                 .addContainerGap(201, Short.MAX_VALUE))
         );
 
-        panelGroup.add(lognPanel, "card3");
+        panelGroup.add(lognPanel, "loginPanel");
 
         createGroupChatBtn.setText("Create Group Chat");
         createGroupChatBtn.addActionListener(new java.awt.event.ActionListener() {
@@ -245,7 +246,7 @@ public class AppMain extends javax.swing.JFrame {
                 .addGap(58, 58, 58))
         );
 
-        panelGroup.add(mainPanel, "card4");
+        panelGroup.add(mainPanel, "mainPanel");
 
         jLabel6.setFont(new java.awt.Font("Ubuntu", 0, 18)); // NOI18N
         jLabel6.setText("Password   :");
@@ -378,7 +379,7 @@ public class AppMain extends javax.swing.JFrame {
                 .addContainerGap(57, Short.MAX_VALUE))
         );
 
-        panelGroup.add(registerPanel, "card2");
+        panelGroup.add(registerPanel, "registerPanel");
 
         getContentPane().add(panelGroup, java.awt.BorderLayout.CENTER);
 
@@ -506,6 +507,7 @@ public class AppMain extends javax.swing.JFrame {
     }
 
     public void setErrorLabel(String errorMsg) {
+        errorLabel.setVisible(true);
         errorLabel.setText(errorMsg);
     }
 
