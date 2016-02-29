@@ -17,7 +17,8 @@ public class Message implements Serializable {
     private String type;
     private Object data;
     private User sender;
-    private ArrayList<Integer> reciever;
+    private ArrayList<Integer> recieverIds;
+    private ArrayList<User> userList;
 
     public Message(String type) {
         this.type = type;
@@ -31,7 +32,7 @@ public class Message implements Serializable {
     public Message(String type, Object data, ArrayList<Integer> reciever) {
         this.type = type;
         this.data = data;
-        this.reciever = reciever;
+        this.recieverIds = reciever;
         this.sender = sender;
     }
 
@@ -52,11 +53,11 @@ public class Message implements Serializable {
     }
 
     public ArrayList<Integer> getReciever() {
-        return reciever;
+        return recieverIds;
     }
 
     public void setReciever(ArrayList<Integer> reciever) {
-        this.reciever = reciever;
+        this.recieverIds = reciever;
     }
 
     public User getSender() {
@@ -65,6 +66,14 @@ public class Message implements Serializable {
 
     public void setSender(User sender) {
         this.sender = sender;
+    }
+
+    public ArrayList<User> getUserList() {
+        return userList;
+    }
+
+    public void setUserList(ArrayList<User> userList) {
+        this.userList = userList;
     }
 
 }

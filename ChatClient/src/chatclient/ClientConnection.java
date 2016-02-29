@@ -6,6 +6,7 @@
 package chatclient;
 
 import gui.AppMain;
+import gui.GroupChatWindow;
 import gui.MainPanel;
 import gui.PrivateChatWindow;
 import java.awt.CardLayout;
@@ -69,17 +70,36 @@ public class ClientConnection extends Thread {
                                     ((AppMain) chatApp).setErrorLabel("Invalid email or password");
                                     break;
                                 case MessageType.MESSAGE:
-                                    Integer recieverId = msg.getReciever().get(0);
                                     MainPanel mainPanel = (MainPanel) chatApp.getMainPanel();
-                                    PrivateChatWindow chatRoom;
-                                    if (mainPanel.isOpened(recieverId) == null) {
-                                        chatRoom = new PrivateChatWindow(msg.getSender(), mainPanel);
+                                    Integer recieverId;
+                                    if (msg.getSender().getId() == user.getId()) {
+                                        recieverId = msg.getReciever().get(0);
                                     } else {
-                                        chatRoom = mainPanel.isOpened(recieverId);
+                                        recieverId = msg.getSender().getId();
                                     }
-                                    chatRoom.setVisible(true);
-                                    chatRoom.AppendMsg(msg);
-                                    //((MainPanel) chatApp.getMainPanel()).getChatRoom().AppendMsg(msg);
+                                    if (msg.getReciever().size() == 1) {
+                                        PrivateChatWindow chatRoom;
+                                        if (mainPanel.isOpened(recieverId) == null) {
+                                            chatRoom = new PrivateChatWindow(msg.getSender(), mainPanel);
+                                            mainPanel.addChat(chatRoom);
+                                            chatRoom.setVisible(true);
+                                        } else {
+                                            chatRoom = mainPanel.isOpened(recieverId);
+                                        }
+                                        chatRoom.AppendMsg(msg);
+                                    } else if (msg.getReciever().size() > 1) {
+                                        GroupChatWindow chatRoom;
+                                        if (mainPanel.isGroupOpened(recieverId) == null) {
+                                            chatRoom = new GroupChatWindow(msg.getUserList(), mainPanel, recieverId);
+                                            mainPanel.addGroupChat(chatRoom);
+                                            chatRoom.setVisible(true);
+
+                                        } else {
+                                            chatRoom = mainPanel.isGroupOpened(recieverId);
+                                        }
+                                        chatRoom.AppendMsg(msg);
+                                    }
+
                                     break;
                             }
                         }
@@ -110,5 +130,9 @@ public class ClientConnection extends Thread {
 
     public ClientConnection getConnection() {
         return this;
+    }
+
+    public int getUserId() {
+        return user.getId();
     }
 }

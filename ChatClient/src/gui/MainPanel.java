@@ -7,9 +7,9 @@ package gui;
 
 import chatclient.ClientConnection;
 import java.util.ArrayList;
+import java.util.List;
 import javax.swing.DefaultListModel;
 import utils.User;
-import utils.interfaces.UserStatues;
 import utils.listhandlers.ContactCellRenderer;
 
 /**
@@ -20,8 +20,10 @@ public class MainPanel extends javax.swing.JPanel {
 
     private DefaultListModel listModel;
     private ArrayList<PrivateChatWindow> chats;
+    private ArrayList<GroupChatWindow> groupChats;
     private AppMain parent;
     private PrivateChatWindow chatRoom;
+    private GroupChatWindow groupChatRoom;
 
     /**
      * Creates new form MainPanel
@@ -33,6 +35,7 @@ public class MainPanel extends javax.swing.JPanel {
         initComponents();
         this.parent = parent;
         chats = new ArrayList<>();
+        groupChats = new ArrayList<>();
     }
 
     /**
@@ -159,8 +162,13 @@ public class MainPanel extends javax.swing.JPanel {
     }// </editor-fold>//GEN-END:initComponents
 
     private void createGroupChatBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_createGroupChatBtnActionPerformed
-        // TODO add your handling code here:
-        //((java.awt.CardLayout) (panelGroup.getLayout())).next(panelGroup);
+        List<User> userList = contactsList.getSelectedValuesList();
+        int chatId = userList.get(0).getId();
+        if (isGroupOpened(chatId) == null) {
+            groupChatRoom = new GroupChatWindow(userList, this, chatId);
+            groupChats.add(groupChatRoom);
+            groupChatRoom.setVisible(true);
+        }
     }//GEN-LAST:event_createGroupChatBtnActionPerformed
 
     private void statusComboBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_statusComboBoxActionPerformed
@@ -174,15 +182,11 @@ public class MainPanel extends javax.swing.JPanel {
     private void contactsListMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_contactsListMouseClicked
         if (evt.getClickCount() == 2 && contactsList.getSelectedValue() instanceof User) {
             User user = (User) contactsList.getSelectedValue();
-//            if (user.getStatus() == UserStatues.AVAILABLE) {
             if (isOpened(user.getId()) == null) {
                 chatRoom = new PrivateChatWindow(user, this);
                 chats.add(chatRoom);
-            } else {
-                chatRoom = isOpened(user.getId());
+                chatRoom.setVisible(true);
             }
-            chatRoom.setVisible(true);
-//            }
         }
 
     }//GEN-LAST:event_contactsListMouseClicked
@@ -196,12 +200,29 @@ public class MainPanel extends javax.swing.JPanel {
         return null;
     }
 
+    public GroupChatWindow isGroupOpened(int chatId) {
+        for (GroupChatWindow chat : groupChats) {
+            if (chat.getChatId() == chatId) {
+                return chat;
+            }
+        }
+        return null;
+    }
+
     public void addChat(PrivateChatWindow chatWindow) {
         chats.add(chatWindow);
     }
 
+    public void addGroupChat(GroupChatWindow chatWindow) {
+        groupChats.add(chatWindow);
+    }
+
     public void removeChat(PrivateChatWindow chatWindow) {
         chats.remove(chatWindow);
+    }
+
+    public void removeGroupChat(GroupChatWindow chatWindow) {
+        groupChats.remove(chatWindow);
     }
 
     public void setNameLabel(User user) {

@@ -75,19 +75,21 @@ public class ClientHandler extends Thread {
                                 sendMsg(new Message(MessageType.AUTH_NO));
                             }
                             break;
-                            
+
                         //case in Regiser Type @mos
                         case MessageType.REGISTER:
                             //recieving the incoming message into the new Hashtable
                             Hashtable<String, String> userData = (Hashtable< String, String>) msg.getData();
-                            
-                            
-                            
-                            
+
                             break;
-                            
+                        // i need to delete the one i'm going to send to from reciever list and add the sender
+                        // handle multiple chats
                         case MessageType.MESSAGE:
                             msg.setSender(user);
+                            if (msg.getReciever().size() > 1) {
+                                msg.setUserList(generateUserList(msg.getReciever()));
+                                msg.setUserList(addReciever(msg.getSender(), msg.getUserList()));
+                            }
                             echoChatMsg(msg);
                             break;
                     }
@@ -107,10 +109,13 @@ public class ClientHandler extends Thread {
 
     public void echoChatMsg(Message msg) {
         ArrayList<Integer> userIds = msg.getReciever();
-        System.out.println("Size in Echo " + clients.size());
         clients.get(user.getId()).sendMsg(msg);
+        System.out.println("Sender Is " + user.getFirstName());
         for (Integer userId : userIds) {
             System.out.println("User Id in Loop :" + userId);
+            if (msg.getReciever().size() > 1) {
+                msg.setUserList(deleteReciever(clients.get(userId).getUser(), msg.getUserList()));
+            }
             clients.get(userId).sendMsg(msg);
         }
     }
@@ -122,6 +127,28 @@ public class ClientHandler extends Thread {
         } catch (IOException ex) {
             Logger.getLogger(ClientHandler.class.getName()).log(Level.SEVERE, null, ex);
         }
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public ArrayList<User> deleteReciever(User user, ArrayList<User> recieverList) {
+        recieverList.remove(user);
+        return recieverList;
+    }
+
+    public ArrayList<User> addReciever(User user, ArrayList<User> recieverList) {
+        recieverList.add(user);
+        return recieverList;
+    }
+
+    public ArrayList<User> generateUserList(ArrayList<Integer> userIds) {
+        ArrayList<User> userList = new ArrayList<>();
+        for (Integer userId : userIds) {
+            userList.add(clients.get(userId).getUser());
+        }
+        return userList;
     }
 
 }
