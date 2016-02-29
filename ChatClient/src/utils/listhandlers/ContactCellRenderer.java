@@ -27,7 +27,8 @@ public class ContactCellRenderer extends JLabel implements ListCellRenderer<User
 
     @Override
     public Component getListCellRendererComponent(JList<? extends User> list, User user, int index, boolean isSelected, boolean cellHasFocus) {
-        ImageIcon imageIcon = new ImageIcon(getClass().getResource("/gui/resources/away.png"));
+        ImageIcon imageIcon = new ImageIcon(getClass().getResource("/gui/resources/"
+                + user.getStatus() + ".png"));
         setBorder(new EmptyBorder(10, 5, 0, 0));
         setIcon(imageIcon);
         setIconTextGap(10);
