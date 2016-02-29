@@ -163,7 +163,7 @@ public class MainPanel extends javax.swing.JPanel {
 
     private void createGroupChatBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_createGroupChatBtnActionPerformed
         List<User> userList = contactsList.getSelectedValuesList();
-        int chatId = userList.get(0).getId();
+        int chatId = generateChatId(userList);
         if (isGroupOpened(chatId) == null) {
             groupChatRoom = new GroupChatWindow(userList, this, chatId);
             groupChats.add(groupChatRoom);
@@ -241,6 +241,16 @@ public class MainPanel extends javax.swing.JPanel {
 
     public ClientConnection getConnection() {
         return parent.getConnection();
+    }
+
+    public int generateChatId(List<User> userList) {
+        int chatId = 0;
+        System.out.println(userList == null);
+        System.out.println("WHats in the user List :" + userList.size());
+        for (User user : userList) {
+            chatId += user.getId();
+        }
+        return chatId;
     }
 
 //    public PrivateChatWindow getChatRoom() {
