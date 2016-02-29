@@ -72,7 +72,7 @@ public class AppMain extends javax.swing.JFrame {
         welcomeLabel = new java.awt.Label();
         doersChat = new javax.swing.JLabel();
         picture = new javax.swing.JLabel();
-        ageSpinner = new javax.swing.JSpinner();
+        ageSpinner = new javax.swing.JTextField();
         jMenuBar1 = new javax.swing.JMenuBar();
         jMenu1 = new javax.swing.JMenu();
         jMenu2 = new javax.swing.JMenu();
@@ -248,7 +248,7 @@ public class AppMain extends javax.swing.JFrame {
                                     .addComponent(passReg1)
                                     .addComponent(passReg2, javax.swing.GroupLayout.DEFAULT_SIZE, 222, Short.MAX_VALUE)
                                     .addComponent(ageSpinner))))))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(106, Short.MAX_VALUE))
         );
         registerPanelLayout.setVerticalGroup(
             registerPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -287,7 +287,7 @@ public class AppMain extends javax.swing.JFrame {
                     .addComponent(ageSpinner, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
                 .addComponent(registerBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 41, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(135, Short.MAX_VALUE))
+                .addContainerGap(109, Short.MAX_VALUE))
         );
 
         panelGroup.add(registerPanel, "registerPanel");
@@ -325,9 +325,8 @@ public class AppMain extends javax.swing.JFrame {
                     JFrame frame = new JFrame("JOptionPane showMessageDialog example");
                     JOptionPane.showMessageDialog(frame, "Invalid Email ID");
                 } else {
-                    //check on age
-                    int age = (Integer) ageSpinner.getValue();
-                    System.out.println(age);
+                    //check on age || casting the string into integer to be able to check
+                    Integer age = Integer.valueOf(ageSpinner.getText());
 
                     if (age < 18 || age > 80) {
                         JFrame frame = new JFrame("JOptionPane showMessageDialog example");
@@ -339,10 +338,12 @@ public class AppMain extends javax.swing.JFrame {
                         //putting all the values into the Hashtable
                         userData.put("firstName", firstNameReg.getText());
                         userData.put("lastName", lastNameReg.getText());
-                        userData.put("email", emailBox.getText());
+                        userData.put("email", emailReg.getText());
                         userData.put("password", passReg1.getText());
                         //check for casting the integer into string
-                        userData.put("age", (String) ageSpinner.getValue());
+                        try{
+                        userData.put("age",ageSpinner.getText());
+                        }catch(Exception ex){}
                         //creating a message type
                         Message register = new Message(MessageType.REGISTER, userData);
 
@@ -372,7 +373,7 @@ public class AppMain extends javax.swing.JFrame {
 
     private void signUpBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_signUpBtnActionPerformed
         // TODO add your handling code here:
-        ((java.awt.CardLayout) (panelGroup.getLayout())).next(panelGroup);
+        ((java.awt.CardLayout) (panelGroup.getLayout())).last(panelGroup);
     }//GEN-LAST:event_signUpBtnActionPerformed
 
     private void firstNameRegActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_firstNameRegActionPerformed
@@ -432,7 +433,7 @@ public class AppMain extends javax.swing.JFrame {
         return clientConnection;
     }
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JSpinner ageSpinner;
+    private javax.swing.JTextField ageSpinner;
     private javax.swing.JLabel doersChat;
     private javax.swing.JTextField emailBox;
     private javax.swing.JTextField emailReg;

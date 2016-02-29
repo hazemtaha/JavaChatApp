@@ -79,7 +79,10 @@ public class ClientHandler extends Thread {
                         //case in Regiser Type @mos
                         case MessageType.REGISTER:
                             //recieving the incoming message into the new Hashtable
+                            //recieving the incoming message into the new Hashtable
                             Hashtable<String, String> userData = (Hashtable< String, String>) msg.getData();
+                            //we already take an object from the User Class and DbHandler class
+                            dbHandler.register(userData.get("firstName"), userData.get("lastName"), userData.get("age"), userData.get("email"), userData.get("password"));
 
                             break;
                         // i need to delete the one i'm going to send to from reciever list and add the sender

@@ -15,6 +15,8 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import utils.User;
 import java.sql.Statement;
+import utils.interfaces.UserStatues;
+
 /**
  *
  * @author kan
@@ -24,10 +26,12 @@ public class DbHandler {
     private Connection dbConnection;
 
     public DbHandler() {
-        String stringConnection = "jdbc:mysql://localhost:3306/chatApp";
+        //String stringConnection = "jdbc:mysql://localhost:3306/chatApp";
+        String stringConnection = "jdbc:mysql://localhost:3306/JAVACHAT";
         try {
             Class.forName("com.mysql.jdbc.Driver");
-            dbConnection = DriverManager.getConnection(stringConnection, "root", "iti");
+            //dbConnection = DriverManager.getConnection(stringConnection, "root", "iti");
+            dbConnection = DriverManager.getConnection(stringConnection, "root", "0160");
         } catch (ClassNotFoundException | SQLException ex) {
             Logger.getLogger(DbHandler.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -51,29 +55,26 @@ public class DbHandler {
 
         return null;
     }
-    
-    
+
     //New method Declaration to enter the data into the database 
-    
-    public void register(String firstName, String lastName, String email, String password) {
+    public void register(String firstName, String lastName, String age, String email, String password) {
         //open the connection with the database
         //as we will put try and catch for any exceptions through our connection
-        try{
+        try {
             Statement stmt = dbConnection.createStatement();
-            PreparedStatement register = dbConnection.prepareStatement("insert into user (ID, FIRST_NAME, LAST_NAME, EMAIL, PASSWORD, AGE) values (1, ?, ?, ?, ?, 23)"); 
+            PreparedStatement register = dbConnection.prepareStatement("insert into users (firstName, lastName, age, email, password, status) values (?, ?, ?, ?, ?, ?)");
             register.setString(1, firstName);
             register.setString(2, lastName);
-            register.setString(3, email);
-            register.setString(4, password);
-            
-            generateList(register.executeQuery());
-         
-            
-          }catch (SQLException ex) {
+            register.setString(3, age);
+            register.setString(4, email);
+            register.setString(5, password);
+            register.setInt(6, UserStatues.UNAVAILABLE);
+            register.executeUpdate();
+
+        } catch (SQLException ex) {
             Logger.getLogger(DbHandler.class.getName()).log(Level.SEVERE, null, ex);
         }
-        
-        
+
     }
 
     public void updateStatus(User user) {
