@@ -89,17 +89,17 @@ public class ClientConnection extends Thread {
                                         chatRoom.AppendMsg(msg);
                                     } else if (msg.getReciever().size() > 1) {
                                         GroupChatWindow chatRoom;
-                                        if (mainPanel.isGroupOpened(recieverId) == null) {
-                                            chatRoom = new GroupChatWindow(msg.getUserList(), mainPanel, recieverId);
+                                        int chatId = mainPanel.generateChatId(msg.getUserList());
+                                        System.out.println(chatId);
+                                        if (mainPanel.isGroupOpened(chatId) == null) {
+                                            chatRoom = new GroupChatWindow(msg.getUserList(), mainPanel, chatId);
                                             mainPanel.addGroupChat(chatRoom);
                                             chatRoom.setVisible(true);
-
                                         } else {
-                                            chatRoom = mainPanel.isGroupOpened(recieverId);
+                                            chatRoom = mainPanel.isGroupOpened(chatId);
                                         }
                                         chatRoom.AppendMsg(msg);
                                     }
-
                                     break;
                             }
                         }

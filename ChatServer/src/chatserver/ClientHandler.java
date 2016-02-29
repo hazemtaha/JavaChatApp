@@ -88,7 +88,6 @@ public class ClientHandler extends Thread {
                             msg.setSender(user);
                             if (msg.getReciever().size() > 1) {
                                 msg.setUserList(generateUserList(msg.getReciever()));
-                                msg.setUserList(addReciever(msg.getSender(), msg.getUserList()));
                             }
                             echoChatMsg(msg);
                             break;
@@ -114,6 +113,8 @@ public class ClientHandler extends Thread {
         for (Integer userId : userIds) {
             System.out.println("User Id in Loop :" + userId);
             if (msg.getReciever().size() > 1) {
+                msg.setUserList(generateUserList(msg.getReciever()));
+                msg.setUserList(addReciever(msg.getSender(), msg.getUserList()));
                 msg.setUserList(deleteReciever(clients.get(userId).getUser(), msg.getUserList()));
             }
             clients.get(userId).sendMsg(msg);
