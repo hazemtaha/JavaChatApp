@@ -23,5 +23,6 @@ public interface MessageType {
     public static final String VALIDATE_EMAIL = "VALIDATE_EMAIL";
     public static final String EMAIL_VALID = "EMAIL_VALID";
     public static final String EMAIL_INVALID = "EMAIL_INVALID";
-    public static final String TEST = "TEST";
+    public static final String FILE_REQUEST = "FILE_REQUEST";
+    public static final String FILE_RESPONSE = "FILE_RESPONSE";
 }

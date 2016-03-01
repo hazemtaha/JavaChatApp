@@ -35,19 +35,9 @@
                       <Component id="sendBtn" min="-2" pref="73" max="-2" attributes="0"/>
                   </Group>
                   <Group type="102" alignment="0" attributes="0">
-                      <Group type="103" groupAlignment="0" attributes="0">
-                          <Component id="jScrollPane1" alignment="0" min="-2" pref="606" max="-2" attributes="0"/>
-                          <Group type="102" alignment="0" attributes="0">
-                              <Component id="emoticonsBtn" min="-2" max="-2" attributes="0"/>
-                              <EmptySpace max="-2" attributes="0"/>
-                              <Component id="sendFileBtn" min="-2" max="-2" attributes="0"/>
-                          </Group>
-                      </Group>
+                      <Component id="jScrollPane1" min="-2" pref="606" max="-2" attributes="0"/>
                       <EmptySpace type="unrelated" max="-2" attributes="0"/>
-                      <Group type="103" groupAlignment="0" attributes="0">
-                          <Component id="deleteUserBtn" max="32767" attributes="0"/>
-                          <Component id="jScrollPane2" max="32767" attributes="0"/>
-                      </Group>
+                      <Component id="jScrollPane2" max="32767" attributes="0"/>
                   </Group>
               </Group>
               <EmptySpace max="-2" attributes="0"/>
@@ -65,17 +55,11 @@
               <EmptySpace min="-2" pref="24" max="-2" attributes="0"/>
               <Component id="jLabel3" min="-2" max="-2" attributes="0"/>
               <EmptySpace type="separate" max="-2" attributes="0"/>
-              <Group type="103" groupAlignment="0" max="-2" attributes="0">
-                  <Component id="jScrollPane2" max="32767" attributes="0"/>
-                  <Component id="jScrollPane1" pref="405" max="32767" attributes="0"/>
+              <Group type="103" groupAlignment="0" attributes="0">
+                  <Component id="jScrollPane2" pref="417" max="32767" attributes="0"/>
+                  <Component id="jScrollPane1" max="32767" attributes="0"/>
               </Group>
-              <EmptySpace max="32767" attributes="0"/>
-              <Group type="103" groupAlignment="3" attributes="0">
-                  <Component id="emoticonsBtn" alignment="3" min="-2" pref="18" max="-2" attributes="0"/>
-                  <Component id="sendFileBtn" alignment="3" min="-2" pref="18" max="-2" attributes="0"/>
-                  <Component id="deleteUserBtn" alignment="3" min="-2" pref="18" max="-2" attributes="0"/>
-              </Group>
-              <EmptySpace max="-2" attributes="0"/>
+              <EmptySpace type="separate" max="-2" attributes="0"/>
               <Group type="103" groupAlignment="0" max="-2" attributes="0">
                   <Component id="sendBtn" pref="52" max="32767" attributes="0"/>
                   <Component id="msgBox" max="32767" attributes="0"/>
@@ -117,21 +101,6 @@
         </Component>
       </SubComponents>
     </Container>
-    <Component class="javax.swing.JButton" name="emoticonsBtn">
-      <Properties>
-        <Property name="text" type="java.lang.String" value="Emotions"/>
-      </Properties>
-    </Component>
-    <Component class="javax.swing.JButton" name="sendFileBtn">
-      <Properties>
-        <Property name="text" type="java.lang.String" value="Attatch Files"/>
-      </Properties>
-    </Component>
-    <Component class="javax.swing.JButton" name="deleteUserBtn">
-      <Properties>
-        <Property name="text" type="java.lang.String" value="Delete from group"/>
-      </Properties>
-    </Component>
     <Component class="javax.swing.JLabel" name="jLabel3">
       <Properties>
         <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">

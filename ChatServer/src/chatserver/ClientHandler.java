@@ -39,9 +39,9 @@ public class ClientHandler extends Thread {
         this.socket = socket;
         dbHandler = new DbHandler();
         try {
-            objWriter = new ObjectOutputStream(this.socket.getOutputStream());
+            objWriter = new ObjectOutputStream(this.getSocket().getOutputStream());
             objWriter.flush();
-            objReader = new ObjectInputStream(this.socket.getInputStream());
+            objReader = new ObjectInputStream(this.getSocket().getInputStream());
             visitors.add(this);
         } catch (IOException ex) {
             Logger.getLogger(ClientHandler.class.getName()).log(Level.SEVERE, null, ex);
@@ -104,6 +104,17 @@ public class ClientHandler extends Thread {
                             data.put("userId", user.getId());
                             data.put("status", user.getStatus());
                             sendMsgToMultiple(new Message(MessageType.UPDATE_CONTACT_LIST, data), user.getContactList());
+                            break;
+                        case MessageType.FILE_REQUEST:
+                            int recieverId = ((ArrayList<Integer>) msg.getReciever()).get(0);
+                            msg.setSender(user);
+                            clients.get(recieverId).sendMsg(msg);
+                            break;
+                        case MessageType.FILE_RESPONSE:
+                            String reciverIp = getSocket().getInetAddress().getHostAddress();
+                            System.out.println(reciverIp);
+                            ((Hashtable<String, Object>) msg.getData()).put("recieverIp", reciverIp);
+                            clients.get(msg.getSender().getId()).sendMsg(msg);
                             break;
                     }
                 }
@@ -178,6 +189,10 @@ public class ClientHandler extends Thread {
             userList.add(clients.get(userId).getUser());
         }
         return userList;
+    }
+
+    public Socket getSocket() {
+        return socket;
     }
 
 }
