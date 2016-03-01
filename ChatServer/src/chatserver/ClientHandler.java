@@ -10,6 +10,7 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
+import java.net.SocketException;
 import java.util.ArrayList;
 import java.util.Hashtable;
 import java.util.logging.Level;
@@ -96,7 +97,7 @@ public class ClientHandler extends Thread {
                             break;
                     }
                 }
-            } catch (EOFException ex) {
+            } catch (EOFException | SocketException ex) {
                 user.setStatus(UserStatues.UNAVAILABLE);
                 dbHandler.updateStatus(user);
                 clients.remove(user.getId());

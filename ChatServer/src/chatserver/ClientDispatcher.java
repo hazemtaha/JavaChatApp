@@ -28,13 +28,20 @@ public class ClientDispatcher extends Thread {
         }
         while (true) {
             try {
-                Socket client = dispatcher.accept();
+                Socket client = getDispatcher().accept();
                 System.out.println("New Client");
                 new ClientHandler(client).start();
             } catch (IOException ex) {
                 Logger.getLogger(ClientDispatcher.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
+    }
+
+    /**
+     * @return the dispatcher
+     */
+    public ServerSocket getDispatcher() {
+        return dispatcher;
     }
 
 }
