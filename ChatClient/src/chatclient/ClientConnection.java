@@ -12,6 +12,8 @@ import gui.GroupChatWindow;
 import gui.MainPanel;
 import gui.PrivateChatWindow;
 import java.awt.CardLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.io.EOFException;
 import java.io.File;
 import java.io.IOException;
@@ -24,6 +26,8 @@ import java.util.Hashtable;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JFileChooser;
+import javax.swing.JMenu;
+import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import utils.Message;
@@ -50,7 +54,8 @@ public class ClientConnection extends Thread {
     public void run() {
         while (true) {
             try {
-                socket = new Socket(InetAddress.getLocalHost(), 8000);
+//                socket = new Socket(InetAddress.getLocalHost(), 8000);
+                socket = new Socket("10.0.1.95", 8000);
                 objWriter = new ObjectOutputStream(getSocket().getOutputStream());
                 objWriter.flush();
                 objReader = new ObjectInputStream(getSocket().getInputStream());
@@ -70,6 +75,17 @@ public class ClientConnection extends Thread {
                                     ((CardLayout) prentPanel.getLayout()).show(prentPanel, "mainPanel");
                                     ((MainPanel) ((AppMain) chatApp).getMainPanel()).setNameLabel(user);
                                     ((MainPanel) ((AppMain) chatApp).getMainPanel()).loadContacts(user);
+                                    JMenuItem logOut = new JMenuItem("Logout", 'l');
+                                    ((JMenu) ((AppMain) chatApp).getMainMenu()).add(logOut);
+                                    logOut.addActionListener(new ActionListener() {
+                                        @Override
+                                        public void actionPerformed(ActionEvent e) {
+                                            sendClientMsg(new Message(MessageType.DISCONNECT));
+                                            ((JMenu) ((AppMain) chatApp).getMainMenu()).remove(logOut);
+                                            ((CardLayout) prentPanel.getLayout()).show(prentPanel, "loginPanel");
+                                        }
+                                    });
+
                                     break;
                                 case MessageType.AUTH_NO:
                                     ((AppMain) chatApp).setErrorLabel("Invalid email or password");

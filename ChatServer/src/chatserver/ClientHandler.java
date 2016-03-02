@@ -50,6 +50,7 @@ public class ClientHandler extends Thread {
 
     @Override
     public void run() {
+        mainLoop:
         while (true) {
             try {
                 Object obj = objReader.readObject();
@@ -115,6 +116,17 @@ public class ClientHandler extends Thread {
                             System.out.println(reciverIp);
                             ((Hashtable<String, Object>) msg.getData()).put("recieverIp", reciverIp);
                             clients.get(msg.getSender().getId()).sendMsg(msg);
+                            break;
+                        case MessageType.DISCONNECT:
+                            user.setStatus(UserStatues.UNAVAILABLE);
+                            dbHandler.updateStatus(user);
+                            clients.remove(user.getId());
+                            visitors.add(this);
+                            Hashtable<String, Integer> userInfo = new Hashtable<>();
+                            userInfo.put("userId", user.getId());
+                            userInfo.put("status", user.getStatus());
+                            sendMsgToMultiple(new Message(MessageType.UPDATE_CONTACT_LIST, userInfo),
+                                    user.getContactList());
                             break;
                     }
                 }
