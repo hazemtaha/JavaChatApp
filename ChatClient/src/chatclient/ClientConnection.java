@@ -19,7 +19,6 @@ import java.net.InetAddress;
 import java.net.Socket;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.swing.JFrame;
 import javax.swing.JPanel;
 import utils.Message;
 import utils.User;
@@ -100,6 +99,11 @@ public class ClientConnection extends Thread {
                                         }
                                         chatRoom.AppendMsg(msg);
                                     }
+                                    break;
+                                    
+                                case MessageType.EMAIL_VALID:
+                                //    ((MainPanel)((AppMain)chatApp).getMainPanel()).
+                                    
                                     break;
                             }
                         }
