@@ -134,7 +134,7 @@
                 <StringItem index="0" value="Online"/>
                 <StringItem index="1" value="Away"/>
                 <StringItem index="2" value="Busy"/>
-                <StringItem index="3" value=" "/>
+                <StringItem index="3" value="Offline"/>
               </StringArray>
             </Property>
           </Properties>

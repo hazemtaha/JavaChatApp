@@ -17,6 +17,7 @@ import java.io.ObjectOutputStream;
 import java.net.ConnectException;
 import java.net.InetAddress;
 import java.net.Socket;
+import java.util.Hashtable;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JFrame;
@@ -60,7 +61,7 @@ public class ClientConnection extends Thread {
                             switch (msg.getType()) {
                                 case MessageType.AUTH_YES:
                                     System.out.println("Authorized");
-                                    user = (User) msg.getData();
+                                    setUser((User) msg.getData());
                                     JPanel prentPanel = ((AppMain) chatApp).getPanelGroup();
                                     ((CardLayout) prentPanel.getLayout()).show(prentPanel, "mainPanel");
                                     ((MainPanel) ((AppMain) chatApp).getMainPanel()).setNameLabel(user);
@@ -101,6 +102,9 @@ public class ClientConnection extends Thread {
                                         chatRoom.AppendMsg(msg);
                                     }
                                     break;
+                                case MessageType.UPDATE_CONTACT_LIST:
+                                    updateContactStatus((Hashtable<String, Integer>) msg.getData());
+                                    break;
                             }
                         }
                     } catch (EOFException ex) {
@@ -128,11 +132,25 @@ public class ClientConnection extends Thread {
         }
     }
 
+    public void updateContactStatus(Hashtable<String, Integer> data) {
+        for (User user : user.getContactList()) {
+            if (user.getId() == data.get("userId")) {
+                user.setStatus(data.get("status"));
+            }
+        }
+        ((MainPanel) ((AppMain) chatApp).getMainPanel()).refreshList();
+        ((MainPanel) ((AppMain) chatApp).getMainPanel()).loadContacts(user);
+    }
+
     public ClientConnection getConnection() {
         return this;
     }
 
-    public int getUserId() {
-        return user.getId();
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
     }
 }

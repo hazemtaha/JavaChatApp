@@ -133,7 +133,7 @@ public class AppMain extends javax.swing.JFrame {
                     .addGroup(lognPanelLayout.createSequentialGroup()
                         .addGap(183, 183, 183)
                         .addComponent(label3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(123, Short.MAX_VALUE))
         );
         lognPanelLayout.setVerticalGroup(
             lognPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -248,7 +248,7 @@ public class AppMain extends javax.swing.JFrame {
                                     .addComponent(passReg1)
                                     .addComponent(passReg2, javax.swing.GroupLayout.DEFAULT_SIZE, 222, Short.MAX_VALUE)
                                     .addComponent(ageSpinner))))))
-                .addContainerGap(106, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         registerPanelLayout.setVerticalGroup(
             registerPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -315,7 +315,8 @@ public class AppMain extends javax.swing.JFrame {
             // show a joptionpane dialog using showMessageDialog
             JOptionPane.showMessageDialog(frame, "Please Enter your Full information");
         } else //another check for the password itself
-         if (passReg1.getText().equals(passReg2.getText())) {
+        {
+            if (passReg1.getText().equals(passReg2.getText())) {
                 System.out.println("matched");
 
                 //check for Email validation
@@ -341,9 +342,10 @@ public class AppMain extends javax.swing.JFrame {
                         userData.put("email", emailReg.getText());
                         userData.put("password", passReg1.getText());
                         //check for casting the integer into string
-                        try{
-                        userData.put("age",ageSpinner.getText());
-                        }catch(Exception ex){}
+                        try {
+                            userData.put("age", ageSpinner.getText());
+                        } catch (Exception ex) {
+                        }
                         //creating a message type
                         Message register = new Message(MessageType.REGISTER, userData);
 
@@ -359,6 +361,7 @@ public class AppMain extends javax.swing.JFrame {
                 JFrame frame = new JFrame("JOptionPane showMessageDialog example");
                 JOptionPane.showMessageDialog(frame, "Password dosen't match");
             }
+        }
     }//GEN-LAST:event_registerBtnActionPerformed
 
     private void loginBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_loginBtnActionPerformed

@@ -59,6 +59,13 @@ public class GroupChatWindow extends javax.swing.JFrame {
         jScrollPane2 = new javax.swing.JScrollPane();
         usersList = new javax.swing.JList<>();
 
+        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+        addWindowListener(new java.awt.event.WindowAdapter() {
+            public void windowClosing(java.awt.event.WindowEvent evt) {
+                formWindowClosing(evt);
+            }
+        });
+
         sendBtn.setText("Send");
         sendBtn.setFocusable(false);
         sendBtn.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
@@ -154,6 +161,10 @@ public class GroupChatWindow extends javax.swing.JFrame {
         clientConnection.sendClientMsg(new Message(MessageType.MESSAGE, msgBox.getText(), reciever));
         msgBox.setText("");
     }//GEN-LAST:event_sendBtnActionPerformed
+
+    private void formWindowClosing(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosing
+        parent.removeGroupChat(this);
+    }//GEN-LAST:event_formWindowClosing
 
     /**
      * @param args the command line arguments
