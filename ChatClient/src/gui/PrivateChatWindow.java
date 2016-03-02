@@ -5,13 +5,11 @@
  */
 package gui;
 
-import chatclient.ChatClient;
 import chatclient.ClientConnection;
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Hashtable;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import javax.swing.JTextArea;
+import javax.swing.JFileChooser;
 import utils.Message;
 import utils.User;
 import utils.interfaces.MessageType;
@@ -51,9 +49,7 @@ public class PrivateChatWindow extends javax.swing.JFrame {
         msgBox = new javax.swing.JTextField();
         jScrollPane1 = new javax.swing.JScrollPane();
         chatBox = new javax.swing.JTextArea();
-        emoticonsBtn = new javax.swing.JButton();
         sendFileBtn = new javax.swing.JButton();
-        groupChatBtn = new javax.swing.JButton();
         nameLabel = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
@@ -83,11 +79,12 @@ public class PrivateChatWindow extends javax.swing.JFrame {
         chatBox.setRows(5);
         jScrollPane1.setViewportView(chatBox);
 
-        emoticonsBtn.setText("Emotions");
-
         sendFileBtn.setText("Attatch Files");
-
-        groupChatBtn.setText("Create A Chat Group");
+        sendFileBtn.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                sendFileBtnActionPerformed(evt);
+            }
+        });
 
         nameLabel.setText("User Name");
 
@@ -96,27 +93,27 @@ public class PrivateChatWindow extends javax.swing.JFrame {
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(msgBox)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(sendButton, javax.swing.GroupLayout.PREFERRED_SIZE, 73, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                        .addContainerGap()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(layout.createSequentialGroup()
-                                .addComponent(emoticonsBtn)
+                                .addComponent(msgBox)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(sendFileBtn)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent(groupChatBtn))
-                            .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 617, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addComponent(sendButton, javax.swing.GroupLayout.PREFERRED_SIZE, 73, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 617, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(0, 0, Short.MAX_VALUE))))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(layout.createSequentialGroup()
+                                .addGap(262, 262, 262)
+                                .addComponent(nameLabel))
+                            .addGroup(layout.createSequentialGroup()
+                                .addContainerGap()
+                                .addComponent(sendFileBtn)))
                         .addGap(0, 0, Short.MAX_VALUE)))
                 .addContainerGap())
-            .addGroup(layout.createSequentialGroup()
-                .addGap(262, 262, 262)
-                .addComponent(nameLabel)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -125,12 +122,9 @@ public class PrivateChatWindow extends javax.swing.JFrame {
                 .addComponent(nameLabel)
                 .addGap(18, 18, 18)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 405, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(emoticonsBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 18, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(sendFileBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 18, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(groupChatBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 18, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(sendFileBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 18, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(sendButton, javax.swing.GroupLayout.DEFAULT_SIZE, 52, Short.MAX_VALUE)
                     .addComponent(msgBox))
@@ -154,6 +148,19 @@ public class PrivateChatWindow extends javax.swing.JFrame {
     private void formWindowClosing(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosing
         parent.removeChat(this);
     }//GEN-LAST:event_formWindowClosing
+
+    private void sendFileBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_sendFileBtnActionPerformed
+        JFileChooser openDialog = new JFileChooser();
+        if (openDialog.showOpenDialog(this) == JFileChooser.APPROVE_OPTION) {
+            File fileChoosed = openDialog.getSelectedFile();
+            ArrayList<Integer> userId = new ArrayList<>();
+            userId.add(chatUser.getId());
+            Hashtable<String, Object> msgData = new Hashtable<>();
+            msgData.put("filePath", fileChoosed);
+            clientConnection.sendClientMsg(new Message(MessageType.FILE_REQUEST, msgData, userId));
+        }
+
+    }//GEN-LAST:event_sendFileBtnActionPerformed
 
     /**
      * @param args the command line arguments
@@ -258,6 +265,10 @@ public class PrivateChatWindow extends javax.swing.JFrame {
         chatBox.append(msg.getSender().getFirstName() + " " + msg.getSender().getLastName() + " : " + msg.getData() + '\n');
     }
 
+    public void AppendMsg(String msg) {
+        chatBox.append(msg);
+    }
+
     public void setNameLabel(User user) {
         nameLabel.setText(user.getFirstName() + " " + user.getLastName());
     }
@@ -267,8 +278,6 @@ public class PrivateChatWindow extends javax.swing.JFrame {
     }
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JTextArea chatBox;
-    private javax.swing.JButton emoticonsBtn;
-    private javax.swing.JButton groupChatBtn;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTextField msgBox;
     private javax.swing.JLabel nameLabel;

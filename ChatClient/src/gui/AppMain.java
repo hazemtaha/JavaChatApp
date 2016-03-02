@@ -11,6 +11,7 @@ import java.util.ArrayList;
 import java.util.Hashtable;
 import javax.swing.DefaultListModel;
 import javax.swing.JFrame;
+import javax.swing.JMenu;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import utils.Message;
@@ -74,7 +75,7 @@ public class AppMain extends javax.swing.JFrame {
         picture = new javax.swing.JLabel();
         ageSpinner = new javax.swing.JTextField();
         jMenuBar1 = new javax.swing.JMenuBar();
-        jMenu1 = new javax.swing.JMenu();
+        mainMenu = new javax.swing.JMenu();
         jMenu2 = new javax.swing.JMenu();
 
         jMenuItem1.setText("jMenuItem1");
@@ -294,8 +295,8 @@ public class AppMain extends javax.swing.JFrame {
 
         getContentPane().add(panelGroup, java.awt.BorderLayout.CENTER);
 
-        jMenu1.setText("File");
-        jMenuBar1.add(jMenu1);
+        mainMenu.setText("Main");
+        jMenuBar1.add(mainMenu);
 
         jMenu2.setText("Edit");
         jMenuBar1.add(jMenu2);
@@ -315,8 +316,7 @@ public class AppMain extends javax.swing.JFrame {
             // show a joptionpane dialog using showMessageDialog
             JOptionPane.showMessageDialog(frame, "Please Enter your Full information");
         } else //another check for the password itself
-        {
-            if (passReg1.getText().equals(passReg2.getText())) {
+         if (passReg1.getText().equals(passReg2.getText())) {
                 System.out.println("matched");
 
                 //check for Email validation
@@ -361,7 +361,6 @@ public class AppMain extends javax.swing.JFrame {
                 JFrame frame = new JFrame("JOptionPane showMessageDialog example");
                 JOptionPane.showMessageDialog(frame, "Password dosen't match");
             }
-        }
     }//GEN-LAST:event_registerBtnActionPerformed
 
     private void loginBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_loginBtnActionPerformed
@@ -435,6 +434,10 @@ public class AppMain extends javax.swing.JFrame {
     public ClientConnection getConnection() {
         return clientConnection;
     }
+
+    public JMenu getMainMenu() {
+        return mainMenu;
+    }
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JTextField ageSpinner;
     private javax.swing.JLabel doersChat;
@@ -450,7 +453,6 @@ public class AppMain extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel7;
     private javax.swing.JLabel jLabel8;
-    private javax.swing.JMenu jMenu1;
     private javax.swing.JMenu jMenu2;
     private javax.swing.JMenuBar jMenuBar1;
     private javax.swing.JMenuItem jMenuItem1;
@@ -459,6 +461,7 @@ public class AppMain extends javax.swing.JFrame {
     private javax.swing.JTextField lastNameReg;
     private javax.swing.JButton loginBtn;
     private javax.swing.JPanel lognPanel;
+    private javax.swing.JMenu mainMenu;
     private gui.MainPanel mainPanel;
     private javax.swing.JPanel panelGroup;
     private javax.swing.JPasswordField passReg1;
