@@ -39,11 +39,10 @@ public class ClientHandler extends Thread {
         this.socket = socket;
         dbHandler = new DbHandler();
         try {
-            objWriter = new ObjectOutputStream(this.socket.getOutputStream());
+            objWriter = new ObjectOutputStream(this.getSocket().getOutputStream());
             objWriter.flush();
-            objReader = new ObjectInputStream(this.socket.getInputStream());
+            objReader = new ObjectInputStream(this.getSocket().getInputStream());
             visitors.add(this);
-            //this.start(); should be started when instanciated
         } catch (IOException ex) {
             Logger.getLogger(ClientHandler.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -51,6 +50,7 @@ public class ClientHandler extends Thread {
 
     @Override
     public void run() {
+        mainLoop:
         while (true) {
             try {
                 Object obj = objReader.readObject();
@@ -71,6 +71,11 @@ public class ClientHandler extends Thread {
                                 visitors.remove(this);
                                 clients.put(user.getId(), this);
                                 sendMsg(new Message(MessageType.AUTH_YES, user));
+                                Hashtable<String, Integer> data = new Hashtable<>();
+                                data.put("userId", user.getId());
+                                data.put("status", user.getStatus());
+                                sendMsgToMultiple(new Message(MessageType.UPDATE_CONTACT_LIST, data),
+                                        user.getContactList());
                             } else {
                                 sendMsg(new Message(MessageType.AUTH_NO));
                             }
@@ -84,8 +89,6 @@ public class ClientHandler extends Thread {
                             dbHandler.register(userData.get("firstName"), userData.get("lastName"), userData.get("age"), userData.get("email"), userData.get("password"));
 
                             break;
-                        // i need to delete the one i'm going to send to from reciever list and add the sender
-                        // handle multiple chats
                         case MessageType.MESSAGE:
                             msg.setSender(user);
                             if (msg.getReciever().size() > 1) {
@@ -115,12 +118,48 @@ public class ClientHandler extends Thread {
                             //user.getContactList().add(friend);
                             
                             
+                        case MessageType.STATE_CHANGE:
+                            user.setStatus((int) msg.getData());
+                            dbHandler.updateStatus(user);
+                            System.out.println("User : " + user.getStatus());
+                            Hashtable<String, Integer> data = new Hashtable<>();
+                            data.put("userId", user.getId());
+                            data.put("status", user.getStatus());
+                            sendMsgToMultiple(new Message(MessageType.UPDATE_CONTACT_LIST, data), user.getContactList());
+                            break;
+                        case MessageType.FILE_REQUEST:
+                            int recieverId = ((ArrayList<Integer>) msg.getReciever()).get(0);
+                            msg.setSender(user);
+                            clients.get(recieverId).sendMsg(msg);
+                            break;
+                        case MessageType.FILE_RESPONSE:
+                            String reciverIp = getSocket().getInetAddress().getHostAddress();
+                            System.out.println(reciverIp);
+                            ((Hashtable<String, Object>) msg.getData()).put("recieverIp", reciverIp);
+                            clients.get(msg.getSender().getId()).sendMsg(msg);
+                            break;
+                        case MessageType.DISCONNECT:
+                            user.setStatus(UserStatues.UNAVAILABLE);
+                            dbHandler.updateStatus(user);
+                            clients.remove(user.getId());
+                            visitors.add(this);
+                            Hashtable<String, Integer> userInfo = new Hashtable<>();
+                            userInfo.put("userId", user.getId());
+                            userInfo.put("status", user.getStatus());
+                            sendMsgToMultiple(new Message(MessageType.UPDATE_CONTACT_LIST, userInfo),
+                                    user.getContactList());
+                            break;
                     }
                 }
             } catch (EOFException ex) {
                 user.setStatus(UserStatues.UNAVAILABLE);
                 dbHandler.updateStatus(user);
                 clients.remove(user.getId());
+                Hashtable<String, Integer> data = new Hashtable<>();
+                data.put("userId", user.getId());
+                data.put("status", user.getStatus());
+                sendMsgToMultiple(new Message(MessageType.UPDATE_CONTACT_LIST, data),
+                        user.getContactList());
                 break;
             } catch (IOException ex) {
                 Logger.getLogger(ClientHandler.class.getName()).log(Level.SEVERE, null, ex);
@@ -145,12 +184,21 @@ public class ClientHandler extends Thread {
         }
     }
 
-    public void sendMsg(Message msg) {
+    synchronized public void sendMsg(Message msg) {
         try {
             objWriter.writeObject(msg);
             objWriter.flush();
         } catch (IOException ex) {
             Logger.getLogger(ClientHandler.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
+    public void sendMsgToMultiple(Message msg, ArrayList<User> recievers) {
+        for (User reciever : recievers) {
+            if (clients.containsKey(reciever.getId())) {
+                System.out.println("Found the user");
+                clients.get(reciever.getId()).sendMsg(msg);
+            }
         }
     }
 
@@ -174,6 +222,10 @@ public class ClientHandler extends Thread {
             userList.add(clients.get(userId).getUser());
         }
         return userList;
+    }
+
+    public Socket getSocket() {
+        return socket;
     }
 
 }

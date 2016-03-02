@@ -30,12 +30,12 @@ public class DbHandler {
     private Connection dbConnection;
 
     public DbHandler() {
-        //String stringConnection = "jdbc:mysql://localhost:3306/chatApp";
-        String stringConnection = "jdbc:mysql://localhost:3306/JAVACHAT";
+        String stringConnection = "jdbc:mysql://localhost:3306/chatApp";
+//        String stringConnection = "jdbc:mysql://localhost:3306/JAVACHAT";
         try {
             Class.forName("com.mysql.jdbc.Driver");
-            //dbConnection = DriverManager.getConnection(stringConnection, "root", "iti");
-            dbConnection = DriverManager.getConnection(stringConnection, "root", "0160");
+            dbConnection = DriverManager.getConnection(stringConnection, "root", "iti");
+//            dbConnection = DriverManager.getConnection(stringConnection, "root", "0160");
         } catch (ClassNotFoundException | SQLException ex) {
             Logger.getLogger(DbHandler.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -60,7 +60,7 @@ public class DbHandler {
         return null;
     }
 
-    //New method Declaration to enter the data into the database 
+    //New method Declaration to enter the data into the database
     public void register(String firstName, String lastName, String age, String email, String password) {
         //open the connection with the database
         //as we will put try and catch for any exceptions through our connection

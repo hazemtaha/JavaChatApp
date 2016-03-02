@@ -15,6 +15,10 @@ import utils.EmailValidator;
 import utils.Message;
 import utils.User;
 import utils.interfaces.MessageType;
+import utils.Message;
+import utils.User;
+import utils.interfaces.MessageType;
+import utils.interfaces.UserStatues;
 import utils.listhandlers.ContactCellRenderer;
 
 /**
@@ -74,7 +78,7 @@ public class MainPanel extends javax.swing.JPanel {
         jLabel14.setFont(new java.awt.Font("Ubuntu", 3, 15)); // NOI18N
         jLabel14.setText("Friends list");
 
-        statusComboBox.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Online", "Away", "Busy", " " }));
+        statusComboBox.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Online", "Away", "Busy", "Offline" }));
         statusComboBox.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 statusComboBoxActionPerformed(evt);
@@ -177,7 +181,22 @@ public class MainPanel extends javax.swing.JPanel {
     }//GEN-LAST:event_createGroupChatBtnActionPerformed
 
     private void statusComboBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_statusComboBoxActionPerformed
-        // TODO add your handling code here:
+        String selectedStatus = (String) statusComboBox.getSelectedItem();
+        System.out.println(selectedStatus);
+        switch (selectedStatus) {
+            case "Online":
+                updateStatus(UserStatues.AVAILABLE);
+                break;
+            case "Offline":
+                updateStatus(UserStatues.UNAVAILABLE);
+                break;
+            case "Busy":
+                updateStatus(UserStatues.BUSY);
+                break;
+            case "Away":
+                updateStatus(UserStatues.AWAY);
+                break;
+        }
     }//GEN-LAST:event_statusComboBoxActionPerformed
 
     private void addFriendBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addFriendBtnActionPerformed
@@ -264,23 +283,29 @@ public class MainPanel extends javax.swing.JPanel {
         contactsList.setCellRenderer(new ContactCellRenderer());
     }
 
+    public void refreshList() {
+        listModel.removeAllElements();
+        contactsList.removeAll();
+    }
+
     public ClientConnection getConnection() {
         return parent.getConnection();
     }
 
     public int generateChatId(List<User> userList) {
         int chatId = 0;
-        System.out.println(userList == null);
-        System.out.println("WHats in the user List :" + userList.size());
         for (User user : userList) {
             chatId += user.getId();
         }
         return chatId;
     }
 
-//    public PrivateChatWindow getChatRoom() {
-//        return chatRoom;
-//    }
+    public void updateStatus(int status) {
+        getConnection().getUser().setStatus(status);
+        getConnection().sendClientMsg(new Message(MessageType.STATE_CHANGE, status));
+        System.out.println(getConnection().getUser().getStatus());
+        System.out.println(status);
+    }
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton addFriendBtn;
     private javax.swing.JList<User> contactsList;

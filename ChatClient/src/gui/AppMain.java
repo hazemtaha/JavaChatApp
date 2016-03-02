@@ -11,6 +11,7 @@ import java.util.ArrayList;
 import java.util.Hashtable;
 import javax.swing.DefaultListModel;
 import javax.swing.JFrame;
+import javax.swing.JMenu;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import utils.Message;
@@ -74,7 +75,7 @@ public class AppMain extends javax.swing.JFrame {
         picture = new javax.swing.JLabel();
         ageSpinner = new javax.swing.JTextField();
         jMenuBar1 = new javax.swing.JMenuBar();
-        jMenu1 = new javax.swing.JMenu();
+        mainMenu = new javax.swing.JMenu();
         jMenu2 = new javax.swing.JMenu();
 
         jMenuItem1.setText("jMenuItem1");
@@ -133,7 +134,7 @@ public class AppMain extends javax.swing.JFrame {
                     .addGroup(lognPanelLayout.createSequentialGroup()
                         .addGap(183, 183, 183)
                         .addComponent(label3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(123, Short.MAX_VALUE))
         );
         lognPanelLayout.setVerticalGroup(
             lognPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -248,7 +249,7 @@ public class AppMain extends javax.swing.JFrame {
                                     .addComponent(passReg1)
                                     .addComponent(passReg2, javax.swing.GroupLayout.DEFAULT_SIZE, 222, Short.MAX_VALUE)
                                     .addComponent(ageSpinner))))))
-                .addContainerGap(106, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         registerPanelLayout.setVerticalGroup(
             registerPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -294,8 +295,8 @@ public class AppMain extends javax.swing.JFrame {
 
         getContentPane().add(panelGroup, java.awt.BorderLayout.CENTER);
 
-        jMenu1.setText("File");
-        jMenuBar1.add(jMenu1);
+        mainMenu.setText("Main");
+        jMenuBar1.add(mainMenu);
 
         jMenu2.setText("Edit");
         jMenuBar1.add(jMenu2);
@@ -341,9 +342,10 @@ public class AppMain extends javax.swing.JFrame {
                         userData.put("email", emailReg.getText());
                         userData.put("password", passReg1.getText());
                         //check for casting the integer into string
-                        try{
-                        userData.put("age",ageSpinner.getText());
-                        }catch(Exception ex){}
+                        try {
+                            userData.put("age", ageSpinner.getText());
+                        } catch (Exception ex) {
+                        }
                         //creating a message type
                         Message register = new Message(MessageType.REGISTER, userData);
 
@@ -433,6 +435,10 @@ public class AppMain extends javax.swing.JFrame {
     public ClientConnection getConnection() {
         return clientConnection;
     }
+
+    public JMenu getMainMenu() {
+        return mainMenu;
+    }
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JTextField ageSpinner;
     private javax.swing.JLabel doersChat;
@@ -448,7 +454,6 @@ public class AppMain extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel7;
     private javax.swing.JLabel jLabel8;
-    private javax.swing.JMenu jMenu1;
     private javax.swing.JMenu jMenu2;
     private javax.swing.JMenuBar jMenuBar1;
     private javax.swing.JMenuItem jMenuItem1;
@@ -457,6 +462,7 @@ public class AppMain extends javax.swing.JFrame {
     private javax.swing.JTextField lastNameReg;
     private javax.swing.JButton loginBtn;
     private javax.swing.JPanel lognPanel;
+    private javax.swing.JMenu mainMenu;
     private gui.MainPanel mainPanel;
     private javax.swing.JPanel panelGroup;
     private javax.swing.JPasswordField passReg1;

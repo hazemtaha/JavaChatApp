@@ -5,20 +5,30 @@
  */
 package chatclient;
 
+import chatclient.filesharing.DownloadHandler;
+import chatclient.filesharing.UploadHandler;
 import gui.AppMain;
 import gui.GroupChatWindow;
 import gui.MainPanel;
 import gui.PrivateChatWindow;
 import java.awt.CardLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.io.EOFException;
+import java.io.File;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.ConnectException;
 import java.net.InetAddress;
 import java.net.Socket;
+import java.util.Hashtable;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.JFileChooser;
+import javax.swing.JMenu;
+import javax.swing.JMenuItem;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import utils.Message;
 import utils.User;
@@ -44,10 +54,11 @@ public class ClientConnection extends Thread {
     public void run() {
         while (true) {
             try {
-                socket = new Socket(InetAddress.getLocalHost(), 8000);
-                objWriter = new ObjectOutputStream(socket.getOutputStream());
+//                socket = new Socket(InetAddress.getLocalHost(), 8000);
+                socket = new Socket("10.0.1.95", 8000);
+                objWriter = new ObjectOutputStream(getSocket().getOutputStream());
                 objWriter.flush();
-                objReader = new ObjectInputStream(socket.getInputStream());
+                objReader = new ObjectInputStream(getSocket().getInputStream());
                 while (true) {
                     try {
                         Object obj = objReader.readObject();
@@ -59,11 +70,22 @@ public class ClientConnection extends Thread {
                             switch (msg.getType()) {
                                 case MessageType.AUTH_YES:
                                     System.out.println("Authorized");
-                                    user = (User) msg.getData();
+                                    setUser((User) msg.getData());
                                     JPanel prentPanel = ((AppMain) chatApp).getPanelGroup();
                                     ((CardLayout) prentPanel.getLayout()).show(prentPanel, "mainPanel");
                                     ((MainPanel) ((AppMain) chatApp).getMainPanel()).setNameLabel(user);
                                     ((MainPanel) ((AppMain) chatApp).getMainPanel()).loadContacts(user);
+                                    JMenuItem logOut = new JMenuItem("Logout", 'l');
+                                    ((JMenu) ((AppMain) chatApp).getMainMenu()).add(logOut);
+                                    logOut.addActionListener(new ActionListener() {
+                                        @Override
+                                        public void actionPerformed(ActionEvent e) {
+                                            sendClientMsg(new Message(MessageType.DISCONNECT));
+                                            ((JMenu) ((AppMain) chatApp).getMainMenu()).remove(logOut);
+                                            ((CardLayout) prentPanel.getLayout()).show(prentPanel, "loginPanel");
+                                        }
+                                    });
+
                                     break;
                                 case MessageType.AUTH_NO:
                                     ((AppMain) chatApp).setErrorLabel("Invalid email or password");
@@ -104,6 +126,52 @@ public class ClientConnection extends Thread {
                                 case MessageType.EMAIL_VALID:
                                 //    ((MainPanel)((AppMain)chatApp).getMainPanel()).
                                     
+                                case MessageType.UPDATE_CONTACT_LIST:
+                                    updateContactStatus((Hashtable<String, Integer>) msg.getData());
+                                    break;
+                                case MessageType.FILE_REQUEST:
+                                    MainPanel parentPanel = (MainPanel) chatApp.getMainPanel();
+                                    if (msg.getSender().getId() == user.getId()) {
+                                        recieverId = msg.getReciever().get(0);
+                                    } else {
+                                        recieverId = msg.getSender().getId();
+                                    }
+                                    PrivateChatWindow chatRoom;
+                                    if (parentPanel.isOpened(recieverId) == null) {
+                                        chatRoom = new PrivateChatWindow(msg.getSender(), parentPanel);
+                                        parentPanel.addChat(chatRoom);
+                                        chatRoom.setVisible(true);
+                                    } else {
+                                        chatRoom = parentPanel.isOpened(recieverId);
+                                    }
+                                    String dialogMsg = msg.getSender().getFirstName() + " " + msg.getSender().getLastName()
+                                            + " is attempting to send you new file, Wanna Accept ?";
+                                    int choice = JOptionPane.showConfirmDialog(chatRoom, dialogMsg, "New File", JOptionPane.YES_NO_OPTION);
+                                    if (choice == JOptionPane.YES_OPTION) {
+                                        JFileChooser saveDialog = new JFileChooser();
+                                        saveDialog.setSelectedFile((File) ((Hashtable<String, Object>) msg.getData()).get("filePath"));
+                                        if (saveDialog.showSaveDialog(chatRoom) == JFileChooser.APPROVE_OPTION) {
+                                            File savePath = saveDialog.getSelectedFile();
+                                            msg.setType(MessageType.FILE_RESPONSE);
+                                            DownloadHandler downloadHandler = new DownloadHandler(savePath.getPath(), chatRoom);
+                                            downloadHandler.start();
+                                            sendClientMsg(msg);
+                                            System.out.println(savePath);
+                                        }
+                                    }
+                                    break;
+                                case MessageType.FILE_RESPONSE:
+                                    parentPanel = (MainPanel) chatApp.getMainPanel();
+                                    if (msg.getSender().getId() == user.getId()) {
+                                        recieverId = msg.getReciever().get(0);
+                                    } else {
+                                        recieverId = msg.getSender().getId();
+                                    }
+                                    chatRoom = parentPanel.isOpened(recieverId);
+                                    File file = (File) ((Hashtable<String, Object>) msg.getData()).get("filePath");
+                                    String ipAddress = (String) ((Hashtable<String, Object>) msg.getData()).get("recieverIp");
+                                    UploadHandler uploadHandler = new UploadHandler(ipAddress, file, chatRoom);
+                                    uploadHandler.start();
                                     break;
                             }
                         }
@@ -132,11 +200,29 @@ public class ClientConnection extends Thread {
         }
     }
 
+    public void updateContactStatus(Hashtable<String, Integer> data) {
+        for (User user : user.getContactList()) {
+            if (user.getId() == data.get("userId")) {
+                user.setStatus(data.get("status"));
+            }
+        }
+        ((MainPanel) ((AppMain) chatApp).getMainPanel()).refreshList();
+        ((MainPanel) ((AppMain) chatApp).getMainPanel()).loadContacts(user);
+    }
+
     public ClientConnection getConnection() {
         return this;
     }
 
-    public int getUserId() {
-        return user.getId();
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
+    }
+
+    public Socket getSocket() {
+        return socket;
     }
 }
