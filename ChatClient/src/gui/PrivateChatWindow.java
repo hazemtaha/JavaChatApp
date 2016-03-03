@@ -50,6 +50,7 @@ public class PrivateChatWindow extends javax.swing.JFrame {
     private StyledDocument chatBoxDoc;
     private SimpleAttributeSet attSet;
     private int caretPosition = 0;
+    private boolean isVisible = false;
 
     /**
      * Creates new form Registeration
@@ -61,8 +62,11 @@ public class PrivateChatWindow extends javax.swing.JFrame {
         chatBox.setEditable(false);
         clientConnection = parent.getConnection();
         setNameLabel(chatUser);
+        sendButton.setVisible(true);
+        progressBar.setVisible(false);
         // /////////////////////////
-        chatSession = new File(clientConnection.getUser().getId() + "/session_" + chatUser.getId() + ".chat");
+        chatSession = new File("chats_" + clientConnection.getUser().getId()
+                + "/session_" + chatUser.getId() + ".cs");
         //////////////////////////
         chatBoxDoc = chatBox.getStyledDocument();
         attSet = new SimpleAttributeSet();
@@ -98,6 +102,7 @@ public class PrivateChatWindow extends javax.swing.JFrame {
         nameLabel = new javax.swing.JLabel();
         jScrollPane2 = new javax.swing.JScrollPane();
         chatBox = new javax.swing.JTextPane();
+        progressBar = new javax.swing.JProgressBar();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         addWindowListener(new java.awt.event.WindowAdapter() {
@@ -141,22 +146,21 @@ public class PrivateChatWindow extends javax.swing.JFrame {
             .addGroup(layout.createSequentialGroup()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(layout.createSequentialGroup()
-                                .addGap(262, 262, 262)
-                                .addComponent(nameLabel))
-                            .addGroup(layout.createSequentialGroup()
-                                .addContainerGap()
-                                .addComponent(sendFileBtn)))
-                        .addGap(0, 284, Short.MAX_VALUE))
-                    .addGroup(layout.createSequentialGroup()
                         .addContainerGap()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(layout.createSequentialGroup()
                                 .addComponent(msgBox)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(sendButton, javax.swing.GroupLayout.PREFERRED_SIZE, 73, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addComponent(jScrollPane2))))
+                            .addComponent(jScrollPane2)))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(262, 262, 262)
+                        .addComponent(nameLabel))
+                    .addGroup(layout.createSequentialGroup()
+                        .addContainerGap()
+                        .addComponent(sendFileBtn)
+                        .addGap(18, 18, 18)
+                        .addComponent(progressBar, javax.swing.GroupLayout.PREFERRED_SIZE, 480, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -166,9 +170,11 @@ public class PrivateChatWindow extends javax.swing.JFrame {
                 .addComponent(nameLabel)
                 .addGap(18, 18, 18)
                 .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 393, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(sendFileBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 18, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(sendFileBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(progressBar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(sendButton, javax.swing.GroupLayout.DEFAULT_SIZE, 52, Short.MAX_VALUE)
                     .addComponent(msgBox))
@@ -205,10 +211,12 @@ public class PrivateChatWindow extends javax.swing.JFrame {
         JFileChooser openDialog = new JFileChooser();
         if (openDialog.showOpenDialog(this) == JFileChooser.APPROVE_OPTION) {
             File fileChoosed = openDialog.getSelectedFile();
+            System.out.println(fileChoosed);
             ArrayList<Integer> userId = new ArrayList<>();
             userId.add(chatUser.getId());
             Hashtable<String, Object> msgData = new Hashtable<>();
             msgData.put("filePath", fileChoosed);
+            msgData.put("fileSize", fileChoosed.length());
             clientConnection.sendClientMsg(new Message(MessageType.FILE_REQUEST, msgData, userId));
         }
 
@@ -375,11 +383,31 @@ public class PrivateChatWindow extends javax.swing.JFrame {
             }
         }
     }
+
+    public void toggleProgressBar() {
+        if (isVisible) {
+            progressBar.setVisible(false);
+            isVisible = false;
+        } else {
+            progressBar.setVisible(true);
+            isVisible = true;
+        }
+    }
+
+    public void setProgressMaximum(int value) {
+        progressBar.setMaximum(value);
+
+    }
+
+    public void setProgress(int percent) {
+        progressBar.setValue(percent);
+    }
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JTextPane chatBox;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JTextField msgBox;
     private javax.swing.JLabel nameLabel;
+    private javax.swing.JProgressBar progressBar;
     private javax.swing.JButton sendButton;
     private javax.swing.JButton sendFileBtn;
     // End of variables declaration//GEN-END:variables

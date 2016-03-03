@@ -64,10 +64,10 @@ public class ClientHandler extends Thread {
                                     = (Hashtable< String, String>) msg.getData();
                             user = dbHandler.login(credentials.get("email"), credentials.get("password"));
                             if (user != null) {
-                                user = dbHandler.getContactList(user);
                                 if (clients.containsKey(user.getId())) {
                                     sendMsg(new Message(MessageType.AUTH_NO, "1"));
                                 } else {
+                                    user = dbHandler.getContactList(user);
                                     user.setStatus(UserStatues.AVAILABLE);
                                     System.out.println("Contact List Size : " + user.getContactList().size());
                                     dbHandler.updateStatus(user);
@@ -100,29 +100,24 @@ public class ClientHandler extends Thread {
                             }
                             echoChatMsg(msg);
                             break;
-                         //recieving the emial here   
+                        //recieving the emial here
                         case MessageType.VALIDATE_EMAIL:
                             //recieve the message of mail here in string
-                            
+
                             String addMail = (String) msg.getData();
                             //here i send the mail and the existing user
                             //create an object from the user
                             User friend = dbHandler.addFriend(addMail, user);
-                            
-                            
+
                             //friend = dbHandler.getContactList(friend);
-                            
                             //get the friend from the data base to add him on the existing user
                             //user = dbHandler.getContactList(user);
-                            
                             //here i send the message to the user with the recent cotact list
-                            sendMsg(new Message(MessageType.EMAIL_VALID,friend));
-                            
-                            //here i have the user 
-                            // now the user went to the existing user
-                            //user.getContactList().add(friend);
-                            
-                            
+                            sendMsg(new Message(MessageType.EMAIL_VALID, friend));
+
+                        //here i have the user
+                        // now the user went to the existing user
+                        //user.getContactList().add(friend);
                         case MessageType.STATE_CHANGE:
                             user.setStatus((int) msg.getData());
                             dbHandler.updateStatus(user);

@@ -86,7 +86,7 @@ public class ClientConnection extends Thread {
                                             ((CardLayout) prentPanel.getLayout()).show(prentPanel, "loginPanel");
                                         }
                                     });
-                                    File sessionStorage = new File(String.valueOf(user.getId()));
+                                    File sessionStorage = new File(String.valueOf("chats_" + user.getId()));
                                     if (!sessionStorage.isDirectory()) {
                                         sessionStorage.mkdir();
                                     }
@@ -167,7 +167,8 @@ public class ClientConnection extends Thread {
                                         if (saveDialog.showSaveDialog(chatRoom) == JFileChooser.APPROVE_OPTION) {
                                             File savePath = saveDialog.getSelectedFile();
                                             msg.setType(MessageType.FILE_RESPONSE);
-                                            DownloadHandler downloadHandler = new DownloadHandler(savePath.getPath(), chatRoom);
+                                            int fileSize = Math.round((long) ((Hashtable<String, Object>) msg.getData()).get("fileSize") / 1024);
+                                            DownloadHandler downloadHandler = new DownloadHandler(savePath.getPath(), fileSize, chatRoom);
                                             downloadHandler.start();
                                             sendClientMsg(msg);
                                             System.out.println(savePath);
