@@ -10,6 +10,7 @@ import chatclient.filesharing.UploadHandler;
 import gui.AppMain;
 import gui.GroupChatWindow;
 import gui.MainPanel;
+import gui.Notification;
 import gui.PrivateChatWindow;
 import java.awt.CardLayout;
 import java.awt.event.ActionEvent;
@@ -54,8 +55,8 @@ public class ClientConnection extends Thread {
     public void run() {
         while (true) {
             try {
-//                socket = new Socket(InetAddress.getLocalHost(), 8000);
-                socket = new Socket("10.0.1.95", 8000);
+                socket = new Socket(InetAddress.getLocalHost(), 8000);
+//                socket = new Socket("10.0.1.95", 8000);
                 objWriter = new ObjectOutputStream(getSocket().getOutputStream());
                 objWriter.flush();
                 objReader = new ObjectInputStream(getSocket().getInputStream());
@@ -85,10 +86,19 @@ public class ClientConnection extends Thread {
                                             ((CardLayout) prentPanel.getLayout()).show(prentPanel, "loginPanel");
                                         }
                                     });
-
+                                    File sessionStorage = new File(String.valueOf(user.getId()));
+                                    if (!sessionStorage.isDirectory()) {
+                                        sessionStorage.mkdir();
+                                    }
                                     break;
                                 case MessageType.AUTH_NO:
-                                    ((AppMain) chatApp).setErrorLabel("Invalid email or password");
+                                    String errorMsg;
+                                    if (msg.getData().equals("1")) {
+                                        errorMsg = "Already Logged In";
+                                    } else {
+                                        errorMsg = "Invalid email or password";
+                                    }
+                                    JOptionPane.showMessageDialog(((AppMain) chatApp), errorMsg, "Error Message", JOptionPane.ERROR_MESSAGE);
                                     break;
                                 case MessageType.MESSAGE:
                                     MainPanel mainPanel = (MainPanel) chatApp.getMainPanel();
@@ -179,7 +189,7 @@ public class ClientConnection extends Thread {
                 }
             } catch (ConnectException ex) {
                 System.out.println("Server Is Offline");
-                continue;
+//                continue;
             } catch (IOException ex) {
                 Logger.getLogger(ClientConnection.class.getName()).log(Level.SEVERE, null, ex);
             }
@@ -200,6 +210,22 @@ public class ClientConnection extends Thread {
         for (User user : user.getContactList()) {
             if (user.getId() == data.get("userId")) {
                 user.setStatus(data.get("status"));
+                String status = "";
+                switch (data.get("status")) {
+                    case 0:
+                        status = "Offline";
+                        break;
+                    case 1:
+                        status = "Online";
+                        break;
+                    case 2:
+                        status = "Busy";
+                        break;
+                    case 3:
+                        status = "Away";
+                        break;
+                }
+                new Notification(user + " Is Now " + status);
             }
         }
         ((MainPanel) ((AppMain) chatApp).getMainPanel()).refreshList();

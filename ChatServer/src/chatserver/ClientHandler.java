@@ -65,19 +65,23 @@ public class ClientHandler extends Thread {
                             user = dbHandler.login(credentials.get("email"), credentials.get("password"));
                             if (user != null) {
                                 user = dbHandler.getContactList(user);
-                                user.setStatus(UserStatues.AVAILABLE);
-                                System.out.println("Contact List Size : " + user.getContactList().size());
-                                dbHandler.updateStatus(user);
-                                visitors.remove(this);
-                                clients.put(user.getId(), this);
-                                sendMsg(new Message(MessageType.AUTH_YES, user));
-                                Hashtable<String, Integer> data = new Hashtable<>();
-                                data.put("userId", user.getId());
-                                data.put("status", user.getStatus());
-                                sendMsgToMultiple(new Message(MessageType.UPDATE_CONTACT_LIST, data),
-                                        user.getContactList());
+                                if (clients.containsKey(user.getId())) {
+                                    sendMsg(new Message(MessageType.AUTH_NO, "1"));
+                                } else {
+                                    user.setStatus(UserStatues.AVAILABLE);
+                                    System.out.println("Contact List Size : " + user.getContactList().size());
+                                    dbHandler.updateStatus(user);
+                                    visitors.remove(this);
+                                    clients.put(user.getId(), this);
+                                    sendMsg(new Message(MessageType.AUTH_YES, user));
+                                    Hashtable<String, Integer> data = new Hashtable<>();
+                                    data.put("userId", user.getId());
+                                    data.put("status", user.getStatus());
+                                    sendMsgToMultiple(new Message(MessageType.UPDATE_CONTACT_LIST, data),
+                                            user.getContactList());
+                                }
                             } else {
-                                sendMsg(new Message(MessageType.AUTH_NO));
+                                sendMsg(new Message(MessageType.AUTH_NO, "0"));
                             }
                             break;
 
@@ -131,14 +135,18 @@ public class ClientHandler extends Thread {
                     }
                 }
             } catch (EOFException ex) {
-                user.setStatus(UserStatues.UNAVAILABLE);
-                dbHandler.updateStatus(user);
-                clients.remove(user.getId());
-                Hashtable<String, Integer> data = new Hashtable<>();
-                data.put("userId", user.getId());
-                data.put("status", user.getStatus());
-                sendMsgToMultiple(new Message(MessageType.UPDATE_CONTACT_LIST, data),
-                        user.getContactList());
+                if (user != null) {
+                    user.setStatus(UserStatues.UNAVAILABLE);
+                    dbHandler.updateStatus(user);
+                    clients.remove(user.getId());
+                    Hashtable<String, Integer> data = new Hashtable<>();
+                    data.put("userId", user.getId());
+                    data.put("status", user.getStatus());
+                    sendMsgToMultiple(new Message(MessageType.UPDATE_CONTACT_LIST, data),
+                            user.getContactList());
+                } else {
+                    visitors.remove(this);
+                }
                 break;
             } catch (IOException ex) {
                 Logger.getLogger(ClientHandler.class.getName()).log(Level.SEVERE, null, ex);
@@ -159,7 +167,9 @@ public class ClientHandler extends Thread {
                 msg.setUserList(addReciever(msg.getSender(), msg.getUserList()));
                 msg.setUserList(deleteReciever(clients.get(userId).getUser(), msg.getUserList()));
             }
-            clients.get(userId).sendMsg(msg);
+            if (clients.containsKey(userId)) {
+                clients.get(userId).sendMsg(msg);
+            }
         }
     }
 
@@ -198,7 +208,9 @@ public class ClientHandler extends Thread {
     public ArrayList<User> generateUserList(ArrayList<Integer> userIds) {
         ArrayList<User> userList = new ArrayList<>();
         for (Integer userId : userIds) {
-            userList.add(clients.get(userId).getUser());
+            if (clients.containsKey(userId)) {
+                userList.add(clients.get(userId).getUser());
+            }
         }
         return userList;
     }

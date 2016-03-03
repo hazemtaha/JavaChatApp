@@ -6,10 +6,31 @@
 package gui;
 
 import chatclient.ClientConnection;
+import java.awt.Color;
+import java.awt.event.ActionEvent;
+import java.awt.event.KeyEvent;
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Hashtable;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.AbstractAction;
+import javax.swing.JComponent;
 import javax.swing.JFileChooser;
+import javax.swing.KeyStroke;
+import javax.swing.text.BadLocationException;
+import javax.swing.text.Caret;
+import javax.swing.text.DefaultCaret;
+import javax.swing.text.SimpleAttributeSet;
+import javax.swing.text.StyleConstants;
+import javax.swing.text.StyledDocument;
 import utils.Message;
 import utils.User;
 import utils.interfaces.MessageType;
@@ -23,6 +44,12 @@ public class PrivateChatWindow extends javax.swing.JFrame {
     private ClientConnection clientConnection;
     private User chatUser;
     private MainPanel parent;
+    // private FileReader reader;
+    private FileWriter writer;
+    private File chatSession;
+    private StyledDocument chatBoxDoc;
+    private SimpleAttributeSet attSet;
+    private int caretPosition = 0;
 
     /**
      * Creates new form Registeration
@@ -31,9 +58,29 @@ public class PrivateChatWindow extends javax.swing.JFrame {
         initComponents();
         this.parent = parent;
         this.chatUser = chatUser;
-        chatBox.setEnabled(false);
+        chatBox.setEditable(false);
         clientConnection = parent.getConnection();
         setNameLabel(chatUser);
+        // /////////////////////////
+        chatSession = new File(clientConnection.getUser().getId() + "/session_" + chatUser.getId() + ".chat");
+        //////////////////////////
+        chatBoxDoc = chatBox.getStyledDocument();
+        attSet = new SimpleAttributeSet();
+        StyleConstants.setLineSpacing(attSet, .3f);
+        StyleConstants.setForeground(attSet, Color.BLACK);
+        chatBoxDoc.setParagraphAttributes(0, chatBoxDoc.getLength(), attSet, true);
+        //////////////////////////////
+        loadSession();
+//         close chat window when escape pressed
+        KeyStroke escKey = KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0);
+        getRootPane().getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(escKey, "Escape");
+        getRootPane().getActionMap().put("Escape", new AbstractAction() {
+            public void actionPerformed(ActionEvent e) {
+                PrivateChatWindow.this.dispose();
+                parent.removeChat(PrivateChatWindow.this);
+            }
+        });
+
     }
 
     /**
@@ -47,10 +94,10 @@ public class PrivateChatWindow extends javax.swing.JFrame {
 
         sendButton = new javax.swing.JButton();
         msgBox = new javax.swing.JTextField();
-        jScrollPane1 = new javax.swing.JScrollPane();
-        chatBox = new javax.swing.JTextArea();
         sendFileBtn = new javax.swing.JButton();
         nameLabel = new javax.swing.JLabel();
+        jScrollPane2 = new javax.swing.JScrollPane();
+        chatBox = new javax.swing.JTextPane();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         addWindowListener(new java.awt.event.WindowAdapter() {
@@ -75,10 +122,6 @@ public class PrivateChatWindow extends javax.swing.JFrame {
             }
         });
 
-        chatBox.setColumns(20);
-        chatBox.setRows(5);
-        jScrollPane1.setViewportView(chatBox);
-
         sendFileBtn.setText("Attatch Files");
         sendFileBtn.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -88,22 +131,15 @@ public class PrivateChatWindow extends javax.swing.JFrame {
 
         nameLabel.setText("User Name");
 
+        jScrollPane2.setViewportView(chatBox);
+        chatBox.getAccessibleContext().setAccessibleName("");
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addContainerGap()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(layout.createSequentialGroup()
-                                .addComponent(msgBox)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(sendButton, javax.swing.GroupLayout.PREFERRED_SIZE, 73, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addGroup(layout.createSequentialGroup()
-                                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 617, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(0, 0, Short.MAX_VALUE))))
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(layout.createSequentialGroup()
@@ -112,7 +148,15 @@ public class PrivateChatWindow extends javax.swing.JFrame {
                             .addGroup(layout.createSequentialGroup()
                                 .addContainerGap()
                                 .addComponent(sendFileBtn)))
-                        .addGap(0, 0, Short.MAX_VALUE)))
+                        .addGap(0, 284, Short.MAX_VALUE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addContainerGap()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(msgBox)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(sendButton, javax.swing.GroupLayout.PREFERRED_SIZE, 73, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(jScrollPane2))))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -121,10 +165,10 @@ public class PrivateChatWindow extends javax.swing.JFrame {
                 .addGap(24, 24, 24)
                 .addComponent(nameLabel)
                 .addGap(18, 18, 18)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 405, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(sendFileBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 18, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 393, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(sendFileBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 18, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(sendButton, javax.swing.GroupLayout.DEFAULT_SIZE, 52, Short.MAX_VALUE)
                     .addComponent(msgBox))
@@ -146,7 +190,15 @@ public class PrivateChatWindow extends javax.swing.JFrame {
     }//GEN-LAST:event_sendButtonActionPerformed
 
     private void formWindowClosing(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosing
-        parent.removeChat(this);
+        try {
+            if (writer != null) {
+                writer.close();
+            }
+        } catch (IOException ex) {
+            Logger.getLogger(PrivateChatWindow.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            parent.removeChat(this);
+        }
     }//GEN-LAST:event_formWindowClosing
 
     private void sendFileBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_sendFileBtnActionPerformed
@@ -262,11 +314,27 @@ public class PrivateChatWindow extends javax.swing.JFrame {
     }
 
     public void AppendMsg(Message msg) {
-        chatBox.append(msg.getSender().getFirstName() + " " + msg.getSender().getLastName() + " : " + msg.getData() + '\n');
+        String line = msg.getSender().getFirstName() + " " + msg.getSender().getLastName()
+                + " : " + msg.getData() + '\n';
+        try {
+            chatBoxDoc.insertString(chatBoxDoc.getLength(), line, attSet);
+            System.out.println("Before : " + caretPosition);
+        } catch (BadLocationException ex) {
+            Logger.getLogger(PrivateChatWindow.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        saveSession();
+        caretPosition = chatBoxDoc.getLength();
+        chatBox.setCaretPosition(caretPosition);
     }
 
     public void AppendMsg(String msg) {
-        chatBox.append(msg);
+        try {
+            chatBoxDoc.insertString(chatBoxDoc.getLength(), msg, attSet);
+            caretPosition = chatBoxDoc.getLength();
+        } catch (BadLocationException ex) {
+            Logger.getLogger(PrivateChatWindow.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        chatBox.setCaretPosition(caretPosition);
     }
 
     public void setNameLabel(User user) {
@@ -276,9 +344,40 @@ public class PrivateChatWindow extends javax.swing.JFrame {
     public int getChatId() {
         return chatUser.getId();
     }
+
+    public void saveSession() {
+        try {
+            writer = new FileWriter(chatSession, true);
+            System.out.println("Length : " + chatBoxDoc.getLength());
+            System.out.println("After : " + caretPosition);
+            writer.write(chatBoxDoc.getText(caretPosition, chatBoxDoc.getLength() - caretPosition));
+            writer.flush();
+        } catch (IOException ex) {
+            Logger.getLogger(PrivateChatWindow.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (BadLocationException ex) {
+            Logger.getLogger(PrivateChatWindow.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
+    public void loadSession() {
+//        char[] buffer = new char[1024];
+        String line;
+        if (chatSession.exists()) {
+            try {
+                BufferedReader reader = new BufferedReader(new FileReader(chatSession));
+                while ((line = reader.readLine()) != null) {
+//                    session += new String(buffer);
+                    AppendMsg(line + '\n');
+                }
+                reader.close();
+            } catch (IOException ex) {
+                Logger.getLogger(PrivateChatWindow.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+    }
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JTextArea chatBox;
-    private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JTextPane chatBox;
+    private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JTextField msgBox;
     private javax.swing.JLabel nameLabel;
     private javax.swing.JButton sendButton;
