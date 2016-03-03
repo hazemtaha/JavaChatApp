@@ -11,6 +11,12 @@ import java.util.Iterator;
 import java.util.List;
 import javax.swing.DefaultListModel;
 import javax.swing.JOptionPane;
+import javax.swing.JFrame;
+import javax.swing.JOptionPane;
+import utils.EmailValidator;
+import utils.Message;
+import utils.User;
+import utils.interfaces.MessageType;
 import utils.Message;
 import utils.User;
 import utils.interfaces.MessageType;
@@ -210,7 +216,27 @@ public class MainPanel extends javax.swing.JPanel {
     }//GEN-LAST:event_statusComboBoxActionPerformed
 
     private void addFriendBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addFriendBtnActionPerformed
-        // TODO add your handling code here:
+/////////////***************************************************************************************************
+        // ADD FRIEND HERE ;
+        JFrame frame = new JFrame("InputDialog Example #2");
+        String friendMail = JOptionPane.showInputDialog(
+                frame,
+                "Enter your friend's Email Address",
+                "ADD FRIEND",
+                JOptionPane.PLAIN_MESSAGE
+        );
+        // System.out.println(friendMail);
+        //here i send this message as email to the server to handle it , then the server will recieve it
+        //check for Email validation
+        EmailValidator emailValidator = new EmailValidator();
+        //trim() ->> Returns a copy of the string, with leading and trailing whitespace omitted.
+        if (!emailValidator.validate(friendMail.trim())) {
+            JOptionPane.showMessageDialog(frame, "Invalid Email ID");
+        } else {
+            Message email = new Message(MessageType.VALIDATE_EMAIL, friendMail);
+            //as the MainPanel is a child from the AppMain we had an object from the app main the get the current connection
+            parent.getConnection().sendClientMsg(email);
+        }
     }//GEN-LAST:event_addFriendBtnActionPerformed
 
     private void contactsListMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_contactsListMouseClicked

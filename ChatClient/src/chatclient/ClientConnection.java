@@ -56,7 +56,7 @@ public class ClientConnection extends Thread {
         while (true) {
             try {
                 socket = new Socket(InetAddress.getLocalHost(), 8000);
-//                socket = new Socket("10.0.1.95", 8000);
+                //     socket = new Socket("10.0.1.95", 8000);
                 objWriter = new ObjectOutputStream(getSocket().getOutputStream());
                 objWriter.flush();
                 objReader = new ObjectInputStream(getSocket().getInputStream());
@@ -131,6 +131,14 @@ public class ClientConnection extends Thread {
                                         }
                                         chatRoom.AppendMsg(msg);
                                     }
+                                    break;
+
+                                case MessageType.EMAIL_VALID:
+                                    User friend = (User) msg.getData();
+                                    user.getContactList().add(friend);
+                                    ((MainPanel) ((AppMain) chatApp).getMainPanel()).refreshList();
+                                    ((MainPanel) ((AppMain) chatApp).getMainPanel()).loadContacts(user);
+
                                     break;
                                 case MessageType.UPDATE_CONTACT_LIST:
                                     updateContactStatus((Hashtable<String, Integer>) msg.getData());

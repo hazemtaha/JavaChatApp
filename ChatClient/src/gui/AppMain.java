@@ -326,7 +326,7 @@ public class AppMain extends javax.swing.JFrame {
                     JFrame frame = new JFrame("JOptionPane showMessageDialog example");
                     JOptionPane.showMessageDialog(frame, "Invalid Email ID");
                 } else {
-                    //check on age || casting the string into integer to be able to check
+                    //check on kage || casting the string into integer to be able to check
                     Integer age = Integer.valueOf(ageSpinner.getText());
 
                     if (age < 18 || age > 80) {
@@ -375,7 +375,8 @@ public class AppMain extends javax.swing.JFrame {
 
     private void signUpBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_signUpBtnActionPerformed
         // TODO add your handling code here:
-        ((java.awt.CardLayout) (panelGroup.getLayout())).last(panelGroup);
+        ((java.awt.CardLayout) (panelGroup.getLayout())).next(panelGroup);
+        //((java.awt.CardLayout) (panelGroup.getLayout())).last(panelGroup);
     }//GEN-LAST:event_signUpBtnActionPerformed
 
     private void firstNameRegActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_firstNameRegActionPerformed
