@@ -81,29 +81,32 @@ public class ClientHandler extends Thread {
                                     = (Hashtable< String, String>) msg.getData();
                             user = dbHandler.login(credentials.get("email"), credentials.get("password"));
                             if (user != null) {
-                                user = dbHandler.getContactList(user);
-                                user.setStatus(UserStatues.AVAILABLE);
-                                System.out.println("Contact List Size : " + user.getContactList().size());
-                                dbHandler.updateStatus(user);
-                                getVisitors().remove(this);
-                                getClients().put(user.getId(), this);
-                                sendMsg(new Message(MessageType.AUTH_YES, user));
-                                Hashtable<String, Integer> data = new Hashtable<>();
-                                data.put("userId", user.getId());
-                                data.put("status", user.getStatus());
-                                sendMsgToMultiple(new Message(MessageType.UPDATE_CONTACT_LIST, data),
-                                        user.getContactList());
-                                        serverFrame lbl = new serverFrame();
+                                if (clients.containsKey(user.getId())) {
+                                    sendMsg(new Message(MessageType.AUTH_NO, "1"));
+                                } else {
+                                    user = dbHandler.getContactList(user);
+                                    user.setStatus(UserStatues.AVAILABLE);
+                                    System.out.println("Contact List Size : " + user.getContactList().size());
+                                    dbHandler.updateStatus(user);
+                                    visitors.remove(this);
+                                    clients.put(user.getId(), this);
+                                    sendMsg(new Message(MessageType.AUTH_YES, user));
+                                    Hashtable<String, Integer> data = new Hashtable<>();
+                                    data.put("userId", user.getId());
+                                    data.put("status", user.getStatus());
+                                    sendMsgToMultiple(new Message(MessageType.UPDATE_CONTACT_LIST, data),
+                                            user.getContactList());
+                                          serverFrame lbl = new serverFrame();
                                         String numberOnline = dbHandler.countOnline();
                                         lbl.onlineLbl.setText(numberOnline);
+                                }
                             } else {
-                                sendMsg(new Message(MessageType.AUTH_NO));
+                                sendMsg(new Message(MessageType.AUTH_NO, "0"));
                             }
                             break;
 
                         //case in Regiser Type @mos
                         case MessageType.REGISTER:
-                            //recieving the incoming message into the new Hashtable
                             //recieving the incoming message into the new Hashtable
                             Hashtable<String, String> userData = (Hashtable< String, String>) msg.getData();
                             //we already take an object from the User Class and DbHandler class
@@ -117,6 +120,24 @@ public class ClientHandler extends Thread {
                             }
                             echoChatMsg(msg);
                             break;
+                        //recieving the emial here
+                        case MessageType.VALIDATE_EMAIL:
+                            //recieve the message of mail here in string
+
+                            String addMail = (String) msg.getData();
+                            //here i send the mail and the existing user
+                            //create an object from the user
+                            User friend = dbHandler.addFriend(addMail, user);
+
+                            //friend = dbHandler.getContactList(friend);
+                            //get the friend from the data base to add him on the existing user
+                            //user = dbHandler.getContactList(user);
+                            //here i send the message to the user with the recent cotact list
+                            sendMsg(new Message(MessageType.EMAIL_VALID, friend));
+
+                        //here i have the user
+                        // now the user went to the existing user
+                        //user.getContactList().add(friend);
                         case MessageType.STATE_CHANGE:
                             user.setStatus((int) msg.getData());
                             dbHandler.updateStatus(user);
@@ -151,14 +172,18 @@ public class ClientHandler extends Thread {
                     }
                 }
             } catch (EOFException | SocketException ex) {
-                user.setStatus(UserStatues.UNAVAILABLE);
-                dbHandler.updateStatus(user);
-                getClients().remove(user.getId());
-                Hashtable<String, Integer> data = new Hashtable<>();
-                data.put("userId", user.getId());
-                data.put("status", user.getStatus());
-                sendMsgToMultiple(new Message(MessageType.UPDATE_CONTACT_LIST, data),
-                        user.getContactList());
+                if (user != null) {
+                    user.setStatus(UserStatues.UNAVAILABLE);
+                    dbHandler.updateStatus(user);
+                    clients.remove(user.getId());
+                    Hashtable<String, Integer> data = new Hashtable<>();
+                    data.put("userId", user.getId());
+                    data.put("status", user.getStatus());
+                    sendMsgToMultiple(new Message(MessageType.UPDATE_CONTACT_LIST, data),
+                            user.getContactList());
+                } else {
+                    visitors.remove(this);
+                }
                 break;
             } catch (IOException ex) {
                 Logger.getLogger(ClientHandler.class.getName()).log(Level.SEVERE, null, ex);
@@ -179,7 +204,9 @@ public class ClientHandler extends Thread {
                 msg.setUserList(addReciever(msg.getSender(), msg.getUserList()));
                 msg.setUserList(deleteReciever(getClients().get(userId).getUser(), msg.getUserList()));
             }
-            getClients().get(userId).sendMsg(msg);
+            if (clients.containsKey(userId)) {
+                clients.get(userId).sendMsg(msg);
+            }
         }
     }
 
@@ -218,7 +245,9 @@ public class ClientHandler extends Thread {
     public ArrayList<User> generateUserList(ArrayList<Integer> userIds) {
         ArrayList<User> userList = new ArrayList<>();
         for (Integer userId : userIds) {
-            userList.add(getClients().get(userId).getUser());
+            if (clients.containsKey(userId)) {
+                userList.add(clients.get(userId).getUser());
+            }
         }
         return userList;
     }
