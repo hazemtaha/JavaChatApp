@@ -196,12 +196,12 @@ public class ServerFrame extends javax.swing.JFrame {
 
     private void toggleButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_toggleButtonActionPerformed
         if (toggleButton.isSelected()) {
-            toggleButton.setText("OFF");
+            toggleButton.setText("ON");
             isOnline = true;
             statusLbl.setForeground(Color.GREEN);
             new ClientDispatcher(this).start();
         } else {
-            toggleButton.setText("ON");
+            toggleButton.setText("OFF");
             isOnline = false;
             statusLbl.setForeground(Color.RED);
             resetStates();
