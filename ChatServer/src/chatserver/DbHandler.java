@@ -35,8 +35,8 @@ public class DbHandler {
 //       String stringConnection = "jdbc:mysql://localhost:3306/JAVACHAT";
         try {
             Class.forName("com.mysql.jdbc.Driver");
-            //dbConnection = DriverManager.getConnection(stringConnection, "root", "iti");
-            dbConnection = DriverManager.getConnection(stringConnection, "root", "");
+            dbConnection = DriverManager.getConnection(stringConnection, "root", "iti");
+//            dbConnection = DriverManager.getConnection(stringConnection, "root", "");
         } catch (ClassNotFoundException | SQLException ex) {
             Logger.getLogger(DbHandler.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -44,6 +44,7 @@ public class DbHandler {
 
     public User login(String email, String password) {
         try {
+
             dbConnection.createStatement();
             PreparedStatement login = dbConnection.prepareStatement("select * from users where email = ? and password = ?");
             login.setString(1, email);
@@ -128,27 +129,10 @@ public class DbHandler {
             Statement stmt = dbConnection.createStatement();
 
             String query = new String("select count(email) from users where status != 0");
-           
-            ResultSet result =stmt.executeQuery(query);
-            while(result.next()){
-             return result.getString(1);
-      
-            }
-        } catch (SQLException ex) {
-            Logger.getLogger(DbHandler.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        return null; 
-    }
-    
-    public String countRegistered(){
-        try {
-            Statement stmt = dbConnection.createStatement();
-            String query = new String("select count(email) from users");
-           
-            ResultSet result =stmt.executeQuery(query);
-            while(result.next()){
-             return result.getString(1);
-      
+
+            ResultSet result = stmt.executeQuery(query);
+            while (result.next()) {
+                return result.getString(1);
 
             }
         } catch (SQLException ex) {
@@ -156,54 +140,72 @@ public class DbHandler {
         }
         return null;
     }
+
+    public String countRegistered() {
+        try {
+            Statement stmt = dbConnection.createStatement();
+            String query = new String("select count(email) from users");
+
+            ResultSet result = stmt.executeQuery(query);
+            while (result.next()) {
+                return result.getString(1);
+
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(DbHandler.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return null;
+    }
+
     public String countOnline() {
         try {
             Statement stmt = dbConnection.createStatement();
 
             String query = new String("select count(email) from users where status = 1");
-           
-            ResultSet result =stmt.executeQuery(query);
-            while(result.next()){
-             return result.getString(1);
-      
+
+            ResultSet result = stmt.executeQuery(query);
+            while (result.next()) {
+                return result.getString(1);
+
             }
         } catch (SQLException ex) {
             Logger.getLogger(DbHandler.class.getName()).log(Level.SEVERE, null, ex);
         }
-        return null; 
+        return null;
     }
+
     public String countBusy() {
         try {
             Statement stmt = dbConnection.createStatement();
 
             String query = new String("select count(email) from users where status = 2");
-           
-            ResultSet result =stmt.executeQuery(query);
-            while(result.next()){
-             return result.getString(1);
-      
+
+            ResultSet result = stmt.executeQuery(query);
+            while (result.next()) {
+                return result.getString(1);
+
             }
         } catch (SQLException ex) {
             Logger.getLogger(DbHandler.class.getName()).log(Level.SEVERE, null, ex);
         }
-        return null; 
+        return null;
     }
-    
+
     public String countAway() {
         try {
             Statement stmt = dbConnection.createStatement();
 
             String query = new String("select count(email) from users where status = 3");
-           
-            ResultSet result =stmt.executeQuery(query);
-            while(result.next()){
-             return result.getString(1);
-      
+
+            ResultSet result = stmt.executeQuery(query);
+            while (result.next()) {
+                return result.getString(1);
+
             }
         } catch (SQLException ex) {
             Logger.getLogger(DbHandler.class.getName()).log(Level.SEVERE, null, ex);
         }
-        return null; 
+        return null;
     }
 
     ///////////////***********************************************************************

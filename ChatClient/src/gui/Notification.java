@@ -20,20 +20,45 @@ public class Notification extends javax.swing.JFrame {
     /**
      * Creates new form Notification
      */
+    public static final int ANNOUNCEMENT = 1;
+    public static final int NOTIFICATION = 2;
+    private int sleepTime = 0;
+
     public Notification(String content) {
         initComponents();
+        notificationInit(content, NOTIFICATION);
+    }
+
+    public Notification(String content, int type) {
+        initComponents();
+        notificationInit(content, type);
+
+    }
+
+    private void notificationInit(String content, int type) {
         msg.setText(content);
         GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
         GraphicsDevice defaultScreen = ge.getDefaultScreenDevice();
         Rectangle rect = defaultScreen.getDefaultConfiguration().getBounds();
-        int x = (int) rect.getMaxX() - getWidth();
-        int y = (int) rect.getMaxY() - (getHeight() + 20);
+        int x = 0, y = 0;
+        switch (type) {
+            case NOTIFICATION:
+                x = (int) rect.getMaxX() - getWidth();
+                y = (int) rect.getMaxY() - (getHeight() + 20);
+                sleepTime = 3000;
+                break;
+            case ANNOUNCEMENT:
+                x = (int) rect.getMaxX() / 2;
+                y = (int) rect.getMinY() + (getHeight() * 2);
+                sleepTime = 10000;
+                break;
+        }
         setLocation(x, y);
         Thread closeFrame = new Thread(new Runnable() {
             @Override
             public void run() {
                 try {
-                    Thread.sleep(3000);
+                    Thread.sleep(sleepTime);
                     Notification.this.dispose();
                 } catch (InterruptedException ex) {
                     Logger.getLogger(Notification.class.getName()).log(Level.SEVERE, null, ex);
@@ -113,7 +138,7 @@ public class Notification extends javax.swing.JFrame {
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                //new Notification("Hahahaha").setVisible(true);
+//                new Notification("Hahahaha", Notification.ANNOUNCEMENT).setVisible(true);
             }
         });
     }

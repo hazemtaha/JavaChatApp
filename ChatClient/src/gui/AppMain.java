@@ -329,7 +329,8 @@ public class AppMain extends javax.swing.JFrame {
             // show a joptionpane dialog using showMessageDialog
             JOptionPane.showMessageDialog(frame, "Please Enter your Full information");
         } else //another check for the password itself
-         if (passReg1.getText().equals(passReg2.getText())) {
+        {
+            if (passReg1.getText().equals(passReg2.getText())) {
                 System.out.println("matched");
 
                 //check for Email validation
@@ -361,7 +362,6 @@ public class AppMain extends javax.swing.JFrame {
                         }
                         //creating a message type
                         Message register = new Message(MessageType.REGISTER, userData);
-
                         //call clientConnection Class to send the message to the server through the sendClientMsg
                         clientConnection.sendClientMsg(register);
                         //it's already sent handle it through clientHandler on server
@@ -374,6 +374,7 @@ public class AppMain extends javax.swing.JFrame {
                 JFrame frame = new JFrame("JOptionPane showMessageDialog example");
                 JOptionPane.showMessageDialog(frame, "Password dosen't match");
             }
+        }
     }//GEN-LAST:event_registerBtnActionPerformed
 
     private void loginBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_loginBtnActionPerformed
