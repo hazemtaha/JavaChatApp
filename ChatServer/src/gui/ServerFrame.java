@@ -15,20 +15,19 @@ import java.util.Set;
  *
  * @author Hussien
  */
-public class serverFrame extends javax.swing.JFrame {
+public class ServerFrame extends javax.swing.JFrame {
         ClientDispatcher dispatcher;
-        //DbHandler conn;    
+        DbHandler conn;    
     /**
      * Creates new form serverFrame
      */
-    public serverFrame() {
+    public ServerFrame() {
         initComponents();
-        dispatcher = new ClientDispatcher();
+        dispatcher = new ClientDispatcher(this);
         dispatcher.start();
         System.out.println("started");
-        //conn = new DbHandler();
-
-        
+        conn = new DbHandler();
+        regLbl.setText(conn.countRegistered());
     }
 
     /**
@@ -50,7 +49,7 @@ public class serverFrame extends javax.swing.JFrame {
         jLabel4 = new javax.swing.JLabel();
         onlineLbl = new javax.swing.JLabel();
         jLabel6 = new javax.swing.JLabel();
-        jLabel7 = new javax.swing.JLabel();
+        regLbl = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -83,7 +82,9 @@ public class serverFrame extends javax.swing.JFrame {
 
         jLabel4.setText("Online Users");
 
-        jLabel6.setText("Offline Users");
+        onlineLbl.setText("0");
+
+        jLabel6.setText("Registered Users");
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -116,8 +117,8 @@ public class serverFrame extends javax.swing.JFrame {
                         .addGap(79, 79, 79)
                         .addComponent(jLabel6)
                         .addGap(48, 48, 48)
-                        .addComponent(jLabel7, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap(51, Short.MAX_VALUE))
+                        .addComponent(regLbl, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap(31, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -145,7 +146,7 @@ public class serverFrame extends javax.swing.JFrame {
                         .addGap(31, 31, 31)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jLabel6)
-                            .addComponent(jLabel7, javax.swing.GroupLayout.PREFERRED_SIZE, 14, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                            .addComponent(regLbl, javax.swing.GroupLayout.PREFERRED_SIZE, 14, javax.swing.GroupLayout.PREFERRED_SIZE))))
                 .addContainerGap(84, Short.MAX_VALUE))
         );
 
@@ -208,20 +209,21 @@ public class serverFrame extends javax.swing.JFrame {
                 }
             }
         } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(serverFrame.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(ServerFrame.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(serverFrame.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(ServerFrame.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(serverFrame.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(ServerFrame.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(serverFrame.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(ServerFrame.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
+        //</editor-fold>
         //</editor-fold>
 
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new serverFrame().setVisible(true);
+                new ServerFrame().setVisible(true);
             }
         });
     }
@@ -233,9 +235,9 @@ public class serverFrame extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel6;
-    private javax.swing.JLabel jLabel7;
     private javax.swing.JTextField jTextField1;
     public javax.swing.JLabel onlineLbl;
+    public javax.swing.JLabel regLbl;
     private javax.swing.JToggleButton toggleButton;
     private javax.swing.JToggleButton toggleButton1;
     // End of variables declaration//GEN-END:variables

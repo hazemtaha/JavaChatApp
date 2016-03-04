@@ -126,7 +126,23 @@ public class DbHandler {
     public String countOnline(){
         try {
             Statement stmt = dbConnection.createStatement();
-            String query = new String("select count(email) from users where status =1");
+            String query = new String("select count(email) from users where status != 0");
+           
+            ResultSet result =stmt.executeQuery(query);
+            while(result.next()){
+             return result.getString(1);
+      
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(DbHandler.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return null; 
+    }
+    
+    public String countRegistered(){
+        try {
+            Statement stmt = dbConnection.createStatement();
+            String query = new String("select count(email) from users");
            
             ResultSet result =stmt.executeQuery(query);
             while(result.next()){

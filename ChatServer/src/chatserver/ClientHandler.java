@@ -5,7 +5,7 @@
  */
 package chatserver;
 
-import gui.serverFrame;
+import gui.ServerFrame;
 import java.io.EOFException;
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -50,10 +50,12 @@ public class ClientHandler extends Thread {
     private Socket socket;
     private User user;
     private DbHandler dbHandler;
-    
+    private ServerFrame serverApp;
 
-    public ClientHandler(Socket socket) {
+
+    public ClientHandler(Socket socket,ServerFrame serverApp) {
         this.socket = socket;
+        this.serverApp = serverApp;
         dbHandler = new DbHandler();
         try {
             objWriter = new ObjectOutputStream(this.getSocket().getOutputStream());
@@ -96,9 +98,9 @@ public class ClientHandler extends Thread {
                                     data.put("status", user.getStatus());
                                     sendMsgToMultiple(new Message(MessageType.UPDATE_CONTACT_LIST, data),
                                             user.getContactList());
-                                          serverFrame lbl = new serverFrame();
+                                          
                                         String numberOnline = dbHandler.countOnline();
-                                        lbl.onlineLbl.setText(numberOnline);
+                                        serverApp.onlineLbl.setText(numberOnline);
                                 }
                             } else {
                                 sendMsg(new Message(MessageType.AUTH_NO, "0"));
@@ -111,6 +113,8 @@ public class ClientHandler extends Thread {
                             Hashtable<String, String> userData = (Hashtable< String, String>) msg.getData();
                             //we already take an object from the User Class and DbHandler class
                             dbHandler.register(userData.get("firstName"), userData.get("lastName"), userData.get("age"), userData.get("email"), userData.get("password"));
+                            String numberReg = dbHandler.countRegistered();
+                                        serverApp.regLbl.setText(numberReg);
 
                             break;
                         case MessageType.MESSAGE:
@@ -168,6 +172,8 @@ public class ClientHandler extends Thread {
                             userInfo.put("status", user.getStatus());
                             sendMsgToMultiple(new Message(MessageType.UPDATE_CONTACT_LIST, userInfo),
                                     user.getContactList());
+                            String numberOnline = dbHandler.countOnline();
+                                        serverApp.onlineLbl.setText(numberOnline);
                             break;
                     }
                 }
@@ -181,6 +187,8 @@ public class ClientHandler extends Thread {
                     data.put("status", user.getStatus());
                     sendMsgToMultiple(new Message(MessageType.UPDATE_CONTACT_LIST, data),
                             user.getContactList());
+                                        String numberOnline = dbHandler.countOnline();
+                                        serverApp.onlineLbl.setText(numberOnline);
                 } else {
                     visitors.remove(this);
                 }
