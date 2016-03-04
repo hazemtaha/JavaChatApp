@@ -12,6 +12,9 @@ import java.awt.Color;
 import java.util.Hashtable;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.JOptionPane;
+import utils.Message;
+import utils.interfaces.MessageType;
 
 /**
  *
@@ -30,6 +33,8 @@ public class ServerFrame extends javax.swing.JFrame {
         initComponents();
         conn = new DbHandler();
         regLbl.setText(conn.countRegistered());
+        msgBox.setEnabled(isOnline);
+        sendBtn.setEnabled(isOnline);
     }
 
     /**
@@ -61,12 +66,7 @@ public class ServerFrame extends javax.swing.JFrame {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
-        toggleButton.setText("ON");
-        toggleButton.addChangeListener(new javax.swing.event.ChangeListener() {
-            public void stateChanged(javax.swing.event.ChangeEvent evt) {
-                toggleButtonStateChanged(evt);
-            }
-        });
+        toggleButton.setText("OFF");
         toggleButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 toggleButtonActionPerformed(evt);
@@ -76,6 +76,12 @@ public class ServerFrame extends javax.swing.JFrame {
         jLabel1.setText("Server Status");
 
         jLabel2.setText("Announcment Message");
+
+        msgBox.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                msgBoxActionPerformed(evt);
+            }
+        });
 
         sendBtn.setText("Send");
         sendBtn.addActionListener(new java.awt.event.ActionListener() {
@@ -138,7 +144,7 @@ public class ServerFrame extends javax.swing.JFrame {
                                     .addGroup(layout.createSequentialGroup()
                                         .addComponent(jLabel1)
                                         .addGap(18, 18, 18)
-                                        .addComponent(toggleButton)))
+                                        .addComponent(toggleButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
                                 .addGap(78, 78, 78)
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addGroup(layout.createSequentialGroup()
@@ -159,7 +165,7 @@ public class ServerFrame extends javax.swing.JFrame {
                 .addGap(24, 24, 24)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel1)
-                    .addComponent(toggleButton)
+                    .addComponent(toggleButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(statusLbl))
                 .addGap(24, 24, 24)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -181,14 +187,14 @@ public class ServerFrame extends javax.swing.JFrame {
                     .addComponent(jLabel3)
                     .addComponent(awayLbl, javax.swing.GroupLayout.PREFERRED_SIZE, 14, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
-                .addComponent(jSeparator1, javax.swing.GroupLayout.DEFAULT_SIZE, 17, Short.MAX_VALUE)
+                .addComponent(jSeparator1)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jLabel2)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 21, Short.MAX_VALUE)
-                .addComponent(msgBox, javax.swing.GroupLayout.PREFERRED_SIZE, 81, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
+                .addComponent(msgBox, javax.swing.GroupLayout.PREFERRED_SIZE, 53, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 21, Short.MAX_VALUE)
                 .addComponent(sendBtn)
-                .addContainerGap())
+                .addGap(19, 19, 19))
         );
 
         pack();
@@ -206,18 +212,24 @@ public class ServerFrame extends javax.swing.JFrame {
             statusLbl.setForeground(Color.RED);
             resetStates();
         }
+        msgBox.setEnabled(isOnline);
+        sendBtn.setEnabled(isOnline);
     }//GEN-LAST:event_toggleButtonActionPerformed
-
-    private void toggleButtonStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_toggleButtonStateChanged
-
-    }//GEN-LAST:event_toggleButtonStateChanged
 
     private void sendBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_sendBtnActionPerformed
 
+        broadcastMsg(msgBox.getText());
+        msgBox.setText("");
     }//GEN-LAST:event_sendBtnActionPerformed
 
+    private void msgBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_msgBoxActionPerformed
+        sendBtnActionPerformed(evt);
+    }//GEN-LAST:event_msgBoxActionPerformed
+
     public void broadcastMsg(String msg) {
-        //        Iterator<Integer, ClientHandler> clientsIterator =
+        for (Integer clientId : ClientHandler.clients.keySet()) {
+            ClientHandler.clients.get(clientId).sendMsg(new Message(MessageType.ANNOUNCEMENT, msg));
+        }
 
     }
 

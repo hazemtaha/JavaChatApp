@@ -191,6 +191,9 @@ public class ClientConnection extends Thread {
                                     UploadHandler uploadHandler = new UploadHandler(ipAddress, file, chatRoom);
                                     uploadHandler.start();
                                     break;
+                                case MessageType.ANNOUNCEMENT:
+                                    new Notification(msg.getData().toString(), Notification.ANNOUNCEMENT);
+                                    break;
                             }
                         }
                     } catch (EOFException | SocketException ex) {
