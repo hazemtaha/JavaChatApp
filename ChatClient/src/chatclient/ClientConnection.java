@@ -142,7 +142,13 @@ public class ClientConnection extends Thread {
 
                                     break;
                                 case MessageType.UPDATE_CONTACT_LIST:
-                                    updateContactStatus((Hashtable<String, Integer>) msg.getData());
+                                    if (msg.getData() instanceof User) {
+                                        user.getContactList().remove(msg.getData());
+                                        ((MainPanel) ((AppMain) chatApp).getMainPanel()).refreshList();
+                                        ((MainPanel) ((AppMain) chatApp).getMainPanel()).loadContacts(user);
+                                    }else {
+                                        updateContactStatus((Hashtable<String, Integer>) msg.getData());
+                                    }
                                     break;
                                 case MessageType.FILE_REQUEST:
                                     MainPanel parentPanel = (MainPanel) chatApp.getMainPanel();
@@ -150,7 +156,7 @@ public class ClientConnection extends Thread {
                                         recieverId = msg.getReciever().get(0);
                                     } else {
                                         recieverId = msg.getSender().getId();
-                                    }
+                                }
                                     PrivateChatWindow chatRoom;
                                     if (parentPanel.isOpened(recieverId) == null) {
                                         chatRoom = new PrivateChatWindow(msg.getSender(), parentPanel);
@@ -189,6 +195,7 @@ public class ClientConnection extends Thread {
                                     UploadHandler uploadHandler = new UploadHandler(ipAddress, file, chatRoom);
                                     uploadHandler.start();
                                     break;
+                                    
                             }
                         }
                     } catch (EOFException | SocketException ex) {

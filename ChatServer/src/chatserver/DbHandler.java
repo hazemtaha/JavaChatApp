@@ -31,12 +31,12 @@ public class DbHandler {
 
     public DbHandler() {
 
-        String stringConnection = "jdbc:mysql://localhost:3306/chatApp";
-//       String stringConnection = "jdbc:mysql://localhost:3306/JAVACHAT";
+//        String stringConnection = "jdbc:mysql://localhost:3306/chatApp";
+       String stringConnection = "jdbc:mysql://localhost:3306/JAVACHAT";
         try {
             Class.forName("com.mysql.jdbc.Driver");
-            dbConnection = DriverManager.getConnection(stringConnection, "root", "iti");
-//            dbConnection = DriverManager.getConnection(stringConnection, "root", "");
+//            dbConnection = DriverManager.getConnection(stringConnection, "root", "iti");
+            dbConnection = DriverManager.getConnection(stringConnection, "root", "0160");
         } catch (ClassNotFoundException | SQLException ex) {
             Logger.getLogger(DbHandler.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -222,15 +222,16 @@ public class DbHandler {
 
             while (rs.next()) {
                 //first check on the database if the mail exist
-                if (!email.equals(rs)) {
+                if (email.equals(rs.getString("email"))) {
                     //so it is exist ** another check if it is the same mail or not
-
-                    if (email.equals(user.getEmail())) {
+                       System.out.println("existing user");
+                    
+                      if (email.equals(user.getEmail())) {
                         System.out.println("you can't add yourself");
 
                         //sendMsg(new Message(MessageType.AUTH_YES, user));
-                        break;
-                    } else {
+                       //  break;
+                     } else {
                         System.out.println("ok you are good to go");
                         //third check if this user already on the contact list
                         if (user.getContactList().contains(email)) {
@@ -243,7 +244,7 @@ public class DbHandler {
                                 ArrayList<User> singleUser = generateList(userObj.executeQuery());
 
                                 //i will call the function to pass u_id and friend_id
-                                System.out.println(user.getId());
+                                //System.out.println(user.getId());
                                 //insert from the reciever to add the sender
                                 insertFriend(user.getId(), ((User) singleUser.get(0)).getId());
 
@@ -255,19 +256,19 @@ public class DbHandler {
                                 //here i recieved this user data.
                                 //    System.out.println(((User)singleUser.get(0)).getId());
                                 //  System.out.println(((User)singleUser.get(0)).getLastName());
-                            } catch (SQLException ex) {
-                            }
-                            break;
-                        }
+                                } catch (SQLException ex) {
+                                                          }
+                               //break;
+                                }
 
-                    }
+                              }
 
                     //String mailList = rs.getString("email");
                     //System.out.format("%s\n", mailList);
-                } else {
+                 } else {
                     JFrame frame = new JFrame("InputDialog Example #2");
                     JOptionPane.showMessageDialog(frame, "This email is not exist on the database");
-                    break;
+                   // break;
 
                 }
             }
@@ -277,21 +278,47 @@ public class DbHandler {
         }
         //System.out.println(email);
 
-        return null;
+        return user;
     }
 
-    public void insertFriend(int userId, int friendId) {
+public void insertFriend(int userId, int friendId) {
+    
         try {
+            
             PreparedStatement addFriend = dbConnection.prepareStatement("insert into contact_list (u_id, friend_id) values (?, ?)");
             addFriend.setInt(1, userId);
             addFriend.setInt(2, friendId);
             addFriend.executeUpdate();
-
-        } catch (SQLException ex) {
+            
+            } catch (SQLException ex) {
             Logger.getLogger(DbHandler.class.getName()).log(Level.SEVERE, null, ex);
-        }
-
-    }
-
-    ///////////////////********************************************************************
+                                      }
 }
+    ///////////////////********************************************************************
+public void deleteFriend(User selectedUser, User user) {
+       try {          
+           PreparedStatement userObj = dbConnection.prepareStatement("DELETE FROM contact_list WHERE u_id = ? AND friend_id = ?");
+           userObj.setInt(1, user.getId());
+           userObj.setInt(2, selectedUser.getId());
+           
+           userObj.executeUpdate();
+           
+           userObj.setInt(1, selectedUser.getId());
+           userObj.setInt(2, user.getId());
+           
+           userObj.executeUpdate();
+           
+           } catch (SQLException ex) {
+            Logger.getLogger(DbHandler.class.getName()).log(Level.SEVERE, null, ex);
+                                     }
+                    
+   }
+}
+/////////**********************************************************************************************************
+
+/////////**********************************************************************************************************
+
+
+
+
+

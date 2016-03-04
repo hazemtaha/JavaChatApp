@@ -76,6 +76,11 @@ public class MainPanel extends javax.swing.JPanel {
         });
 
         deleteFriendBtn.setText("Delete friend");
+        deleteFriendBtn.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                deleteFriendBtnActionPerformed(evt);
+            }
+        });
 
         jLabel14.setFont(new java.awt.Font("Ubuntu", 3, 15)); // NOI18N
         jLabel14.setText("Friends list");
@@ -225,7 +230,6 @@ public class MainPanel extends javax.swing.JPanel {
                 "ADD FRIEND",
                 JOptionPane.PLAIN_MESSAGE
         );
-        // System.out.println(friendMail);
         //here i send this message as email to the server to handle it , then the server will recieve it
         //check for Email validation
         EmailValidator emailValidator = new EmailValidator();
@@ -233,6 +237,7 @@ public class MainPanel extends javax.swing.JPanel {
         if (!emailValidator.validate(friendMail.trim())) {
             JOptionPane.showMessageDialog(frame, "Invalid Email ID");
         } else {
+            //create an object to declare the message type
             Message email = new Message(MessageType.VALIDATE_EMAIL, friendMail);
             //as the MainPanel is a child from the AppMain we had an object from the app main the get the current connection
             parent.getConnection().sendClientMsg(email);
@@ -250,6 +255,17 @@ public class MainPanel extends javax.swing.JPanel {
         }
 
     }//GEN-LAST:event_contactsListMouseClicked
+
+    private void deleteFriendBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_deleteFriendBtnActionPerformed
+        // get the selected user as an object 
+        User uDelete = contactsList.getSelectedValue();
+        System.out.print(uDelete.getFirstName());
+         //create an object to declare the message type
+        Message selectedUser = new Message(MessageType.Delete, uDelete);
+         //as the MainPanel is a child from the AppMain we had an object from the app main the get the current connection
+        parent.getConnection().sendClientMsg(selectedUser);
+            
+    }//GEN-LAST:event_deleteFriendBtnActionPerformed
 
     public PrivateChatWindow isOpened(int chatId) {
         for (PrivateChatWindow chat : chats) {

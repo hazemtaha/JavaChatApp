@@ -126,6 +126,7 @@ public class ClientHandler extends Thread {
                             }
                             echoChatMsg(msg);
                             break;
+                            
                         //recieving the emial here
                         case MessageType.VALIDATE_EMAIL:
                             //recieve the message of mail here in string
@@ -144,6 +145,7 @@ public class ClientHandler extends Thread {
                         //here i have the user
                         // now the user went to the existing user
                         //user.getContactList().add(friend);
+                            break;
                         case MessageType.STATE_CHANGE:
                             user.setStatus((int) msg.getData());
                             dbHandler.updateStatus(user);
@@ -190,6 +192,22 @@ public class ClientHandler extends Thread {
                             serverApp.awayLbl.setText(numAway2);
 
                             break;
+                            
+                        case MessageType.Delete:
+                       //recieve the message of the selected user here
+                       User selectedUser = (User) msg.getData();
+                       dbHandler.deleteFriend(selectedUser, user);
+                      //get the contact list of existing user and selected user
+                       user = dbHandler.getContactList(user);
+                       selectedUser = dbHandler.getContactList(selectedUser);
+                       //update contact list for both of them
+                       sendMsg(new Message(MessageType.UPDATE_CONTACT_LIST, selectedUser));
+                            if (clients.containsKey(selectedUser.getId())) {
+                            clients.get(selectedUser.getId()).sendMsg(new Message(MessageType.UPDATE_CONTACT_LIST, user));
+                            }
+                            
+                        break;
+                        
                     }
                 }
             } catch (EOFException | SocketException ex) {
