@@ -224,7 +224,6 @@ public class DbHandler {
                 //first check on the database if the mail exist
                 if (!email.equals(rs)) {
                     //so it is exist ** another check if it is the same mail or not
-
                     if (email.equals(user.getEmail())) {
                         System.out.println("you can't add yourself");
 

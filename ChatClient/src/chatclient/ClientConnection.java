@@ -47,6 +47,7 @@ public class ClientConnection extends Thread {
     private ObjectOutputStream objWriter;
     private AppMain chatApp;
     private User user;
+    public static boolean isConnected = false;
 
     public ClientConnection(AppMain chatApp) {
         this.chatApp = chatApp;
@@ -61,7 +62,8 @@ public class ClientConnection extends Thread {
                 objWriter = new ObjectOutputStream(getSocket().getOutputStream());
                 objWriter.flush();
                 objReader = new ObjectInputStream(getSocket().getInputStream());
-                while (true) {
+                isConnected = true;
+                while (isConnected) {
                     try {
                         Object obj = objReader.readObject();
                         if (obj instanceof Message) {
@@ -192,24 +194,30 @@ public class ClientConnection extends Thread {
                             }
                         }
                     } catch (EOFException | SocketException ex) {
+//                        Logger.getLogger(ClientConnection.class.getName()).log(Level.SEVERE, null, ex);
                         break;
                     } catch (IOException | ClassNotFoundException ex) {
-                        Logger.getLogger(ClientConnection.class.getName()).log(Level.SEVERE, null, ex);
+//                        Logger.getLogger(ClientConnection.class.getName()).log(Level.SEVERE, null, ex);
                     }
                 }
             } catch (ConnectException ex) {
-                System.out.println("Server Is Offline");
-//                continue;
+                ((MainPanel) chatApp.getMainPanel()).destroyChats();
+                ((CardLayout) chatApp.getPanelGroup().getLayout()).
+                        show(chatApp.getPanelGroup(), "loginPanel");
+                isConnected = false;
+//                Logger.getLogger(ClientConn ection.class.getName()).log(Level.SEVERE, null, ex);
             } catch (IOException ex) {
-                Logger.getLogger(ClientConnection.class.getName()).log(Level.SEVERE, null, ex);
+//                Logger.getLogger(ClientConnection.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
     }
 
     public void sendClientMsg(Message msg) {
         try {
-            objWriter.writeObject(msg);
-            objWriter.flush();
+            if (isConnected) {
+                objWriter.writeObject(msg);
+                objWriter.flush();
+            }
         } catch (IOException ex) {
             Logger.getLogger(ClientConnection.class
                     .getName()).log(Level.SEVERE, null, ex);
