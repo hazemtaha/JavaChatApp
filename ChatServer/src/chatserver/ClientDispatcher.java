@@ -5,6 +5,7 @@
  */
 package chatserver;
 
+import gui.ServerFrame;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
@@ -18,6 +19,10 @@ import java.util.logging.Logger;
 public class ClientDispatcher extends Thread {
 
     private ServerSocket dispatcher;
+    private ServerFrame serverApp;
+    public ClientDispatcher(ServerFrame serverApp) {
+        this.serverApp = serverApp;
+    }
 
     @Override
     public void run() {
@@ -28,13 +33,20 @@ public class ClientDispatcher extends Thread {
         }
         while (true) {
             try {
-                Socket client = dispatcher.accept();
+                Socket client = getDispatcher().accept();
                 System.out.println("New Client");
-                new ClientHandler(client).start();
+                new ClientHandler(client,serverApp).start();
             } catch (IOException ex) {
                 Logger.getLogger(ClientDispatcher.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
+    }
+
+    /**
+     * @return the dispatcher
+     */
+    public ServerSocket getDispatcher() {
+        return dispatcher;
     }
 
 }

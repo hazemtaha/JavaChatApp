@@ -7,8 +7,10 @@ package gui;
 
 import chatclient.ClientConnection;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import javax.swing.DefaultListModel;
+import javax.swing.JOptionPane;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import utils.EmailValidator;
@@ -78,7 +80,7 @@ public class MainPanel extends javax.swing.JPanel {
         jLabel14.setFont(new java.awt.Font("Ubuntu", 3, 15)); // NOI18N
         jLabel14.setText("Friends list");
 
-        statusComboBox.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Online", "Away", "Busy", "Offline" }));
+        statusComboBox.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Online", "Away", "Busy" }));
         statusComboBox.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 statusComboBoxActionPerformed(evt);
@@ -171,13 +173,30 @@ public class MainPanel extends javax.swing.JPanel {
     }// </editor-fold>//GEN-END:initComponents
 
     private void createGroupChatBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_createGroupChatBtnActionPerformed
-        List<User> userList = contactsList.getSelectedValuesList();
-        int chatId = generateChatId(userList);
-        if (isGroupOpened(chatId) == null) {
-            groupChatRoom = new GroupChatWindow(userList, this, chatId);
-            groupChats.add(groupChatRoom);
-            groupChatRoom.setVisible(true);
+        List<User> usersList = contactsList.getSelectedValuesList();
+        removeOfflineUsers(usersList);
+        int chatId = generateChatId(usersList);
+        if (usersList.size() == 1) {
+            if ((chatRoom = isOpened(usersList.get(0).getId())) == null) {
+                chatRoom = new PrivateChatWindow(usersList.get(0), this);
+                chats.add(chatRoom);
+                chatRoom.setVisible(true);
+            } else {
+                chatRoom.setVisible(true);
+            }
+        } else if (usersList.size() > 1) {
+            if ((groupChatRoom = isGroupOpened(chatId)) == null) {
+                groupChatRoom = new GroupChatWindow(usersList, this, chatId);
+                groupChats.add(groupChatRoom);
+                groupChatRoom.setVisible(true);
+            } else {
+                groupChatRoom.setVisible(true);
+            }
+        } else {
+            String errorMsg = "Sorry you can't create a group chat of offline users";
+            JOptionPane.showMessageDialog(this, errorMsg, "Warning", JOptionPane.WARNING_MESSAGE);
         }
+
     }//GEN-LAST:event_createGroupChatBtnActionPerformed
 
     private void statusComboBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_statusComboBoxActionPerformed
@@ -186,9 +205,6 @@ public class MainPanel extends javax.swing.JPanel {
         switch (selectedStatus) {
             case "Online":
                 updateStatus(UserStatues.AVAILABLE);
-                break;
-            case "Offline":
-                updateStatus(UserStatues.UNAVAILABLE);
                 break;
             case "Busy":
                 updateStatus(UserStatues.BUSY);
@@ -200,27 +216,27 @@ public class MainPanel extends javax.swing.JPanel {
     }//GEN-LAST:event_statusComboBoxActionPerformed
 
     private void addFriendBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addFriendBtnActionPerformed
-/////////////***************************************************************************************************       
+/////////////***************************************************************************************************
         // ADD FRIEND HERE ;
         JFrame frame = new JFrame("InputDialog Example #2");
         String friendMail = JOptionPane.showInputDialog(
-        frame, 
-        "Enter your friend's Email Address", 
-        "ADD FRIEND", 
-        JOptionPane.PLAIN_MESSAGE
-    );
-       // System.out.println(friendMail);
+                frame,
+                "Enter your friend's Email Address",
+                "ADD FRIEND",
+                JOptionPane.PLAIN_MESSAGE
+        );
+        // System.out.println(friendMail);
         //here i send this message as email to the server to handle it , then the server will recieve it
-                //check for Email validation
-                EmailValidator emailValidator = new EmailValidator();
-                //trim() ->> Returns a copy of the string, with leading and trailing whitespace omitted.
-                if (!emailValidator.validate(friendMail.trim())) {
-                    JOptionPane.showMessageDialog(frame, "Invalid Email ID");
-                }else{
-                      Message email = new Message(MessageType.VALIDATE_EMAIL, friendMail);
-                      //as the MainPanel is a child from the AppMain we had an object from the app main the get the current connection
-                      parent.getConnection().sendClientMsg(email);
-                }
+        //check for Email validation
+        EmailValidator emailValidator = new EmailValidator();
+        //trim() ->> Returns a copy of the string, with leading and trailing whitespace omitted.
+        if (!emailValidator.validate(friendMail.trim())) {
+            JOptionPane.showMessageDialog(frame, "Invalid Email ID");
+        } else {
+            Message email = new Message(MessageType.VALIDATE_EMAIL, friendMail);
+            //as the MainPanel is a child from the AppMain we had an object from the app main the get the current connection
+            parent.getConnection().sendClientMsg(email);
+        }
     }//GEN-LAST:event_addFriendBtnActionPerformed
 
     private void contactsListMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_contactsListMouseClicked
@@ -305,6 +321,18 @@ public class MainPanel extends javax.swing.JPanel {
         getConnection().sendClientMsg(new Message(MessageType.STATE_CHANGE, status));
         System.out.println(getConnection().getUser().getStatus());
         System.out.println(status);
+    }
+
+    public List<User> removeOfflineUsers(List<User> usersList) {
+        Iterator<User> listIterator = usersList.iterator();
+        while (listIterator.hasNext()) {
+            User user = listIterator.next();
+            if (user.getStatus() == UserStatues.UNAVAILABLE) {
+                listIterator.remove();
+//                usersList.remove(user);
+            }
+        }
+        return usersList;
     }
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton addFriendBtn;

@@ -10,6 +10,7 @@ import chatclient.filesharing.UploadHandler;
 import gui.AppMain;
 import gui.GroupChatWindow;
 import gui.MainPanel;
+import gui.Notification;
 import gui.PrivateChatWindow;
 import java.awt.CardLayout;
 import java.awt.event.ActionEvent;
@@ -22,6 +23,7 @@ import java.io.ObjectOutputStream;
 import java.net.ConnectException;
 import java.net.InetAddress;
 import java.net.Socket;
+import java.net.SocketException;
 import java.util.Hashtable;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -53,9 +55,9 @@ public class ClientConnection extends Thread {
     @Override
     public void run() {
         while (true) {
-            try { 
+            try {
                 socket = new Socket(InetAddress.getLocalHost(), 8000);
-           //     socket = new Socket("10.0.1.95", 8000);
+                //socket = new Socket("10.0.1.95", 8000);
                 objWriter = new ObjectOutputStream(getSocket().getOutputStream());
                 objWriter.flush();
                 objReader = new ObjectInputStream(getSocket().getInputStream());
@@ -85,10 +87,19 @@ public class ClientConnection extends Thread {
                                             ((CardLayout) prentPanel.getLayout()).show(prentPanel, "loginPanel");
                                         }
                                     });
-
+                                    File sessionStorage = new File(String.valueOf("chats_" + user.getId()));
+                                    if (!sessionStorage.isDirectory()) {
+                                        sessionStorage.mkdir();
+                                    }
                                     break;
                                 case MessageType.AUTH_NO:
-                                    ((AppMain) chatApp).setErrorLabel("Invalid email or password");
+                                    String errorMsg;
+                                    if (msg.getData().equals("1")) {
+                                        errorMsg = "Already Logged In";
+                                    } else {
+                                        errorMsg = "Invalid email or password";
+                                    }
+                                    JOptionPane.showMessageDialog(((AppMain) chatApp), errorMsg, "Error Message", JOptionPane.ERROR_MESSAGE);
                                     break;
                                 case MessageType.MESSAGE:
                                     MainPanel mainPanel = (MainPanel) chatApp.getMainPanel();
@@ -122,14 +133,14 @@ public class ClientConnection extends Thread {
                                         chatRoom.AppendMsg(msg);
                                     }
                                     break;
-                                    
-                                case MessageType.EMAIL_VALID:
-                                    User friend = (User)msg.getData();
-                                    user.getContactList().add(friend);
-                                   ((MainPanel)((AppMain)chatApp).getMainPanel()).refreshList();
-                                   ((MainPanel)((AppMain)chatApp).getMainPanel()).loadContacts(user);
 
-                                     break;
+                                case MessageType.EMAIL_VALID:
+                                    User friend = (User) msg.getData();
+                                    user.getContactList().add(friend);
+                                    ((MainPanel) ((AppMain) chatApp).getMainPanel()).refreshList();
+                                    ((MainPanel) ((AppMain) chatApp).getMainPanel()).loadContacts(user);
+
+                                    break;
                                 case MessageType.UPDATE_CONTACT_LIST:
                                     updateContactStatus((Hashtable<String, Integer>) msg.getData());
                                     break;
@@ -157,7 +168,8 @@ public class ClientConnection extends Thread {
                                         if (saveDialog.showSaveDialog(chatRoom) == JFileChooser.APPROVE_OPTION) {
                                             File savePath = saveDialog.getSelectedFile();
                                             msg.setType(MessageType.FILE_RESPONSE);
-                                            DownloadHandler downloadHandler = new DownloadHandler(savePath.getPath(), chatRoom);
+                                            int fileSize = Math.round((long) ((Hashtable<String, Object>) msg.getData()).get("fileSize") / 1024);
+                                            DownloadHandler downloadHandler = new DownloadHandler(savePath.getPath(), fileSize, chatRoom);
                                             downloadHandler.start();
                                             sendClientMsg(msg);
                                             System.out.println(savePath);
@@ -179,7 +191,7 @@ public class ClientConnection extends Thread {
                                     break;
                             }
                         }
-                    } catch (EOFException ex) {
+                    } catch (EOFException | SocketException ex) {
                         break;
                     } catch (IOException | ClassNotFoundException ex) {
                         Logger.getLogger(ClientConnection.class.getName()).log(Level.SEVERE, null, ex);
@@ -187,7 +199,7 @@ public class ClientConnection extends Thread {
                 }
             } catch (ConnectException ex) {
                 System.out.println("Server Is Offline");
-                continue;
+//                continue;
             } catch (IOException ex) {
                 Logger.getLogger(ClientConnection.class.getName()).log(Level.SEVERE, null, ex);
             }
@@ -208,6 +220,22 @@ public class ClientConnection extends Thread {
         for (User user : user.getContactList()) {
             if (user.getId() == data.get("userId")) {
                 user.setStatus(data.get("status"));
+                String status = "";
+                switch (data.get("status")) {
+                    case 0:
+                        status = "Offline";
+                        break;
+                    case 1:
+                        status = "Online";
+                        break;
+                    case 2:
+                        status = "Busy";
+                        break;
+                    case 3:
+                        status = "Away";
+                        break;
+                }
+                new Notification(user + " Is Now " + status);
             }
         }
         ((MainPanel) ((AppMain) chatApp).getMainPanel()).refreshList();

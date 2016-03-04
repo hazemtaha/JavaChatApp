@@ -5,11 +5,13 @@
  */
 package chatserver;
 
+import gui.ServerFrame;
 import java.io.EOFException;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
+import java.net.SocketException;
 import java.util.ArrayList;
 import java.util.Hashtable;
 import java.util.logging.Level;
@@ -25,18 +27,35 @@ import utils.interfaces.UserStatues;
  */
 public class ClientHandler extends Thread {
 
-    private static ArrayList<ClientHandler> visitors
+    public static ArrayList<ClientHandler> visitors
             = new ArrayList<ClientHandler>();
-    private static Hashtable<Integer, ClientHandler> clients
+    public static Hashtable<Integer, ClientHandler> clients
             = new Hashtable<Integer, ClientHandler>();
+    
+    /**
+     * @return the visitors
+     */
+    public static ArrayList<ClientHandler> getVisitors() {
+        return visitors;
+    }
+
+    /**
+     * @return the clients
+     */
+    public static Hashtable<Integer, ClientHandler> getClients() {
+        return clients;
+    }
     private ObjectInputStream objReader;
     private ObjectOutputStream objWriter;
     private Socket socket;
     private User user;
     private DbHandler dbHandler;
+    private ServerFrame serverApp;
 
-    public ClientHandler(Socket socket) {
+
+    public ClientHandler(Socket socket,ServerFrame serverApp) {
         this.socket = socket;
+        this.serverApp = serverApp;
         dbHandler = new DbHandler();
         try {
             objWriter = new ObjectOutputStream(this.getSocket().getOutputStream());
@@ -64,20 +83,29 @@ public class ClientHandler extends Thread {
                                     = (Hashtable< String, String>) msg.getData();
                             user = dbHandler.login(credentials.get("email"), credentials.get("password"));
                             if (user != null) {
-                                user = dbHandler.getContactList(user);
-                                user.setStatus(UserStatues.AVAILABLE);
-                                System.out.println("Contact List Size : " + user.getContactList().size());
-                                dbHandler.updateStatus(user);
-                                visitors.remove(this);
-                                clients.put(user.getId(), this);
-                                sendMsg(new Message(MessageType.AUTH_YES, user));
-                                Hashtable<String, Integer> data = new Hashtable<>();
-                                data.put("userId", user.getId());
-                                data.put("status", user.getStatus());
-                                sendMsgToMultiple(new Message(MessageType.UPDATE_CONTACT_LIST, data),
-                                        user.getContactList());
+                                if (clients.containsKey(user.getId())) {
+                                    sendMsg(new Message(MessageType.AUTH_NO, "1"));
+                                } else {
+                                    user = dbHandler.getContactList(user);
+                                    user.setStatus(UserStatues.AVAILABLE);
+                                    System.out.println("Contact List Size : " + user.getContactList().size());
+                                    dbHandler.updateStatus(user);
+                                    visitors.remove(this);
+                                    clients.put(user.getId(), this);
+                                    sendMsg(new Message(MessageType.AUTH_YES, user));
+                                    Hashtable<String, Integer> data = new Hashtable<>();
+                                    data.put("userId", user.getId());
+                                    data.put("status", user.getStatus());
+                                    sendMsgToMultiple(new Message(MessageType.UPDATE_CONTACT_LIST, data),
+                                            user.getContactList());
+                                          
+                                        String numberOnline = dbHandler.countConnected();
+                                        String numOnline = dbHandler.countOnline();
+                                        serverApp.onlineLbl.setText(numberOnline);
+                                        serverApp.onlineLbl2.setText(numOnline);
+                                }
                             } else {
-                                sendMsg(new Message(MessageType.AUTH_NO));
+                                sendMsg(new Message(MessageType.AUTH_NO, "0"));
                             }
                             break;
 
@@ -87,6 +115,8 @@ public class ClientHandler extends Thread {
                             Hashtable<String, String> userData = (Hashtable< String, String>) msg.getData();
                             //we already take an object from the User Class and DbHandler class
                             dbHandler.register(userData.get("firstName"), userData.get("lastName"), userData.get("age"), userData.get("email"), userData.get("password"));
+                            String numberReg = dbHandler.countRegistered();
+                                        serverApp.regLbl.setText(numberReg);
 
                             break;
                         case MessageType.MESSAGE:
@@ -96,29 +126,24 @@ public class ClientHandler extends Thread {
                             }
                             echoChatMsg(msg);
                             break;
-                         //recieving the emial here   
+                        //recieving the emial here
                         case MessageType.VALIDATE_EMAIL:
                             //recieve the message of mail here in string
-                            
+
                             String addMail = (String) msg.getData();
                             //here i send the mail and the existing user
                             //create an object from the user
                             User friend = dbHandler.addFriend(addMail, user);
-                            
-                            
+
                             //friend = dbHandler.getContactList(friend);
-                            
                             //get the friend from the data base to add him on the existing user
                             //user = dbHandler.getContactList(user);
-                            
                             //here i send the message to the user with the recent cotact list
-                            sendMsg(new Message(MessageType.EMAIL_VALID,friend));
-                            
-                            //here i have the user 
-                            // now the user went to the existing user
-                            //user.getContactList().add(friend);
-                            
-                            
+                            sendMsg(new Message(MessageType.EMAIL_VALID, friend));
+
+                        //here i have the user
+                        // now the user went to the existing user
+                        //user.getContactList().add(friend);
                         case MessageType.STATE_CHANGE:
                             user.setStatus((int) msg.getData());
                             dbHandler.updateStatus(user);
@@ -127,40 +152,68 @@ public class ClientHandler extends Thread {
                             data.put("userId", user.getId());
                             data.put("status", user.getStatus());
                             sendMsgToMultiple(new Message(MessageType.UPDATE_CONTACT_LIST, data), user.getContactList());
+                            String numOnline = dbHandler.countOnline();
+                            String numBusy = dbHandler.countBusy();
+                            String numAway = dbHandler.countAway();
+                            serverApp.onlineLbl2.setText(numOnline);
+                            serverApp.busyLbl.setText(numBusy);
+                            serverApp.awayLbl.setText(numAway);
                             break;
                         case MessageType.FILE_REQUEST:
                             int recieverId = ((ArrayList<Integer>) msg.getReciever()).get(0);
                             msg.setSender(user);
-                            clients.get(recieverId).sendMsg(msg);
+                            getClients().get(recieverId).sendMsg(msg);
                             break;
                         case MessageType.FILE_RESPONSE:
                             String reciverIp = getSocket().getInetAddress().getHostAddress();
                             System.out.println(reciverIp);
                             ((Hashtable<String, Object>) msg.getData()).put("recieverIp", reciverIp);
-                            clients.get(msg.getSender().getId()).sendMsg(msg);
+                            getClients().get(msg.getSender().getId()).sendMsg(msg);
                             break;
                         case MessageType.DISCONNECT:
                             user.setStatus(UserStatues.UNAVAILABLE);
                             dbHandler.updateStatus(user);
-                            clients.remove(user.getId());
-                            visitors.add(this);
+                            getClients().remove(user.getId());
+                            getVisitors().add(this);
                             Hashtable<String, Integer> userInfo = new Hashtable<>();
                             userInfo.put("userId", user.getId());
                             userInfo.put("status", user.getStatus());
                             sendMsgToMultiple(new Message(MessageType.UPDATE_CONTACT_LIST, userInfo),
                                     user.getContactList());
+                            String numberOnline = dbHandler.countConnected();
+                                        serverApp.onlineLbl.setText(numberOnline);
+                                        String numOnline2 = dbHandler.countOnline();
+                                        String numBusy2 = dbHandler.countBusy();
+                                        String numAway2 = dbHandler.countAway();
+                            serverApp.onlineLbl2.setText(numOnline2);
+                            serverApp.busyLbl.setText(numBusy2);
+                            serverApp.awayLbl.setText(numAway2);
+
                             break;
                     }
                 }
-            } catch (EOFException ex) {
-                user.setStatus(UserStatues.UNAVAILABLE);
-                dbHandler.updateStatus(user);
-                clients.remove(user.getId());
-                Hashtable<String, Integer> data = new Hashtable<>();
-                data.put("userId", user.getId());
-                data.put("status", user.getStatus());
-                sendMsgToMultiple(new Message(MessageType.UPDATE_CONTACT_LIST, data),
-                        user.getContactList());
+            } catch (EOFException | SocketException ex) {
+                if (user != null) {
+                    user.setStatus(UserStatues.UNAVAILABLE);
+                    dbHandler.updateStatus(user);
+                    clients.remove(user.getId());
+                    Hashtable<String, Integer> data = new Hashtable<>();
+                    data.put("userId", user.getId());
+                    data.put("status", user.getStatus());
+                    sendMsgToMultiple(new Message(MessageType.UPDATE_CONTACT_LIST, data),
+                            user.getContactList());
+                                        String numberOnline = dbHandler.countConnected();
+                                        serverApp.onlineLbl.setText(numberOnline);
+                                        String numOnline = dbHandler.countOnline();
+                                        String numBusy = dbHandler.countBusy();
+                                        String numAway = dbHandler.countAway();
+                                        serverApp.onlineLbl2.setText(numOnline);
+                                        serverApp.busyLbl.setText(numBusy);
+                                        serverApp.awayLbl.setText(numAway);
+
+                } else {
+                    visitors.remove(this);
+                }
                 break;
             } catch (IOException ex) {
                 Logger.getLogger(ClientHandler.class.getName()).log(Level.SEVERE, null, ex);
@@ -172,16 +225,18 @@ public class ClientHandler extends Thread {
 
     public void echoChatMsg(Message msg) {
         ArrayList<Integer> userIds = msg.getReciever();
-        clients.get(user.getId()).sendMsg(msg);
+        getClients().get(user.getId()).sendMsg(msg);
         System.out.println("Sender Is " + user.getFirstName());
         for (Integer userId : userIds) {
             System.out.println("User Id in Loop :" + userId);
             if (msg.getReciever().size() > 1) {
                 msg.setUserList(generateUserList(msg.getReciever()));
                 msg.setUserList(addReciever(msg.getSender(), msg.getUserList()));
-                msg.setUserList(deleteReciever(clients.get(userId).getUser(), msg.getUserList()));
+                msg.setUserList(deleteReciever(getClients().get(userId).getUser(), msg.getUserList()));
             }
-            clients.get(userId).sendMsg(msg);
+            if (clients.containsKey(userId)) {
+                clients.get(userId).sendMsg(msg);
+            }
         }
     }
 
@@ -196,9 +251,9 @@ public class ClientHandler extends Thread {
 
     public void sendMsgToMultiple(Message msg, ArrayList<User> recievers) {
         for (User reciever : recievers) {
-            if (clients.containsKey(reciever.getId())) {
+            if (getClients().containsKey(reciever.getId())) {
                 System.out.println("Found the user");
-                clients.get(reciever.getId()).sendMsg(msg);
+                getClients().get(reciever.getId()).sendMsg(msg);
             }
         }
     }
@@ -220,7 +275,9 @@ public class ClientHandler extends Thread {
     public ArrayList<User> generateUserList(ArrayList<Integer> userIds) {
         ArrayList<User> userList = new ArrayList<>();
         for (Integer userId : userIds) {
-            userList.add(clients.get(userId).getUser());
+            if (clients.containsKey(userId)) {
+                userList.add(clients.get(userId).getUser());
+            }
         }
         return userList;
     }

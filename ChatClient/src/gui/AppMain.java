@@ -74,6 +74,7 @@ public class AppMain extends javax.swing.JFrame {
         doersChat = new javax.swing.JLabel();
         picture = new javax.swing.JLabel();
         ageSpinner = new javax.swing.JTextField();
+        backBtn = new javax.swing.JButton();
         jMenuBar1 = new javax.swing.JMenuBar();
         mainMenu = new javax.swing.JMenu();
         jMenu2 = new javax.swing.JMenu();
@@ -203,6 +204,13 @@ public class AppMain extends javax.swing.JFrame {
 
         picture.setIcon(new javax.swing.ImageIcon(getClass().getResource("/gui/resources/chat-people.png"))); // NOI18N
 
+        backBtn.setText("Back");
+        backBtn.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                backBtnActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout registerPanelLayout = new javax.swing.GroupLayout(registerPanel);
         registerPanel.setLayout(registerPanelLayout);
         registerPanelLayout.setHorizontalGroup(
@@ -245,10 +253,13 @@ public class AppMain extends javax.swing.JFrame {
                                     .addComponent(jLabel8))
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                                 .addGroup(registerPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                    .addComponent(registerBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 127, javax.swing.GroupLayout.PREFERRED_SIZE)
                                     .addComponent(passReg1)
-                                    .addComponent(passReg2, javax.swing.GroupLayout.DEFAULT_SIZE, 222, Short.MAX_VALUE)
-                                    .addComponent(ageSpinner))))))
+                                    .addComponent(passReg2)
+                                    .addComponent(ageSpinner)
+                                    .addGroup(registerPanelLayout.createSequentialGroup()
+                                        .addComponent(backBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 112, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                        .addComponent(registerBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 108, javax.swing.GroupLayout.PREFERRED_SIZE)))))))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         registerPanelLayout.setVerticalGroup(
@@ -287,8 +298,10 @@ public class AppMain extends javax.swing.JFrame {
                     .addComponent(jLabel8)
                     .addComponent(ageSpinner, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
-                .addComponent(registerBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 41, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(109, Short.MAX_VALUE))
+                .addGroup(registerPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(registerBtn, javax.swing.GroupLayout.DEFAULT_SIZE, 41, Short.MAX_VALUE)
+                    .addComponent(backBtn, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(137, Short.MAX_VALUE))
         );
 
         panelGroup.add(registerPanel, "registerPanel");
@@ -316,7 +329,8 @@ public class AppMain extends javax.swing.JFrame {
             // show a joptionpane dialog using showMessageDialog
             JOptionPane.showMessageDialog(frame, "Please Enter your Full information");
         } else //another check for the password itself
-         if (passReg1.getText().equals(passReg2.getText())) {
+        {
+            if (passReg1.getText().equals(passReg2.getText())) {
                 System.out.println("matched");
 
                 //check for Email validation
@@ -348,7 +362,6 @@ public class AppMain extends javax.swing.JFrame {
                         }
                         //creating a message type
                         Message register = new Message(MessageType.REGISTER, userData);
-
                         //call clientConnection Class to send the message to the server through the sendClientMsg
                         clientConnection.sendClientMsg(register);
                         //it's already sent handle it through clientHandler on server
@@ -361,6 +374,7 @@ public class AppMain extends javax.swing.JFrame {
                 JFrame frame = new JFrame("JOptionPane showMessageDialog example");
                 JOptionPane.showMessageDialog(frame, "Password dosen't match");
             }
+        }
     }//GEN-LAST:event_registerBtnActionPerformed
 
     private void loginBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_loginBtnActionPerformed
@@ -375,13 +389,17 @@ public class AppMain extends javax.swing.JFrame {
 
     private void signUpBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_signUpBtnActionPerformed
         // TODO add your handling code here:
-        ((java.awt.CardLayout) (panelGroup.getLayout())).next(panelGroup);
+        ((java.awt.CardLayout) (panelGroup.getLayout())).show(panelGroup, "registerPanel");
         //((java.awt.CardLayout) (panelGroup.getLayout())).last(panelGroup);
     }//GEN-LAST:event_signUpBtnActionPerformed
 
     private void firstNameRegActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_firstNameRegActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_firstNameRegActionPerformed
+
+    private void backBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_backBtnActionPerformed
+        ((java.awt.CardLayout) (panelGroup.getLayout())).show(panelGroup, "loginPanel");
+    }//GEN-LAST:event_backBtnActionPerformed
 
     /**
      * @param args the command line arguments
@@ -441,6 +459,7 @@ public class AppMain extends javax.swing.JFrame {
     }
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JTextField ageSpinner;
+    private javax.swing.JButton backBtn;
     private javax.swing.JLabel doersChat;
     private javax.swing.JTextField emailBox;
     private javax.swing.JTextField emailReg;

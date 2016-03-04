@@ -15,8 +15,8 @@ public class ChatServer {
      * @param args the command line arguments
      */
     public static void main(String[] args) {
-        ClientDispatcher dispatcher = new ClientDispatcher();
-        dispatcher.start();
+        //ClientDispatcher dispatcher = new ClientDispatcher();
+        //dispatcher.start();
     }
 
 }
