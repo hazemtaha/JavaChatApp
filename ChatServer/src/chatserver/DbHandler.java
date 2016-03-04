@@ -26,21 +26,14 @@ public class DbHandler {
     private Connection dbConnection;
 
     public DbHandler() {
-<<<<<<< HEAD
+
         //String stringConnection = "jdbc:mysql://localhost:3306/chatApp";
         String stringConnection = "jdbc:mysql://localhost:3306/chatapp";
         try {
             Class.forName("com.mysql.jdbc.Driver");
             //dbConnection = DriverManager.getConnection(stringConnection, "root", "iti");
             dbConnection = DriverManager.getConnection(stringConnection, "root", "");
-=======
-        String stringConnection = "jdbc:mysql://localhost:3306/chatApp";
-//        String stringConnection = "jdbc:mysql://localhost:3306/JAVACHAT";
-        try {
-            Class.forName("com.mysql.jdbc.Driver");
-            dbConnection = DriverManager.getConnection(stringConnection, "root", "iti");
-//            dbConnection = DriverManager.getConnection(stringConnection, "root", "0160");
->>>>>>> 06e2b7fc5fac619b394ca64b53732105af6fb0f1
+
         } catch (ClassNotFoundException | SQLException ex) {
             Logger.getLogger(DbHandler.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -126,4 +119,20 @@ public class DbHandler {
         }
         return null;
     }
+    public String countOnline(){
+        try {
+            Statement stmt = dbConnection.createStatement();
+            String query = new String("select count(email) from users where status =1");
+           
+            ResultSet result =stmt.executeQuery(query);
+            while(result.next()){
+             return result.getString(1);
+      
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(DbHandler.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return null;
+    }
+    
 }

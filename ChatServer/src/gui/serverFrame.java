@@ -6,9 +6,10 @@
 package gui;
 
 import chatserver.ClientDispatcher;
-import java.io.IOException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import chatserver.ClientHandler;
+import static chatserver.ClientHandler.clients;
+import chatserver.DbHandler;
+import java.util.Set;
 
 /**
  *
@@ -16,7 +17,7 @@ import java.util.logging.Logger;
  */
 public class serverFrame extends javax.swing.JFrame {
         ClientDispatcher dispatcher;
-            
+        //DbHandler conn;    
     /**
      * Creates new form serverFrame
      */
@@ -25,6 +26,9 @@ public class serverFrame extends javax.swing.JFrame {
         dispatcher = new ClientDispatcher();
         dispatcher.start();
         System.out.println("started");
+        //conn = new DbHandler();
+
+        
     }
 
     /**
@@ -44,7 +48,7 @@ public class serverFrame extends javax.swing.JFrame {
         jLabel3 = new javax.swing.JLabel();
         toggleButton1 = new javax.swing.JToggleButton();
         jLabel4 = new javax.swing.JLabel();
-        jLabel5 = new javax.swing.JLabel();
+        onlineLbl = new javax.swing.JLabel();
         jLabel6 = new javax.swing.JLabel();
         jLabel7 = new javax.swing.JLabel();
 
@@ -108,7 +112,7 @@ public class serverFrame extends javax.swing.JFrame {
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(jLabel4)
                         .addGap(43, 43, 43)
-                        .addComponent(jLabel5, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(onlineLbl, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(79, 79, 79)
                         .addComponent(jLabel6)
                         .addGap(48, 48, 48)
@@ -136,7 +140,7 @@ public class serverFrame extends javax.swing.JFrame {
                         .addGap(32, 32, 32)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jLabel4)
-                            .addComponent(jLabel5, javax.swing.GroupLayout.PREFERRED_SIZE, 14, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                            .addComponent(onlineLbl, javax.swing.GroupLayout.PREFERRED_SIZE, 14, javax.swing.GroupLayout.PREFERRED_SIZE)))
                     .addGroup(layout.createSequentialGroup()
                         .addGap(31, 31, 31)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
@@ -153,28 +157,30 @@ public class serverFrame extends javax.swing.JFrame {
             if (toggleButton.isSelected()){
                 toggleButton.setText("OFF");         
                     dispatcher.suspend();
+                    for (ClientHandler visitor : ClientHandler.visitors) {
+                    visitor.suspend();
+                }
+                    Set<Integer> keys = ClientHandler.clients.keySet();
+                    for (Integer key :keys ) {
+                    clients.get(key).suspend();
+                }
                     System.out.println("stopped");
             } else {
                 toggleButton.setText("ON");
                 dispatcher.resume();
                 System.out.println("resumed");
+                   for (ClientHandler visitor : ClientHandler.visitors) {
+                    visitor.resume();
+                }
+                    Set<Integer> keys = ClientHandler.clients.keySet();
+                    for (Integer key :keys ) {
+                    clients.get(key).resume();
+                }
             }
     }//GEN-LAST:event_toggleButtonActionPerformed
 
     private void toggleButtonStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_toggleButtonStateChanged
-        /*
-            ClientDispatcher dispatcher = new ClientDispatcher();
-            dispatcher.start();
-            if (toggleButton.isSelected()){
-                toggleButton.setText("OFF");
-                dispatcher.suspend();
-            } else {
-                toggleButton.setText("ON");
-                dispatcher.resume();
-                
-                
-            }
-       */
+        
     }//GEN-LAST:event_toggleButtonStateChanged
 
     private void toggleButton1StateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_toggleButton1StateChanged
@@ -226,10 +232,10 @@ public class serverFrame extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
-    private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel7;
     private javax.swing.JTextField jTextField1;
+    public javax.swing.JLabel onlineLbl;
     private javax.swing.JToggleButton toggleButton;
     private javax.swing.JToggleButton toggleButton1;
     // End of variables declaration//GEN-END:variables

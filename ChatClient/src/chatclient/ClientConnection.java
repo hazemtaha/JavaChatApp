@@ -22,6 +22,7 @@ import java.io.ObjectOutputStream;
 import java.net.ConnectException;
 import java.net.InetAddress;
 import java.net.Socket;
+import java.net.SocketException;
 import java.util.Hashtable;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -54,8 +55,8 @@ public class ClientConnection extends Thread {
     public void run() {
         while (true) {
             try {
-//                socket = new Socket(InetAddress.getLocalHost(), 8000);
-                socket = new Socket("10.0.1.95", 8000);
+                socket = new Socket(InetAddress.getLocalHost(), 8000);
+                //socket = new Socket("10.0.1.95", 8000);
                 objWriter = new ObjectOutputStream(getSocket().getOutputStream());
                 objWriter.flush();
                 objReader = new ObjectInputStream(getSocket().getInputStream());
@@ -171,7 +172,7 @@ public class ClientConnection extends Thread {
                                     break;
                             }
                         }
-                    } catch (EOFException ex) {
+                    } catch (EOFException | SocketException ex) {
                         break;
                     } catch (IOException | ClassNotFoundException ex) {
                         Logger.getLogger(ClientConnection.class.getName()).log(Level.SEVERE, null, ex);
