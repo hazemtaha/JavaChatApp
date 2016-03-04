@@ -35,9 +35,8 @@ public class DbHandler {
 //       String stringConnection = "jdbc:mysql://localhost:3306/JAVACHAT";
         try {
             Class.forName("com.mysql.jdbc.Driver");
-            //dbConnection = DriverManager.getConnection(stringConnection, "root", "iti");
-            dbConnection = DriverManager.getConnection(stringConnection, "root", "");
-
+            dbConnection = DriverManager.getConnection(stringConnection, "root", "iti");
+//            dbConnection = DriverManager.getConnection(stringConnection, "root", "");
         } catch (ClassNotFoundException | SQLException ex) {
             Logger.getLogger(DbHandler.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -123,25 +122,25 @@ public class DbHandler {
         }
         return null;
     }
-    public String countOnline(){
+
+    public String countOnline() {
         try {
             Statement stmt = dbConnection.createStatement();
             String query = new String("select count(email) from users where status =1");
-           
-            ResultSet result =stmt.executeQuery(query);
-            while(result.next()){
-             return result.getString(1);
-      
+
+            ResultSet result = stmt.executeQuery(query);
+            while (result.next()) {
+                return result.getString(1);
+
             }
         } catch (SQLException ex) {
             Logger.getLogger(DbHandler.class.getName()).log(Level.SEVERE, null, ex);
         }
-        return null; 
+        return null;
     }
-    
+
     ///////////////***********************************************************************
     //here i recieve the email message
-
     public User addFriend(String email, User user) {
         //first i need to check if this email exist in data base or not
         //create the query to select from the database
