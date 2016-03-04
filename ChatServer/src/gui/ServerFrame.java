@@ -7,10 +7,9 @@ package gui;
 
 import chatserver.ClientDispatcher;
 import chatserver.ClientHandler;
-import static chatserver.ClientHandler.clients;
 import chatserver.DbHandler;
 import java.awt.Color;
-import java.util.Set;
+import java.util.Hashtable;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -45,8 +44,8 @@ public class ServerFrame extends javax.swing.JFrame {
         toggleButton = new javax.swing.JToggleButton();
         jLabel1 = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
-        jTextField1 = new javax.swing.JTextField();
-        jButton1 = new javax.swing.JButton();
+        msgBox = new javax.swing.JTextField();
+        sendBtn = new javax.swing.JButton();
         jLabel4 = new javax.swing.JLabel();
         connectedLbl = new javax.swing.JLabel();
         jLabel6 = new javax.swing.JLabel();
@@ -78,7 +77,12 @@ public class ServerFrame extends javax.swing.JFrame {
 
         jLabel2.setText("Announcment Message");
 
-        jButton1.setText("Send");
+        sendBtn.setText("Send");
+        sendBtn.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                sendBtnActionPerformed(evt);
+            }
+        });
 
         jLabel4.setText("Connected Users");
 
@@ -110,9 +114,9 @@ public class ServerFrame extends javax.swing.JFrame {
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(jButton1, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(sendBtn, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(jSeparator1, javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jTextField1, javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(msgBox, javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jLabel2)
@@ -181,9 +185,9 @@ public class ServerFrame extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jLabel2)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 21, Short.MAX_VALUE)
-                .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, 81, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(msgBox, javax.swing.GroupLayout.PREFERRED_SIZE, 81, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
-                .addComponent(jButton1)
+                .addComponent(sendBtn)
                 .addContainerGap())
         );
 
@@ -207,6 +211,15 @@ public class ServerFrame extends javax.swing.JFrame {
     private void toggleButtonStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_toggleButtonStateChanged
 
     }//GEN-LAST:event_toggleButtonStateChanged
+
+    private void sendBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_sendBtnActionPerformed
+
+    }//GEN-LAST:event_sendBtnActionPerformed
+
+    public void broadcastMsg(String msg) {
+        //        Iterator<Integer, ClientHandler> clientsIterator =
+
+    }
 
     public void resetStates() {
         connectedLbl.setText("0");
@@ -257,7 +270,6 @@ public class ServerFrame extends javax.swing.JFrame {
     public javax.swing.JLabel awayLbl;
     public javax.swing.JLabel busyLbl;
     public javax.swing.JLabel connectedLbl;
-    private javax.swing.JButton jButton1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
@@ -266,9 +278,10 @@ public class ServerFrame extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel8;
     private javax.swing.JSeparator jSeparator1;
-    private javax.swing.JTextField jTextField1;
+    private javax.swing.JTextField msgBox;
     public javax.swing.JLabel onlineLbl;
     public javax.swing.JLabel regLbl;
+    private javax.swing.JButton sendBtn;
     private javax.swing.JLabel statusLbl;
     private javax.swing.JToggleButton toggleButton;
     // End of variables declaration//GEN-END:variables

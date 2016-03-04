@@ -215,7 +215,7 @@ public class ClientHandler extends Thread {
                             break;
                     }
                 }
-            } catch (EOFException | SocketException ex) { // 
+            } catch (EOFException | SocketException ex) {
                 if (user != null) {
                     user.setStatus(UserStatues.UNAVAILABLE);
                     dbHandler.updateStatus(user);
