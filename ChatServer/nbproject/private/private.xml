@@ -2,14 +2,11 @@
 <project-private xmlns="http://www.netbeans.org/ns/project-private/1">
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
-<<<<<<< HEAD
-        <group/>
-=======
         <group>
-            <file>file:/home/kan/MyGitRepos/JavaChat/ChatServer/src/chatserver/ClientHandler.java</file>
-            <file>file:/home/kan/MyGitRepos/JavaChat/ChatServer/src/chatserver/ClientDispatcher.java</file>
-            <file>file:/home/kan/MyGitRepos/JavaChat/ChatServer/src/gui/ServerFrame.java</file>
+            <file>file:/C:/Users/Hussien/Desktop/Java_Project/JavaChatApp/ChatServer/src/chatserver/ClientDispatcher.java</file>
+            <file>file:/C:/Users/Hussien/Desktop/Java_Project/JavaChatApp/ChatServer/src/chatserver/ClientHandler.java</file>
+            <file>file:/C:/Users/Hussien/Desktop/Java_Project/JavaChatApp/ChatServer/src/gui/ServerFrame.java</file>
+            <file>file:/C:/Users/Hussien/Desktop/Java_Project/JavaChatApp/ChatServer/src/chatserver/DbHandler.java</file>
         </group>
->>>>>>> c69ddcfe4ae345a40ab3470f5ebcaa8887b534cf
     </open-files>
 </project-private>

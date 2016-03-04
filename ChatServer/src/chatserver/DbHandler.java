@@ -35,8 +35,8 @@ public class DbHandler {
 //       String stringConnection = "jdbc:mysql://localhost:3306/JAVACHAT";
         try {
             Class.forName("com.mysql.jdbc.Driver");
-            dbConnection = DriverManager.getConnection(stringConnection, "root", "iti");
-//            dbConnection = DriverManager.getConnection(stringConnection, "root", "");
+            //dbConnection = DriverManager.getConnection(stringConnection, "root", "iti");
+           dbConnection = DriverManager.getConnection(stringConnection, "root", "");
         } catch (ClassNotFoundException | SQLException ex) {
             Logger.getLogger(DbHandler.class.getName()).log(Level.SEVERE, null, ex);
         }
