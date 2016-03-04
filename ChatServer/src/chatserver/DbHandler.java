@@ -220,37 +220,29 @@ public class DbHandler {
         //create the query to select from the database
         //i am recieving the input email and the existing user
         try {
-            String query = "SELECT email FROM users";
+            String query = "SELECT * FROM users where email = '"+email+"' and u_id !="+user.getId();
+
             Statement st = dbConnection.createStatement();
 
-            ResultSet rs = st.executeQuery(query);
+            ResultSet rs = st.executeQuery(query); 
+            if (rs.next()) 
+                        {
+            String friendCheck = "SELECT * FROM contact_list where friend_id = "+rs.getInt("u_id")+" and u_id ="+user.getId();
 
-            while (rs.next()) {
-                //first check on the database if the mail exist
-                if (email.equals(rs.getString("email"))) {
-                    //so it is exist ** another check if it is the same mail or not
+            Statement checkStmt = dbConnection.createStatement();
 
-                       System.out.println("existing user");
-                    
-               //    if (email.equals(user.getEmail())) {
-
-                    if (email.equals(user.getEmail())) {
-
-                        System.out.println("you can't add yourself");
-
-                        //sendMsg(new Message(MessageType.AUTH_YES, user));
-                       //  break;
-                     } else {
+            ResultSet checkRs = checkStmt.executeQuery(friendCheck);                             
                         System.out.println("ok you are good to go");
-                        //third check if this user already on the contact list
-                        if (user.getContactList().contains(email)) {
+                        //check if its already exist
+                        if (checkRs.next()) { 
                             System.out.println("you already added this user");
-                        } else {
+                            return null;
+                            } else {
                             //here is the start of adding this friend to his list
-                            try {
-                                PreparedStatement userObj = dbConnection.prepareStatement("SELECT * FROM users WHERE email = ?");
-                                userObj.setString(1, email);
-                                ArrayList<User> singleUser = generateList(userObj.executeQuery());
+                            
+                                //generate an object from this friend
+                                rs.beforeFirst();
+                                ArrayList<User> singleUser = generateList(rs);
 
                                 //i will call the function to pass u_id and friend_id
                                 //System.out.println(user.getId());
@@ -265,29 +257,23 @@ public class DbHandler {
                                 //here i recieved this user data.
                                 //    System.out.println(((User)singleUser.get(0)).getId());
                                 //  System.out.println(((User)singleUser.get(0)).getLastName());
-                                } catch (SQLException ex) {
-                                                          }
+                                
                                //break;
-                                }
-
-                              }
-
+                                
+                                    }
+                        } else {
+                return null;
+                        }
                     //String mailList = rs.getString("email");
                     //System.out.format("%s\n", mailList);
-                 } else {
-                    JFrame frame = new JFrame("InputDialog Example #2");
-                    JOptionPane.showMessageDialog(frame, "This email is not exist on the database");
-                   // break;
-
-                }
-            }
+                 
+            
 
         } catch (SQLException ex) {
             Logger.getLogger(DbHandler.class.getName()).log(Level.SEVERE, null, ex);
         }
         //System.out.println(email);
-
-        return user;
+     return null;   
     }
 
 public void insertFriend(int userId, int friendId) {

@@ -157,12 +157,18 @@ public class ClientHandler extends Thread {
                             //here i send the mail and the existing user
                             //create an object from the user
                             User friend = dbHandler.addFriend(addMail, user);
+                            if (friend == null) {
+                                sendMsg(new Message(MessageType.EMAIL_INVALID));
+
+                            } else {
+                                sendMsg(new Message(MessageType.EMAIL_VALID, friend));
+                           
+                            }
 
                             //friend = dbHandler.getContactList(friend);
                             //get the friend from the data base to add him on the existing user
                             //user = dbHandler.getContactList(user);
                             //here i send the message to the user with the recent cotact list
-                            sendMsg(new Message(MessageType.EMAIL_VALID, friend));
 
 
                         //here i have the user

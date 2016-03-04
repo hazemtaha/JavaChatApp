@@ -28,6 +28,7 @@ import java.util.Hashtable;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JFileChooser;
+import javax.swing.JFrame;
 import javax.swing.JMenu;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
@@ -202,6 +203,13 @@ public class ClientConnection extends Thread {
 
                                 case MessageType.ANNOUNCEMENT:
                                     new Notification(msg.getData().toString(), Notification.ANNOUNCEMENT);
+                                    break;
+                                    
+                                case MessageType.EMAIL_INVALID:
+                                    JFrame frame = new JFrame("JOptionPane showMessageDialog example");
+                                    // show a joptionpane dialog using showMessageDialog
+                                    JOptionPane.showMessageDialog(frame, "Please check this Email");
+                                    
                                     break;
 
                             }
