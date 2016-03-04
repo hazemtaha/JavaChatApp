@@ -247,10 +247,14 @@
                                       </Group>
                                       <EmptySpace type="unrelated" max="-2" attributes="0"/>
                                       <Group type="103" groupAlignment="0" max="-2" attributes="0">
-                                          <Component id="registerBtn" min="-2" pref="127" max="-2" attributes="0"/>
                                           <Component id="passReg1" max="32767" attributes="0"/>
-                                          <Component id="passReg2" alignment="0" pref="222" max="32767" attributes="0"/>
+                                          <Component id="passReg2" alignment="0" max="32767" attributes="0"/>
                                           <Component id="ageSpinner" alignment="0" max="32767" attributes="0"/>
+                                          <Group type="102" alignment="0" attributes="0">
+                                              <Component id="backBtn" min="-2" pref="112" max="-2" attributes="0"/>
+                                              <EmptySpace max="32767" attributes="0"/>
+                                              <Component id="registerBtn" min="-2" pref="108" max="-2" attributes="0"/>
+                                          </Group>
                                       </Group>
                                   </Group>
                               </Group>
@@ -302,8 +306,11 @@
                           <Component id="ageSpinner" alignment="3" min="-2" max="-2" attributes="0"/>
                       </Group>
                       <EmptySpace type="separate" max="-2" attributes="0"/>
-                      <Component id="registerBtn" min="-2" pref="41" max="-2" attributes="0"/>
-                      <EmptySpace pref="109" max="32767" attributes="0"/>
+                      <Group type="103" groupAlignment="0" max="-2" attributes="0">
+                          <Component id="registerBtn" pref="41" max="32767" attributes="0"/>
+                          <Component id="backBtn" max="32767" attributes="0"/>
+                      </Group>
+                      <EmptySpace pref="137" max="32767" attributes="0"/>
                   </Group>
               </Group>
             </DimensionLayout>
@@ -410,6 +417,14 @@
               </Properties>
             </Component>
             <Component class="javax.swing.JTextField" name="ageSpinner">
+            </Component>
+            <Component class="javax.swing.JButton" name="backBtn">
+              <Properties>
+                <Property name="text" type="java.lang.String" value="Back"/>
+              </Properties>
+              <Events>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="backBtnActionPerformed"/>
+              </Events>
             </Component>
           </SubComponents>
         </Container>

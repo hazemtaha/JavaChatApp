@@ -37,7 +37,6 @@ public class DbHandler {
             Class.forName("com.mysql.jdbc.Driver");
             //dbConnection = DriverManager.getConnection(stringConnection, "root", "iti");
             dbConnection = DriverManager.getConnection(stringConnection, "root", "");
-
         } catch (ClassNotFoundException | SQLException ex) {
             Logger.getLogger(DbHandler.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -123,9 +122,11 @@ public class DbHandler {
         }
         return null;
     }
-    public String countOnline(){
+
+    public String countOnline() {
         try {
             Statement stmt = dbConnection.createStatement();
+
             String query = new String("select count(email) from users where status != 0");
            
             ResultSet result =stmt.executeQuery(query);
@@ -148,16 +149,16 @@ public class DbHandler {
             while(result.next()){
              return result.getString(1);
       
+
             }
         } catch (SQLException ex) {
             Logger.getLogger(DbHandler.class.getName()).log(Level.SEVERE, null, ex);
         }
-        return null; 
+        return null;
     }
-    
+
     ///////////////***********************************************************************
     //here i recieve the email message
-
     public User addFriend(String email, User user) {
         //first i need to check if this email exist in data base or not
         //create the query to select from the database
