@@ -378,18 +378,28 @@ public class AppMain extends javax.swing.JFrame {
     }//GEN-LAST:event_registerBtnActionPerformed
 
     private void loginBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_loginBtnActionPerformed
-        Hashtable<String, String> credintials = new Hashtable<>();
-        credintials.put("email", emailBox.getText());
-        credintials.put("password", passwordBox.getText());
-        passwordBox.setText("");
-        Message login = new Message(MessageType.LOGIN, credintials);
-        clientConnection.sendClientMsg(login);
+        if (ClientConnection.isConnected) {
+            Hashtable<String, String> credintials = new Hashtable<>();
+            credintials.put("email", emailBox.getText());
+            credintials.put("password", passwordBox.getText());
+            passwordBox.setText("");
+            Message login = new Message(MessageType.LOGIN, credintials);
+            clientConnection.sendClientMsg(login);
+        } else {
+            String errMsg = "Server currently unavailable";
+            JOptionPane.showMessageDialog(this, errMsg, "Server Offline", JOptionPane.ERROR_MESSAGE);
+        }
         //((java.awt.CardLayout) (jPanel1.getLayout())).next(jPanel1);
     }//GEN-LAST:event_loginBtnActionPerformed
 
     private void signUpBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_signUpBtnActionPerformed
         // TODO add your handling code here:
-        ((java.awt.CardLayout) (panelGroup.getLayout())).show(panelGroup, "registerPanel");
+        if (ClientConnection.isConnected) {
+            ((java.awt.CardLayout) (panelGroup.getLayout())).show(panelGroup, "registerPanel");
+        } else {
+            String errMsg = "Server currently unavailable";
+            JOptionPane.showMessageDialog(this, errMsg, "Server Offline", JOptionPane.ERROR_MESSAGE);
+        }
         //((java.awt.CardLayout) (panelGroup.getLayout())).last(panelGroup);
     }//GEN-LAST:event_signUpBtnActionPerformed
 

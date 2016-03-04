@@ -35,8 +35,13 @@ public class DbHandler {
        String stringConnection = "jdbc:mysql://localhost:3306/JAVACHAT";
         try {
             Class.forName("com.mysql.jdbc.Driver");
+
 //            dbConnection = DriverManager.getConnection(stringConnection, "root", "iti");
             dbConnection = DriverManager.getConnection(stringConnection, "root", "0160");
+
+//            dbConnection = DriverManager.getConnection(stringConnection, "root", "iti");
+//           dbConnection = DriverManager.getConnection(stringConnection, "root", "");
+
         } catch (ClassNotFoundException | SQLException ex) {
             Logger.getLogger(DbHandler.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -224,9 +229,13 @@ public class DbHandler {
                 //first check on the database if the mail exist
                 if (email.equals(rs.getString("email"))) {
                     //so it is exist ** another check if it is the same mail or not
+
                        System.out.println("existing user");
                     
-                      if (email.equals(user.getEmail())) {
+               //    if (email.equals(user.getEmail())) {
+
+                    if (email.equals(user.getEmail())) {
+
                         System.out.println("you can't add yourself");
 
                         //sendMsg(new Message(MessageType.AUTH_YES, user));

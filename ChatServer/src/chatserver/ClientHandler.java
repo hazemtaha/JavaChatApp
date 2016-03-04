@@ -31,7 +31,7 @@ public class ClientHandler extends Thread {
             = new ArrayList<ClientHandler>();
     public static Hashtable<Integer, ClientHandler> clients
             = new Hashtable<Integer, ClientHandler>();
-    
+
     /**
      * @return the visitors
      */
@@ -51,9 +51,9 @@ public class ClientHandler extends Thread {
     private User user;
     private DbHandler dbHandler;
     private ServerFrame serverApp;
+    private Thread controller;
 
-
-    public ClientHandler(Socket socket,ServerFrame serverApp) {
+    public ClientHandler(Socket socket, ServerFrame serverApp) {
         this.socket = socket;
         this.serverApp = serverApp;
         dbHandler = new DbHandler();
@@ -65,10 +65,32 @@ public class ClientHandler extends Thread {
         } catch (IOException ex) {
             Logger.getLogger(ClientHandler.class.getName()).log(Level.SEVERE, null, ex);
         }
+        controller = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                while (true) {
+                    if (!ServerFrame.isOnline) {
+                        try {
+                            socket.close();
+                            break;
+                        } catch (IOException ex) {
+                            Logger.getLogger(ClientDispatcher.class.getName()).log(Level.SEVERE, null, ex);
+                        }
+                    }
+                    try {
+                        sleep(1000);
+                    } catch (InterruptedException ex) {
+                        Logger.getLogger(ClientDispatcher.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+
+                }
+            }
+        });
     }
 
     @Override
     public void run() {
+        controller.start();
         mainLoop:
         while (true) {
             try {
@@ -98,11 +120,11 @@ public class ClientHandler extends Thread {
                                     data.put("status", user.getStatus());
                                     sendMsgToMultiple(new Message(MessageType.UPDATE_CONTACT_LIST, data),
                                             user.getContactList());
-                                          
-                                        String numberOnline = dbHandler.countConnected();
-                                        String numOnline = dbHandler.countOnline();
-                                        serverApp.onlineLbl.setText(numberOnline);
-                                        serverApp.onlineLbl2.setText(numOnline);
+
+                                    String numberOnline = dbHandler.countConnected();
+                                    String numOnline = dbHandler.countOnline();
+                                    serverApp.connectedLbl.setText(numberOnline);
+                                    serverApp.onlineLbl.setText(numOnline);
                                 }
                             } else {
                                 sendMsg(new Message(MessageType.AUTH_NO, "0"));
@@ -116,7 +138,7 @@ public class ClientHandler extends Thread {
                             //we already take an object from the User Class and DbHandler class
                             dbHandler.register(userData.get("firstName"), userData.get("lastName"), userData.get("age"), userData.get("email"), userData.get("password"));
                             String numberReg = dbHandler.countRegistered();
-                                        serverApp.regLbl.setText(numberReg);
+                            serverApp.regLbl.setText(numberReg);
 
                             break;
                         case MessageType.MESSAGE:
@@ -142,9 +164,15 @@ public class ClientHandler extends Thread {
                             //here i send the message to the user with the recent cotact list
                             sendMsg(new Message(MessageType.EMAIL_VALID, friend));
 
+
                         //here i have the user
                         // now the user went to the existing user
                         //user.getContactList().add(friend);
+
+                            //here i have the user
+                            // now the user went to the existing user
+                            //user.getContactList().add(friend);
+
                             break;
                         case MessageType.STATE_CHANGE:
                             user.setStatus((int) msg.getData());
@@ -157,7 +185,7 @@ public class ClientHandler extends Thread {
                             String numOnline = dbHandler.countOnline();
                             String numBusy = dbHandler.countBusy();
                             String numAway = dbHandler.countAway();
-                            serverApp.onlineLbl2.setText(numOnline);
+                            serverApp.onlineLbl.setText(numOnline);
                             serverApp.busyLbl.setText(numBusy);
                             serverApp.awayLbl.setText(numAway);
                             break;
@@ -183,11 +211,11 @@ public class ClientHandler extends Thread {
                             sendMsgToMultiple(new Message(MessageType.UPDATE_CONTACT_LIST, userInfo),
                                     user.getContactList());
                             String numberOnline = dbHandler.countConnected();
-                                        serverApp.onlineLbl.setText(numberOnline);
-                                        String numOnline2 = dbHandler.countOnline();
-                                        String numBusy2 = dbHandler.countBusy();
-                                        String numAway2 = dbHandler.countAway();
-                            serverApp.onlineLbl2.setText(numOnline2);
+                            serverApp.connectedLbl.setText(numberOnline);
+                            String numOnline2 = dbHandler.countOnline();
+                            String numBusy2 = dbHandler.countBusy();
+                            String numAway2 = dbHandler.countAway();
+                            serverApp.onlineLbl.setText(numOnline2);
                             serverApp.busyLbl.setText(numBusy2);
                             serverApp.awayLbl.setText(numAway2);
 
@@ -220,15 +248,14 @@ public class ClientHandler extends Thread {
                     data.put("status", user.getStatus());
                     sendMsgToMultiple(new Message(MessageType.UPDATE_CONTACT_LIST, data),
                             user.getContactList());
-                                        String numberOnline = dbHandler.countConnected();
-                                        serverApp.onlineLbl.setText(numberOnline);
-                                        String numOnline = dbHandler.countOnline();
-                                        String numBusy = dbHandler.countBusy();
-                                        String numAway = dbHandler.countAway();
-                                        serverApp.onlineLbl2.setText(numOnline);
-                                        serverApp.busyLbl.setText(numBusy);
-                                        serverApp.awayLbl.setText(numAway);
-
+                    String numberOnline = dbHandler.countConnected();
+                    serverApp.connectedLbl.setText(numberOnline);
+                    String numOnline = dbHandler.countOnline();
+                    String numBusy = dbHandler.countBusy();
+                    String numAway = dbHandler.countAway();
+                    serverApp.onlineLbl.setText(numOnline);
+                    serverApp.busyLbl.setText(numBusy);
+                    serverApp.awayLbl.setText(numAway);
                 } else {
                     visitors.remove(this);
                 }

@@ -350,6 +350,17 @@ public class MainPanel extends javax.swing.JPanel {
         }
         return usersList;
     }
+
+    public void destroyChats() {
+        for (PrivateChatWindow chat : chats) {
+            chat.dispose();
+        }
+        for (GroupChatWindow chat : groupChats) {
+            chat.dispose();
+        }
+        chats.clear();
+        groupChats.clear();
+    }
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton addFriendBtn;
     private javax.swing.JList<User> contactsList;
