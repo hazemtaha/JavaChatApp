@@ -123,7 +123,7 @@ public class DbHandler {
         return null;
     }
 
-    public String countOnline() {
+    public String countConnected() {
         try {
             Statement stmt = dbConnection.createStatement();
 
@@ -155,6 +155,55 @@ public class DbHandler {
             Logger.getLogger(DbHandler.class.getName()).log(Level.SEVERE, null, ex);
         }
         return null;
+    }
+    public String countOnline() {
+        try {
+            Statement stmt = dbConnection.createStatement();
+
+            String query = new String("select count(email) from users where status = 1");
+           
+            ResultSet result =stmt.executeQuery(query);
+            while(result.next()){
+             return result.getString(1);
+      
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(DbHandler.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return null; 
+    }
+    public String countBusy() {
+        try {
+            Statement stmt = dbConnection.createStatement();
+
+            String query = new String("select count(email) from users where status = 2");
+           
+            ResultSet result =stmt.executeQuery(query);
+            while(result.next()){
+             return result.getString(1);
+      
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(DbHandler.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return null; 
+    }
+    
+    public String countAway() {
+        try {
+            Statement stmt = dbConnection.createStatement();
+
+            String query = new String("select count(email) from users where status = 3");
+           
+            ResultSet result =stmt.executeQuery(query);
+            while(result.next()){
+             return result.getString(1);
+      
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(DbHandler.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return null; 
     }
 
     ///////////////***********************************************************************

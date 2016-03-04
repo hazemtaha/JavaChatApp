@@ -99,8 +99,10 @@ public class ClientHandler extends Thread {
                                     sendMsgToMultiple(new Message(MessageType.UPDATE_CONTACT_LIST, data),
                                             user.getContactList());
                                           
-                                        String numberOnline = dbHandler.countOnline();
+                                        String numberOnline = dbHandler.countConnected();
+                                        String numOnline = dbHandler.countOnline();
                                         serverApp.onlineLbl.setText(numberOnline);
+                                        serverApp.onlineLbl2.setText(numOnline);
                                 }
                             } else {
                                 sendMsg(new Message(MessageType.AUTH_NO, "0"));
@@ -150,6 +152,12 @@ public class ClientHandler extends Thread {
                             data.put("userId", user.getId());
                             data.put("status", user.getStatus());
                             sendMsgToMultiple(new Message(MessageType.UPDATE_CONTACT_LIST, data), user.getContactList());
+                            String numOnline = dbHandler.countOnline();
+                            String numBusy = dbHandler.countBusy();
+                            String numAway = dbHandler.countAway();
+                            serverApp.onlineLbl2.setText(numOnline);
+                            serverApp.busyLbl.setText(numBusy);
+                            serverApp.awayLbl.setText(numAway);
                             break;
                         case MessageType.FILE_REQUEST:
                             int recieverId = ((ArrayList<Integer>) msg.getReciever()).get(0);
@@ -172,8 +180,15 @@ public class ClientHandler extends Thread {
                             userInfo.put("status", user.getStatus());
                             sendMsgToMultiple(new Message(MessageType.UPDATE_CONTACT_LIST, userInfo),
                                     user.getContactList());
-                            String numberOnline = dbHandler.countOnline();
+                            String numberOnline = dbHandler.countConnected();
                                         serverApp.onlineLbl.setText(numberOnline);
+                                        String numOnline2 = dbHandler.countOnline();
+                                        String numBusy2 = dbHandler.countBusy();
+                                        String numAway2 = dbHandler.countAway();
+                            serverApp.onlineLbl2.setText(numOnline2);
+                            serverApp.busyLbl.setText(numBusy2);
+                            serverApp.awayLbl.setText(numAway2);
+
                             break;
                     }
                 }
@@ -187,8 +202,15 @@ public class ClientHandler extends Thread {
                     data.put("status", user.getStatus());
                     sendMsgToMultiple(new Message(MessageType.UPDATE_CONTACT_LIST, data),
                             user.getContactList());
-                                        String numberOnline = dbHandler.countOnline();
+                                        String numberOnline = dbHandler.countConnected();
                                         serverApp.onlineLbl.setText(numberOnline);
+                                        String numOnline = dbHandler.countOnline();
+                                        String numBusy = dbHandler.countBusy();
+                                        String numAway = dbHandler.countAway();
+                                        serverApp.onlineLbl2.setText(numOnline);
+                                        serverApp.busyLbl.setText(numBusy);
+                                        serverApp.awayLbl.setText(numAway);
+
                 } else {
                     visitors.remove(this);
                 }
