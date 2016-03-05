@@ -104,6 +104,7 @@ public class PrivateChatWindow extends javax.swing.JFrame {
         chatBox = new javax.swing.JTextPane();
         progressBar = new javax.swing.JProgressBar();
         micToggle = new javax.swing.JToggleButton();
+        jTextField1 = new javax.swing.JTextField();
 
         msgBox.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -147,6 +148,8 @@ public class PrivateChatWindow extends javax.swing.JFrame {
             }
         });
 
+        jTextField1.setText("jTextField1");
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -157,7 +160,8 @@ public class PrivateChatWindow extends javax.swing.JFrame {
                         .addContainerGap()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(layout.createSequentialGroup()
-                                .addGap(0, 0, Short.MAX_VALUE)
+                                .addComponent(jTextField1)
+                                .addGap(18, 18, 18)
                                 .addComponent(sendButton, javax.swing.GroupLayout.PREFERRED_SIZE, 73, javax.swing.GroupLayout.PREFERRED_SIZE))
                             .addComponent(jScrollPane2)))
                     .addGroup(layout.createSequentialGroup()
@@ -187,7 +191,9 @@ public class PrivateChatWindow extends javax.swing.JFrame {
                         .addComponent(micToggle))
                     .addComponent(progressBar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(sendButton, javax.swing.GroupLayout.PREFERRED_SIZE, 52, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(sendButton, javax.swing.GroupLayout.DEFAULT_SIZE, 52, Short.MAX_VALUE)
+                    .addComponent(jTextField1))
                 .addContainerGap())
         );
 
@@ -420,6 +426,7 @@ public class PrivateChatWindow extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JTextPane chatBox;
     private javax.swing.JScrollPane jScrollPane2;
+    private javax.swing.JTextField jTextField1;
     private javax.swing.JToggleButton micToggle;
     private javax.swing.JTextField msgBox;
     private javax.swing.JLabel nameLabel;
