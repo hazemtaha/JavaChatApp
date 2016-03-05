@@ -18,3 +18,9 @@ Mostaf Ashour : [e';rkpelfsigjsal;gnaskljga
 Mostaf Ashour : igljODKLDkAD
 Mostaf Ashour : ASdlAKDS;
 Mostaf Ashour : ADSKASDL;KADSA;LDSKA
+Mostaf Ashour : i need to send offline message
+Hazem Taha : hello
+Hazem Taha : how are you ?
+Mostaf Ashour : fine
+Mostaf Ashour : zeko
+Mostaf Ashour : hello dude nihaaaaaaaaaaaaaaa
