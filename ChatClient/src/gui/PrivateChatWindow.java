@@ -375,8 +375,9 @@ public class PrivateChatWindow extends javax.swing.JFrame {
                 BufferedReader reader = new BufferedReader(new FileReader(chatSession));
                 while ((line = reader.readLine()) != null) {
 //                    session += new String(buffer);
-                    AppendMsg(line + '\n');
+                    AppendMsg(line + "\n");
                 }
+                AppendMsg("=====================================================\n");
                 reader.close();
             } catch (IOException ex) {
                 Logger.getLogger(PrivateChatWindow.class.getName()).log(Level.SEVERE, null, ex);

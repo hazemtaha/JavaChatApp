@@ -77,7 +77,6 @@ public class AppMain extends javax.swing.JFrame {
         backBtn = new javax.swing.JButton();
         jMenuBar1 = new javax.swing.JMenuBar();
         mainMenu = new javax.swing.JMenu();
-        jMenu2 = new javax.swing.JMenu();
 
         jMenuItem1.setText("jMenuItem1");
 
@@ -308,11 +307,9 @@ public class AppMain extends javax.swing.JFrame {
 
         getContentPane().add(panelGroup, java.awt.BorderLayout.CENTER);
 
+        mainMenu.setMnemonic('m');
         mainMenu.setText("Main");
         jMenuBar1.add(mainMenu);
-
-        jMenu2.setText("Edit");
-        jMenuBar1.add(jMenu2);
 
         setJMenuBar(jMenuBar1);
 
@@ -483,7 +480,6 @@ public class AppMain extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel7;
     private javax.swing.JLabel jLabel8;
-    private javax.swing.JMenu jMenu2;
     private javax.swing.JMenuBar jMenuBar1;
     private javax.swing.JMenuItem jMenuItem1;
     private java.awt.Label label1;

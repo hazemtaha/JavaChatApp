@@ -31,17 +31,14 @@ public class DbHandler {
 
     public DbHandler() {
 
-//        String stringConnection = "jdbc:mysql://localhost:3306/chatApp";
-       String stringConnection = "jdbc:mysql://localhost:3306/JAVACHAT";
+        String stringConnection = "jdbc:mysql://localhost:3306/chatApp";
+//        String stringConnection = "jdbc:mysql://localhost:3306/JAVACHAT";
         try {
             Class.forName("com.mysql.jdbc.Driver");
 
-//            dbConnection = DriverManager.getConnection(stringConnection, "root", "iti");
-            dbConnection = DriverManager.getConnection(stringConnection, "root", "0160");
-
-//            dbConnection = DriverManager.getConnection(stringConnection, "root", "iti");
+//            dbConnection = DriverManager.getConnection(stringConnection, "root", "0160");
+            dbConnection = DriverManager.getConnection(stringConnection, "root", "iti");
 //           dbConnection = DriverManager.getConnection(stringConnection, "root", "");
-
         } catch (ClassNotFoundException | SQLException ex) {
             Logger.getLogger(DbHandler.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -220,100 +217,194 @@ public class DbHandler {
         //create the query to select from the database
         //i am recieving the input email and the existing user
         try {
-            String query = "SELECT * FROM users where email = '"+email+"' and u_id !="+user.getId();
+            String query = "SELECT * FROM users where email = '" + email + "' and u_id !=" + user.getId();
 
             Statement st = dbConnection.createStatement();
 
-            ResultSet rs = st.executeQuery(query); 
-            if (rs.next()) 
-                        {
-            String friendCheck = "SELECT * FROM contact_list where friend_id = "+rs.getInt("u_id")+" and u_id ="+user.getId();
+            ResultSet rs = st.executeQuery(query);
+            if (rs.next()) {
+                String friendCheck = "SELECT * FROM contact_list where friend_id = " + rs.getInt("u_id") + " and u_id =" + user.getId();
 
-            Statement checkStmt = dbConnection.createStatement();
+                Statement checkStmt = dbConnection.createStatement();
 
-            ResultSet checkRs = checkStmt.executeQuery(friendCheck);                             
-                        System.out.println("ok you are good to go");
-                        //check if its already exist
-                        if (checkRs.next()) { 
-                            System.out.println("you already added this user");
-                            return null;
-                            } else {
-                            //here is the start of adding this friend to his list
-                            
-                                //generate an object from this friend
-                                rs.beforeFirst();
-                                ArrayList<User> singleUser = generateList(rs);
+                ResultSet checkRs = checkStmt.executeQuery(friendCheck);
+                System.out.println("ok you are good to go");
+                //check if its already exist
+                if (checkRs.next()) {
+                    System.out.println("you already added this user");
+                    return null;
+                } else {
+                    //here is the start of adding this friend to his list
 
-                                //i will call the function to pass u_id and friend_id
-                                //System.out.println(user.getId());
-                                //insert from the reciever to add the sender
-                                insertFriend(user.getId(), ((User) singleUser.get(0)).getId());
+                    //generate an object from this friend
+                    rs.beforeFirst();
+                    ArrayList<User> singleUser = generateList(rs);
 
-                                //another insert from the sender to add the reciever
-                                insertFriend(((User) singleUser.get(0)).getId(), user.getId());
+                    //i will call the function to pass u_id and friend_id
+                    //System.out.println(user.getId());
+                    //insert from the reciever to add the sender
+                    insertFriend(user.getId(), ((User) singleUser.get(0)).getId());
 
-                                //get the first element of the array which is the first user
-                                return singleUser.get(0);
-                                //here i recieved this user data.
-                                //    System.out.println(((User)singleUser.get(0)).getId());
-                                //  System.out.println(((User)singleUser.get(0)).getLastName());
-                                
-                               //break;
-                                
-                                    }
-                        } else {
+                    //another insert from the sender to add the reciever
+                    insertFriend(((User) singleUser.get(0)).getId(), user.getId());
+
+                    //get the first element of the array which is the first user
+                    return singleUser.get(0);
+                    //here i recieved this user data.
+                    //    System.out.println(((User)singleUser.get(0)).getId());
+                    //  System.out.println(((User)singleUser.get(0)).getLastName());
+
+                    //break;
+                }
+            } else {
                 return null;
-                        }
-                    //String mailList = rs.getString("email");
-                    //System.out.format("%s\n", mailList);
-                 
-            
+            }
+            //String mailList = rs.getString("email");
+            //System.out.format("%s\n", mailList);
 
         } catch (SQLException ex) {
             Logger.getLogger(DbHandler.class.getName()).log(Level.SEVERE, null, ex);
         }
         //System.out.println(email);
-     return null;   
+        return null;
     }
 
-public void insertFriend(int userId, int friendId) {
-    
+    public void insertFriend(int userId, int friendId) {
+
         try {
-            
+
             PreparedStatement addFriend = dbConnection.prepareStatement("insert into contact_list (u_id, friend_id) values (?, ?)");
             addFriend.setInt(1, userId);
             addFriend.setInt(2, friendId);
             addFriend.executeUpdate();
-            
-            } catch (SQLException ex) {
+
+        } catch (SQLException ex) {
             Logger.getLogger(DbHandler.class.getName()).log(Level.SEVERE, null, ex);
-                                      }
-}
+        }
+    }
     ///////////////////********************************************************************
-public void deleteFriend(User selectedUser, User user) {
-       try {          
-           PreparedStatement userObj = dbConnection.prepareStatement("DELETE FROM contact_list WHERE u_id = ? AND friend_id = ?");
-           userObj.setInt(1, user.getId());
-           userObj.setInt(2, selectedUser.getId());
-           
-           userObj.executeUpdate();
-           
-           userObj.setInt(1, selectedUser.getId());
-           userObj.setInt(2, user.getId());
-           
-           userObj.executeUpdate();
-           
-           } catch (SQLException ex) {
+
+    public void deleteFriend(User selectedUser, User user) {
+        try {
+            PreparedStatement userObj = dbConnection.prepareStatement("DELETE FROM contact_list WHERE u_id = ? AND friend_id = ?");
+            userObj.setInt(1, user.getId());
+            userObj.setInt(2, selectedUser.getId());
+
+            userObj.executeUpdate();
+
+            userObj.setInt(1, selectedUser.getId());
+            userObj.setInt(2, user.getId());
+
+            userObj.executeUpdate();
+
+        } catch (SQLException ex) {
             Logger.getLogger(DbHandler.class.getName()).log(Level.SEVERE, null, ex);
-                                     }
-                    
-   }
+        }
+
+    }
+
+    public boolean checkOfflineMsgs(int userId) {
+        try {
+            PreparedStatement offMsgs = dbConnection.prepareStatement("select message from offline_messages"
+                    + " where reciever_id = ?");
+            offMsgs.setInt(1, userId);
+            if (offMsgs.executeQuery().next()) {
+                return true;
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(DbHandler.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return false;
+    }
+
+    public void addOfflineMsg(Message msg) {
+
+        try {
+            PreparedStatement offMsg = dbConnection.prepareStatement("insert into offline_messages "
+                    + "values(?,?,?)");
+            offMsg.setInt(1, msg.getSender().getId());
+            offMsg.setInt(2, msg.getReciever().get(0));
+            offMsg.setString(3, msg.getData().toString());
+            offMsg.executeUpdate();
+        } catch (SQLException ex) {
+            Logger.getLogger(DbHandler.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
+    public ArrayList<Message> pullOfflineMsgs(int userId) {
+        try {
+            PreparedStatement offMsgs = dbConnection.prepareStatement("select * from offline_messages"
+                    + " where reciever_id = ?");
+            offMsgs.setInt(1, userId);
+            ResultSet msgsSet = offMsgs.executeQuery();
+            ArrayList<Integer> reciverList = new ArrayList<>();
+            reciverList.add(userId);
+            ArrayList<Message> messages = new ArrayList<>();
+            while (msgsSet.next()) {
+                Message msg;
+                if (msgsSet.getInt("sender_id") == msgsSet.getInt("reciever_id")) {
+                    msg = new Message(MessageType.ANNOUNCEMENT);
+                } else {
+                    msg = new Message(MessageType.MESSAGE);
+                    msg.setSender(generateUser(msgsSet.getInt("sender_id")));
+                    msg.setReciever(reciverList);
+                }
+                msg.setData(msgsSet.getString("message"));
+                messages.add(msg);
+            }
+            deleteOfflineMsgs(userId);
+            return messages;
+        } catch (SQLException ex) {
+            Logger.getLogger(DbHandler.class.getName()).log(Level.SEVERE, null, ex);
+            return null;
+        }
+    }
+
+    public void deleteOfflineMsgs(int userId) {
+        try {
+            PreparedStatement offMsgs = dbConnection.prepareStatement("delete from offline_messages"
+                    + " where reciever_id = ?");
+            offMsgs.setInt(1, userId);
+            offMsgs.executeUpdate();
+        } catch (SQLException ex) {
+            Logger.getLogger(DbHandler.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+    }
+
+    public void sendOffAnnouncement(String announcement) {
+        try {
+            Statement stmt = dbConnection.createStatement();
+            ResultSet offUsers = stmt.executeQuery("select * from users where status = 0");
+            PreparedStatement serverMsgs = dbConnection.prepareStatement(""
+                    + "insert into offline_messages values(?,?,?)");
+            while (offUsers.next()) {
+                serverMsgs.setInt(1, offUsers.getInt("u_id"));
+                serverMsgs.setInt(2, offUsers.getInt("u_id"));
+                serverMsgs.setString(3, announcement);
+                serverMsgs.executeUpdate();
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(DbHandler.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
+    public User generateUser(int userId) {
+        try {
+            PreparedStatement user = dbConnection.prepareStatement("select * "
+                    + "from users where u_id = ?");
+            user.setInt(1, userId);
+            ArrayList<User> userList = generateList(user.executeQuery());
+            return userList.get(0);
+        } catch (SQLException ex) {
+            Logger.getLogger(DbHandler.class.getName()).log(Level.SEVERE, null, ex);
+            return null;
+        }
+
+    }
+
 }
 /////////**********************************************************************************************************
 
 /////////**********************************************************************************************************
-
-
-
-
 

@@ -125,6 +125,13 @@ public class ClientHandler extends Thread {
                                     String numOnline = dbHandler.countOnline();
                                     serverApp.connectedLbl.setText(numberOnline);
                                     serverApp.onlineLbl.setText(numOnline);
+                                    /// offline messages
+                                    if (dbHandler.checkOfflineMsgs(user.getId())) {
+                                        ArrayList<Message> offMsgs = dbHandler.pullOfflineMsgs(user.getId());
+                                        for (Message offMsg : offMsgs) {
+                                            sendMsg(offMsg);
+                                        }
+                                    }
                                 }
                             } else {
                                 sendMsg(new Message(MessageType.AUTH_NO, "0"));
@@ -144,11 +151,11 @@ public class ClientHandler extends Thread {
                         case MessageType.MESSAGE:
                             msg.setSender(user);
                             if (msg.getReciever().size() > 1) {
-                                msg.setUserList(generateUserList(msg.getReciever()));
+                                msg.setUserList(generateUserList(msg));
                             }
                             echoChatMsg(msg);
                             break;
-                            
+
                         //recieving the emial here
                         case MessageType.VALIDATE_EMAIL:
                             //recieve the message of mail here in string
@@ -162,23 +169,19 @@ public class ClientHandler extends Thread {
 
                             } else {
                                 sendMsg(new Message(MessageType.EMAIL_VALID, friend));
-                           
+
                             }
 
                             //friend = dbHandler.getContactList(friend);
                             //get the friend from the data base to add him on the existing user
                             //user = dbHandler.getContactList(user);
                             //here i send the message to the user with the recent cotact list
-
-
-                        //here i have the user
-                        // now the user went to the existing user
-                        //user.getContactList().add(friend);
-
                             //here i have the user
                             // now the user went to the existing user
                             //user.getContactList().add(friend);
-
+                            //here i have the user
+                            // now the user went to the existing user
+                            //user.getContactList().add(friend);
                             break;
                         case MessageType.STATE_CHANGE:
                             user.setStatus((int) msg.getData());
@@ -226,22 +229,22 @@ public class ClientHandler extends Thread {
                             serverApp.awayLbl.setText(numAway2);
 
                             break;
-                            
+
                         case MessageType.Delete:
-                       //recieve the message of the selected user here
-                       User selectedUser = (User) msg.getData();
-                       dbHandler.deleteFriend(selectedUser, user);
-                      //get the contact list of existing user and selected user
-                       user = dbHandler.getContactList(user);
-                       selectedUser = dbHandler.getContactList(selectedUser);
-                       //update contact list for both of them
-                       sendMsg(new Message(MessageType.UPDATE_CONTACT_LIST, selectedUser));
+                            //recieve the message of the selected user here
+                            User selectedUser = (User) msg.getData();
+                            dbHandler.deleteFriend(selectedUser, user);
+                            //get the contact list of existing user and selected user
+                            user = dbHandler.getContactList(user);
+                            selectedUser = dbHandler.getContactList(selectedUser);
+                            //update contact list for both of them
+                            sendMsg(new Message(MessageType.UPDATE_CONTACT_LIST, selectedUser));
                             if (clients.containsKey(selectedUser.getId())) {
-                            clients.get(selectedUser.getId()).sendMsg(new Message(MessageType.UPDATE_CONTACT_LIST, user));
+                                clients.get(selectedUser.getId()).sendMsg(new Message(MessageType.UPDATE_CONTACT_LIST, user));
                             }
-                            
-                        break;
-                        
+
+                            break;
+
                     }
                 }
             } catch (EOFException | SocketException ex) {
@@ -281,12 +284,14 @@ public class ClientHandler extends Thread {
         for (Integer userId : userIds) {
             System.out.println("User Id in Loop :" + userId);
             if (msg.getReciever().size() > 1) {
-                msg.setUserList(generateUserList(msg.getReciever()));
+                msg.setUserList(generateUserList(msg));
                 msg.setUserList(addReciever(msg.getSender(), msg.getUserList()));
                 msg.setUserList(deleteReciever(getClients().get(userId).getUser(), msg.getUserList()));
             }
             if (clients.containsKey(userId)) {
                 clients.get(userId).sendMsg(msg);
+            } else {
+                dbHandler.addOfflineMsg(msg);
             }
         }
     }
@@ -323,9 +328,9 @@ public class ClientHandler extends Thread {
         return recieverList;
     }
 
-    public ArrayList<User> generateUserList(ArrayList<Integer> userIds) {
+    public ArrayList<User> generateUserList(Message msg) {
         ArrayList<User> userList = new ArrayList<>();
-        for (Integer userId : userIds) {
+        for (Integer userId : msg.getReciever()) {
             if (clients.containsKey(userId)) {
                 userList.add(clients.get(userId).getUser());
             }

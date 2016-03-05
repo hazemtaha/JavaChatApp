@@ -23,7 +23,7 @@ import utils.interfaces.MessageType;
 public class ServerFrame extends javax.swing.JFrame {
 
 //    private ClientDispatcher dispatcher;
-    private DbHandler conn;
+    private DbHandler dbHandler;
     public static boolean isOnline = false;
 
     /**
@@ -31,8 +31,8 @@ public class ServerFrame extends javax.swing.JFrame {
      */
     public ServerFrame() {
         initComponents();
-        conn = new DbHandler();
-        regLbl.setText(conn.countRegistered());
+        dbHandler = new DbHandler();
+        regLbl.setText(dbHandler.countRegistered());
         msgBox.setEnabled(isOnline);
         sendBtn.setEnabled(isOnline);
     }
@@ -230,7 +230,7 @@ public class ServerFrame extends javax.swing.JFrame {
         for (Integer clientId : ClientHandler.clients.keySet()) {
             ClientHandler.clients.get(clientId).sendMsg(new Message(MessageType.ANNOUNCEMENT, msg));
         }
-
+        dbHandler.sendOffAnnouncement(msg);
     }
 
     public void resetStates() {

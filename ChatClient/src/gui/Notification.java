@@ -22,7 +22,9 @@ public class Notification extends javax.swing.JFrame {
      */
     public static final int ANNOUNCEMENT = 1;
     public static final int NOTIFICATION = 2;
-    private int sleepTime = 0;
+    private static boolean isShown = false;
+    private static int occurances = 1;
+    private int sleepTime = 0, x = 0, y = 0;
 
     public Notification(String content) {
         initComponents();
@@ -32,7 +34,6 @@ public class Notification extends javax.swing.JFrame {
     public Notification(String content, int type) {
         initComponents();
         notificationInit(content, type);
-
     }
 
     private void notificationInit(String content, int type) {
@@ -40,33 +41,45 @@ public class Notification extends javax.swing.JFrame {
         GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
         GraphicsDevice defaultScreen = ge.getDefaultScreenDevice();
         Rectangle rect = defaultScreen.getDefaultConfiguration().getBounds();
-        int x = 0, y = 0;
-        switch (type) {
-            case NOTIFICATION:
-                x = (int) rect.getMaxX() - getWidth();
-                y = (int) rect.getMaxY() - (getHeight() + 20);
-                sleepTime = 3000;
-                break;
-            case ANNOUNCEMENT:
-                x = (int) rect.getMaxX() / 2;
-                y = (int) rect.getMinY() + (getHeight() * 2);
-                sleepTime = 10000;
-                break;
-        }
-        setLocation(x, y);
-        Thread closeFrame = new Thread(new Runnable() {
+        new Thread(new Runnable() {
             @Override
             public void run() {
-                try {
-                    Thread.sleep(sleepTime);
-                    Notification.this.dispose();
-                } catch (InterruptedException ex) {
-                    Logger.getLogger(Notification.class.getName()).log(Level.SEVERE, null, ex);
+                while (occurances > 1) {
+                    try {
+                        Thread.sleep(1000);
+                    } catch (InterruptedException ex) {
+                        Logger.getLogger(Notification.class.getName()).log(Level.SEVERE, null, ex);
+                    }
                 }
+                switch (type) {
+                    case NOTIFICATION:
+                        x = (int) rect.getMaxX() - getWidth();
+                        y = (int) rect.getMaxY() - (getHeight() + 20);
+                        sleepTime = 3000;
+                        break;
+                    case ANNOUNCEMENT:
+                        x = (int) rect.getMaxX() / 2;
+                        y = (int) rect.getMinY() + (getHeight() * 2);
+                        sleepTime = 3000;
+                        break;
+                }
+                setLocation(x, y);
+                setVisible(true);
+                occurances++;
+                new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        try {
+                            Thread.sleep(sleepTime);
+                            occurances--;
+                            Notification.this.dispose();
+                        } catch (InterruptedException ex) {
+                            Logger.getLogger(Notification.class.getName()).log(Level.SEVERE, null, ex);
+                        }
+                    }
+                }).start();
             }
-        });
-        closeFrame.start();
-        setVisible(true);
+        }).start();
     }
 
     /**
