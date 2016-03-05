@@ -96,14 +96,20 @@ public class PrivateChatWindow extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        sendButton = new javax.swing.JButton();
         msgBox = new javax.swing.JTextField();
+        sendButton = new javax.swing.JButton();
         sendFileBtn = new javax.swing.JButton();
         nameLabel = new javax.swing.JLabel();
         jScrollPane2 = new javax.swing.JScrollPane();
         chatBox = new javax.swing.JTextPane();
         progressBar = new javax.swing.JProgressBar();
         micToggle = new javax.swing.JToggleButton();
+
+        msgBox.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                msgBoxActionPerformed(evt);
+            }
+        });
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         addWindowListener(new java.awt.event.WindowAdapter() {
@@ -119,12 +125,6 @@ public class PrivateChatWindow extends javax.swing.JFrame {
         sendButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 sendButtonActionPerformed(evt);
-            }
-        });
-
-        msgBox.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                msgBoxActionPerformed(evt);
             }
         });
 
@@ -157,8 +157,7 @@ public class PrivateChatWindow extends javax.swing.JFrame {
                         .addContainerGap()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(layout.createSequentialGroup()
-                                .addComponent(msgBox)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addGap(0, 0, Short.MAX_VALUE)
                                 .addComponent(sendButton, javax.swing.GroupLayout.PREFERRED_SIZE, 73, javax.swing.GroupLayout.PREFERRED_SIZE))
                             .addComponent(jScrollPane2)))
                     .addGroup(layout.createSequentialGroup()
@@ -188,9 +187,7 @@ public class PrivateChatWindow extends javax.swing.JFrame {
                         .addComponent(micToggle))
                     .addComponent(progressBar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(sendButton, javax.swing.GroupLayout.DEFAULT_SIZE, 52, Short.MAX_VALUE)
-                    .addComponent(msgBox))
+                .addComponent(sendButton, javax.swing.GroupLayout.PREFERRED_SIZE, 52, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
         );
 
