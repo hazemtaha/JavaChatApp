@@ -15,6 +15,8 @@ import gui.PrivateChatWindow;
 import java.awt.CardLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.InputEvent;
+import java.awt.event.KeyEvent;
 import java.io.EOFException;
 import java.io.File;
 import java.io.IOException;
@@ -33,6 +35,7 @@ import javax.swing.JMenu;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.KeyStroke;
 import utils.Message;
 import utils.User;
 import utils.interfaces.MessageType;
@@ -81,6 +84,8 @@ public class ClientConnection extends Thread {
                                     ((MainPanel) ((AppMain) chatApp).getMainPanel()).setNameLabel(user);
                                     ((MainPanel) ((AppMain) chatApp).getMainPanel()).loadContacts(user);
                                     JMenuItem logOut = new JMenuItem("Logout", 'l');
+                                    KeyStroke logOutKeyStroke = KeyStroke.getKeyStroke(KeyEvent.VK_L, InputEvent.CTRL_DOWN_MASK);
+                                    logOut.setAccelerator(logOutKeyStroke);
                                     ((JMenu) ((AppMain) chatApp).getMainMenu()).add(logOut);
                                     logOut.addActionListener(new ActionListener() {
                                         @Override
@@ -149,7 +154,7 @@ public class ClientConnection extends Thread {
                                         user.getContactList().remove(msg.getData());
                                         ((MainPanel) ((AppMain) chatApp).getMainPanel()).refreshList();
                                         ((MainPanel) ((AppMain) chatApp).getMainPanel()).loadContacts(user);
-                                    }else {
+                                    } else {
                                         updateContactStatus((Hashtable<String, Integer>) msg.getData());
                                     }
                                     break;
@@ -159,7 +164,7 @@ public class ClientConnection extends Thread {
                                         recieverId = msg.getReciever().get(0);
                                     } else {
                                         recieverId = msg.getSender().getId();
-                                }
+                                    }
                                     PrivateChatWindow chatRoom;
                                     if (parentPanel.isOpened(recieverId) == null) {
                                         chatRoom = new PrivateChatWindow(msg.getSender(), parentPanel);
@@ -199,17 +204,15 @@ public class ClientConnection extends Thread {
                                     uploadHandler.start();
                                     break;
 
-                                    
-
                                 case MessageType.ANNOUNCEMENT:
                                     new Notification(msg.getData().toString(), Notification.ANNOUNCEMENT);
                                     break;
-                                    
+
                                 case MessageType.EMAIL_INVALID:
                                     JFrame frame = new JFrame("JOptionPane showMessageDialog example");
                                     // show a joptionpane dialog using showMessageDialog
                                     JOptionPane.showMessageDialog(frame, "Please check this Email");
-                                    
+
                                     break;
 
                             }
