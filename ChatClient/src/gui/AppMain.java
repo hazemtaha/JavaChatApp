@@ -53,12 +53,12 @@ public class AppMain extends javax.swing.JFrame {
         lognPanel = new javax.swing.JPanel();
         loginBtn = new javax.swing.JButton();
         signUpBtn = new javax.swing.JButton();
-        passwordBox = new javax.swing.JTextField();
         emailBox = new javax.swing.JTextField();
         jLabel11 = new javax.swing.JLabel();
         jLabel12 = new javax.swing.JLabel();
         label3 = new java.awt.Label();
         errorLabel = new javax.swing.JLabel();
+        passwordBox = new javax.swing.JPasswordField();
         mainPanel = new gui.MainPanel(this);
         registerPanel = new javax.swing.JPanel();
         emailReg = new javax.swing.JTextField();
@@ -124,11 +124,11 @@ public class AppMain extends javax.swing.JFrame {
                                 .addComponent(jLabel11)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 47, Short.MAX_VALUE)
                                 .addGroup(lognPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                    .addComponent(passwordBox, javax.swing.GroupLayout.PREFERRED_SIZE, 261, javax.swing.GroupLayout.PREFERRED_SIZE)
                                     .addGroup(lognPanelLayout.createSequentialGroup()
                                         .addComponent(loginBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 104, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                        .addComponent(signUpBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 103, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 54, Short.MAX_VALUE)
+                                        .addComponent(signUpBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 103, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                    .addComponent(passwordBox)))
                             .addGroup(lognPanelLayout.createSequentialGroup()
                                 .addComponent(jLabel12)
                                 .addGap(18, 18, 18)
@@ -153,13 +153,13 @@ public class AppMain extends javax.swing.JFrame {
                     .addComponent(emailBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(47, 47, 47)
                 .addGroup(lognPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(passwordBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel11))
-                .addGap(126, 126, 126)
+                    .addComponent(jLabel11)
+                    .addComponent(passwordBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(122, 122, 122)
                 .addGroup(lognPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(loginBtn)
                     .addComponent(signUpBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(207, Short.MAX_VALUE))
+                .addContainerGap(205, Short.MAX_VALUE))
         );
 
         panelGroup.add(lognPanel, "loginPanel");
@@ -502,7 +502,7 @@ public class AppMain extends javax.swing.JFrame {
     private javax.swing.JPanel panelGroup;
     private javax.swing.JPasswordField passReg1;
     private javax.swing.JPasswordField passReg2;
-    private javax.swing.JTextField passwordBox;
+    private javax.swing.JPasswordField passwordBox;
     private javax.swing.JLabel picture;
     private javax.swing.JButton registerBtn;
     private javax.swing.JPanel registerPanel;
