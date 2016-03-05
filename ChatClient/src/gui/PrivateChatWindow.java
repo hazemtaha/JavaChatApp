@@ -103,6 +103,7 @@ public class PrivateChatWindow extends javax.swing.JFrame {
         jScrollPane2 = new javax.swing.JScrollPane();
         chatBox = new javax.swing.JTextPane();
         progressBar = new javax.swing.JProgressBar();
+        micToggle = new javax.swing.JToggleButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         addWindowListener(new java.awt.event.WindowAdapter() {
@@ -139,6 +140,13 @@ public class PrivateChatWindow extends javax.swing.JFrame {
         jScrollPane2.setViewportView(chatBox);
         chatBox.getAccessibleContext().setAccessibleName("");
 
+        micToggle.setText("Mic OFF");
+        micToggle.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                micToggleActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -155,12 +163,15 @@ public class PrivateChatWindow extends javax.swing.JFrame {
                             .addComponent(jScrollPane2)))
                     .addGroup(layout.createSequentialGroup()
                         .addGap(262, 262, 262)
-                        .addComponent(nameLabel))
+                        .addComponent(nameLabel)
+                        .addGap(0, 0, Short.MAX_VALUE))
                     .addGroup(layout.createSequentialGroup()
                         .addContainerGap()
                         .addComponent(sendFileBtn)
                         .addGap(18, 18, 18)
-                        .addComponent(progressBar, javax.swing.GroupLayout.PREFERRED_SIZE, 480, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addComponent(micToggle, javax.swing.GroupLayout.PREFERRED_SIZE, 108, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18)
+                        .addComponent(progressBar, javax.swing.GroupLayout.DEFAULT_SIZE, 413, Short.MAX_VALUE)))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -172,7 +183,9 @@ public class PrivateChatWindow extends javax.swing.JFrame {
                 .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 393, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(sendFileBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(sendFileBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(micToggle))
                     .addComponent(progressBar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
@@ -221,6 +234,10 @@ public class PrivateChatWindow extends javax.swing.JFrame {
         }
 
     }//GEN-LAST:event_sendFileBtnActionPerformed
+
+    private void micToggleActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_micToggleActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_micToggleActionPerformed
 
     /**
      * @param args the command line arguments
@@ -406,6 +423,7 @@ public class PrivateChatWindow extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JTextPane chatBox;
     private javax.swing.JScrollPane jScrollPane2;
+    private javax.swing.JToggleButton micToggle;
     private javax.swing.JTextField msgBox;
     private javax.swing.JLabel nameLabel;
     private javax.swing.JProgressBar progressBar;
