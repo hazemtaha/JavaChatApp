@@ -25,7 +25,7 @@ public interface MessageType {
     public static final String EMAIL_INVALID = "EMAIL_INVALID";
     public static final String FILE_REQUEST = "FILE_REQUEST";
     public static final String FILE_RESPONSE = "FILE_RESPONSE";
-    public static final String Delete = "Delete";
+    public static final String DELETE = "DELETE";
     public static final String ANNOUNCEMENT = "ANNOUNCEMENT";
 
 }

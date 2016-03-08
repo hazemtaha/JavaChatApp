@@ -22,8 +22,6 @@ import java.io.File;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-import java.net.ConnectException;
-import java.net.InetAddress;
 import java.net.Socket;
 import java.net.SocketException;
 import java.util.Hashtable;
@@ -61,15 +59,16 @@ public class ClientConnection extends Thread {
     public void run() {
         while (true) {
             try {
-                socket = new Socket(InetAddress.getLocalHost(), 8000);
-                //socket = new Socket("10.0.1.95", 8000);
+//                socket = new Socket(InetAddress.getLocalHost(), 8000);
+//                socket = new Socket("10.0.1.95", 8000);
+                socket = new Socket("192.168.1.5", 8000);
                 objWriter = new ObjectOutputStream(getSocket().getOutputStream());
-                objWriter.flush();
+                getObjWriter().flush();
                 objReader = new ObjectInputStream(getSocket().getInputStream());
                 isConnected = true;
                 while (isConnected) {
                     try {
-                        Object obj = objReader.readObject();
+                        Object obj = getObjReader().readObject();
                         if (obj instanceof Message) {
                             Message msg = (Message) obj;
                             System.out.println(msg.getType());
@@ -212,7 +211,6 @@ public class ClientConnection extends Thread {
                                     JFrame frame = new JFrame("JOptionPane showMessageDialog example");
                                     // show a joptionpane dialog using showMessageDialog
                                     JOptionPane.showMessageDialog(frame, "Please check this Email");
-
                                     break;
 
                             }
@@ -224,7 +222,7 @@ public class ClientConnection extends Thread {
 //                        Logger.getLogger(ClientConnection.class.getName()).log(Level.SEVERE, null, ex);
                     }
                 }
-            } catch (ConnectException ex) {
+            } catch (SocketException ex) {
                 ((MainPanel) chatApp.getMainPanel()).destroyChats();
                 ((CardLayout) chatApp.getPanelGroup().getLayout()).
                         show(chatApp.getPanelGroup(), "loginPanel");
@@ -239,8 +237,9 @@ public class ClientConnection extends Thread {
     public void sendClientMsg(Message msg) {
         try {
             if (isConnected) {
-                objWriter.writeObject(msg);
-                objWriter.flush();
+                getObjWriter().writeObject(msg);
+                getObjWriter().flush();
+
             }
         } catch (IOException ex) {
             Logger.getLogger(ClientConnection.class
@@ -288,5 +287,13 @@ public class ClientConnection extends Thread {
 
     public Socket getSocket() {
         return socket;
+    }
+
+    public ObjectInputStream getObjReader() {
+        return objReader;
+    }
+
+    public ObjectOutputStream getObjWriter() {
+        return objWriter;
     }
 }

@@ -203,7 +203,7 @@ public class ServerFrame extends javax.swing.JFrame {
             toggleButton.setText("ON");
             statusLbl.setText("online");
             isOnline = true;
-            statusLbl.setForeground(Color.ORANGE);
+            statusLbl.setForeground(Color.GREEN);
             new ClientDispatcher(this).start();
         } else {
             toggleButton.setText("OFF");
@@ -245,36 +245,36 @@ public class ServerFrame extends javax.swing.JFrame {
      */
     public static void main(String args[]) {
         /* Set the Nimbus look and feel */
-       // //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
+        // //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
         /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
          * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html
          */
         //try {
-          //  for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-            //    if ("Nimbus".equals(info.getName())) {
-              //      try {
-                //        javax.swing.UIManager.setLookAndFeel(info.getClassName());
-                  //  } catch (InstantiationException ex) {
-                    //    Logger.getLogger(ServerFrame.class.getName()).log(Level.SEVERE, null, ex);
-                   // }
-                  //  break;
-               // }
-           // }
+        //  for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
+        //    if ("Nimbus".equals(info.getName())) {
+        //      try {
+        //        javax.swing.UIManager.setLookAndFeel(info.getClassName());
+        //  } catch (InstantiationException ex) {
+        //    Logger.getLogger(ServerFrame.class.getName()).log(Level.SEVERE, null, ex);
+        // }
+        //  break;
+        // }
+        // }
         //} catch (ClassNotFoundException ex) {
-          //  java.util.logging.Logger.getLogger(ServerFrame.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        //  java.util.logging.Logger.getLogger(ServerFrame.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         //} catch (IllegalAccessException ex) {
-          //  java.util.logging.Logger.getLogger(ServerFrame.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-       // } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-         //   java.util.logging.Logger.getLogger(ServerFrame.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        //  java.util.logging.Logger.getLogger(ServerFrame.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        // } catch (javax.swing.UnsupportedLookAndFeelException ex) {
+        //   java.util.logging.Logger.getLogger(ServerFrame.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         //}
         //</editor-fold>
         //</editor-fold>
-            try {
-                UIManager.setLookAndFeel(new SyntheticaClassyLookAndFeel());
+        try {
+            UIManager.setLookAndFeel(new SyntheticaClassyLookAndFeel());
 
-                } catch (Exception e) {
-                System.err.println("Look and feel not set.");
-                }
+        } catch (Exception e) {
+            System.err.println("Look and feel not set.");
+        }
 
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {

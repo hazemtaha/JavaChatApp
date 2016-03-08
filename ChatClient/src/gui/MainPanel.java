@@ -259,19 +259,19 @@ public class MainPanel extends javax.swing.JPanel {
     }//GEN-LAST:event_contactsListMouseClicked
 
     private void deleteFriendBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_deleteFriendBtnActionPerformed
-        // get the selected user as an object 
+        // get the selected user as an object
         User uDelete = contactsList.getSelectedValue();
         System.out.print(uDelete.getFirstName());
-         //create an object to declare the message type
-        Message selectedUser = new Message(MessageType.Delete, uDelete);
-         //as the MainPanel is a child from the AppMain we had an object from the app main the get the current connection
+        //create an object to declare the message type
+        Message selectedUser = new Message(MessageType.DELETE, uDelete);
+        //as the MainPanel is a child from the AppMain we had an object from the app main the get the current connection
         parent.getConnection().sendClientMsg(selectedUser);
-            
+
     }//GEN-LAST:event_deleteFriendBtnActionPerformed
 
     public PrivateChatWindow isOpened(int chatId) {
         for (PrivateChatWindow chat : chats) {
-            if (chat.getChatId() == chatId) {
+            if (chat.getChatUser().getId() == chatId) {
                 return chat;
             }
         }

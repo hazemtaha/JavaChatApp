@@ -11,9 +11,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
 import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -26,8 +23,6 @@ import javax.swing.JComponent;
 import javax.swing.JFileChooser;
 import javax.swing.KeyStroke;
 import javax.swing.text.BadLocationException;
-import javax.swing.text.Caret;
-import javax.swing.text.DefaultCaret;
 import javax.swing.text.SimpleAttributeSet;
 import javax.swing.text.StyleConstants;
 import javax.swing.text.StyledDocument;
@@ -84,7 +79,6 @@ public class PrivateChatWindow extends javax.swing.JFrame {
                 parent.removeChat(PrivateChatWindow.this);
             }
         });
-
     }
 
     /**
@@ -96,21 +90,13 @@ public class PrivateChatWindow extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        msgBox = new javax.swing.JTextField();
         sendButton = new javax.swing.JButton();
         sendFileBtn = new javax.swing.JButton();
         nameLabel = new javax.swing.JLabel();
         jScrollPane2 = new javax.swing.JScrollPane();
         chatBox = new javax.swing.JTextPane();
         progressBar = new javax.swing.JProgressBar();
-        micToggle = new javax.swing.JToggleButton();
-        jTextField1 = new javax.swing.JTextField();
-
-        msgBox.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                msgBoxActionPerformed(evt);
-            }
-        });
+        msgBox = new javax.swing.JTextField();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         addWindowListener(new java.awt.event.WindowAdapter() {
@@ -141,14 +127,11 @@ public class PrivateChatWindow extends javax.swing.JFrame {
         jScrollPane2.setViewportView(chatBox);
         chatBox.getAccessibleContext().setAccessibleName("");
 
-        micToggle.setText("Mic OFF");
-        micToggle.addActionListener(new java.awt.event.ActionListener() {
+        msgBox.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                micToggleActionPerformed(evt);
+                msgBoxActionPerformed(evt);
             }
         });
-
-        jTextField1.setText("jTextField1");
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -158,23 +141,21 @@ public class PrivateChatWindow extends javax.swing.JFrame {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
                         .addContainerGap()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(layout.createSequentialGroup()
-                                .addComponent(jTextField1)
-                                .addGap(18, 18, 18)
-                                .addComponent(sendButton, javax.swing.GroupLayout.PREFERRED_SIZE, 73, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addComponent(jScrollPane2)))
+                        .addComponent(jScrollPane2))
+                    .addGroup(layout.createSequentialGroup()
+                        .addContainerGap()
+                        .addComponent(msgBox)
+                        .addGap(18, 18, 18)
+                        .addComponent(sendButton, javax.swing.GroupLayout.PREFERRED_SIZE, 73, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(layout.createSequentialGroup()
                         .addGap(262, 262, 262)
                         .addComponent(nameLabel)
-                        .addGap(0, 0, Short.MAX_VALUE))
+                        .addGap(0, 343, Short.MAX_VALUE))
                     .addGroup(layout.createSequentialGroup()
                         .addContainerGap()
                         .addComponent(sendFileBtn)
                         .addGap(18, 18, 18)
-                        .addComponent(micToggle, javax.swing.GroupLayout.PREFERRED_SIZE, 108, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(18, 18, 18)
-                        .addComponent(progressBar, javax.swing.GroupLayout.DEFAULT_SIZE, 413, Short.MAX_VALUE)))
+                        .addComponent(progressBar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -186,29 +167,25 @@ public class PrivateChatWindow extends javax.swing.JFrame {
                 .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 393, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(sendFileBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(micToggle))
+                    .addComponent(sendFileBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(progressBar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(sendButton, javax.swing.GroupLayout.DEFAULT_SIZE, 52, Short.MAX_VALUE)
-                    .addComponent(jTextField1))
+                    .addComponent(msgBox))
                 .addContainerGap())
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void msgBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_msgBoxActionPerformed
-        sendButtonActionPerformed(evt);
-    }//GEN-LAST:event_msgBoxActionPerformed
-
     private void sendButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_sendButtonActionPerformed
-        ArrayList<Integer> reciever = new ArrayList<Integer>();
-        reciever.add(chatUser.getId());
-        clientConnection.sendClientMsg(new Message(MessageType.MESSAGE, msgBox.getText(), reciever));
-        msgBox.setText("");
+        if (!msgBox.getText().isEmpty()) {
+            ArrayList<Integer> reciever = new ArrayList<Integer>();
+            reciever.add(chatUser.getId());
+            clientConnection.sendClientMsg(new Message(MessageType.MESSAGE, msgBox.getText(), reciever));
+            msgBox.setText("");
+        }
     }//GEN-LAST:event_sendButtonActionPerformed
 
     private void formWindowClosing(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosing
@@ -219,6 +196,8 @@ public class PrivateChatWindow extends javax.swing.JFrame {
         } catch (IOException ex) {
             Logger.getLogger(PrivateChatWindow.class.getName()).log(Level.SEVERE, null, ex);
         } finally {
+            ArrayList<Integer> userId = new ArrayList<>();
+            userId.add(chatUser.getId());
             parent.removeChat(this);
         }
     }//GEN-LAST:event_formWindowClosing
@@ -238,9 +217,9 @@ public class PrivateChatWindow extends javax.swing.JFrame {
 
     }//GEN-LAST:event_sendFileBtnActionPerformed
 
-    private void micToggleActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_micToggleActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_micToggleActionPerformed
+    private void msgBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_msgBoxActionPerformed
+        sendButtonActionPerformed(evt);
+    }//GEN-LAST:event_msgBoxActionPerformed
 
     /**
      * @param args the command line arguments
@@ -369,8 +348,8 @@ public class PrivateChatWindow extends javax.swing.JFrame {
         nameLabel.setText(user.getFirstName() + " " + user.getLastName());
     }
 
-    public int getChatId() {
-        return chatUser.getId();
+    public User getChatUser() {
+        return chatUser;
     }
 
     public void saveSession() {
@@ -423,11 +402,10 @@ public class PrivateChatWindow extends javax.swing.JFrame {
     public void setProgress(int percent) {
         progressBar.setValue(percent);
     }
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JTextPane chatBox;
     private javax.swing.JScrollPane jScrollPane2;
-    private javax.swing.JTextField jTextField1;
-    private javax.swing.JToggleButton micToggle;
     private javax.swing.JTextField msgBox;
     private javax.swing.JLabel nameLabel;
     private javax.swing.JProgressBar progressBar;

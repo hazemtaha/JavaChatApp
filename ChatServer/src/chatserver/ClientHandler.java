@@ -201,7 +201,9 @@ public class ClientHandler extends Thread {
                         case MessageType.FILE_REQUEST:
                             int recieverId = ((ArrayList<Integer>) msg.getReciever()).get(0);
                             msg.setSender(user);
-                            getClients().get(recieverId).sendMsg(msg);
+                            if (getClients().containsKey(recieverId)) {
+                                getClients().get(recieverId).sendMsg(msg);
+                            }
                             break;
                         case MessageType.FILE_RESPONSE:
                             String reciverIp = getSocket().getInetAddress().getHostAddress();
@@ -230,7 +232,7 @@ public class ClientHandler extends Thread {
 
                             break;
 
-                        case MessageType.Delete:
+                        case MessageType.DELETE:
                             //recieve the message of the selected user here
                             User selectedUser = (User) msg.getData();
                             dbHandler.deleteFriend(selectedUser, user);
@@ -244,7 +246,6 @@ public class ClientHandler extends Thread {
                             }
 
                             break;
-
                     }
                 }
             } catch (EOFException | SocketException ex) {
@@ -300,8 +301,10 @@ public class ClientHandler extends Thread {
         try {
             objWriter.writeObject(msg);
             objWriter.flush();
+
         } catch (IOException ex) {
-            Logger.getLogger(ClientHandler.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(ClientHandler.class
+                    .getName()).log(Level.SEVERE, null, ex);
         }
     }
 
