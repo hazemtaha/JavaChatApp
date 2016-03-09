@@ -315,11 +315,24 @@ public class MainPanel extends javax.swing.JPanel {
         }
         contactsList.setModel(listModel);
         contactsList.setCellRenderer(new ContactCellRenderer());
+        toggleVoice(user);
     }
 
     public void refreshList() {
         listModel.removeAllElements();
         contactsList.removeAll();
+    }
+
+    public void toggleVoice(User user) {
+        ArrayList<User> users = user.getContactList();
+        for (PrivateChatWindow chat : chats) {
+            if (users.get(users.indexOf(chat.getChatUser())).getStatus() == UserStatues.UNAVAILABLE) {
+                chat.disableVoice();
+            } else {
+                chat.enableVoice();
+            }
+        }
+
     }
 
     public ClientConnection getConnection() {

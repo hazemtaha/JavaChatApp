@@ -7,6 +7,9 @@ package chatclient;
 
 import chatclient.filesharing.DownloadHandler;
 import chatclient.filesharing.UploadHandler;
+import chatclient.media.Speakers;
+import chatclient.media.handlers.RecieveHandler;
+import chatclient.media.handlers.SendHandler;
 import gui.AppMain;
 import gui.GroupChatWindow;
 import gui.MainPanel;
@@ -22,9 +25,13 @@ import java.io.File;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.net.ConnectException;
+import java.net.InetAddress;
 import java.net.Socket;
 import java.net.SocketException;
+import java.util.ArrayList;
 import java.util.Hashtable;
+import java.util.Random;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JFileChooser;
@@ -50,6 +57,8 @@ public class ClientConnection extends Thread {
     private AppMain chatApp;
     private User user;
     public static boolean isConnected = false;
+    private RecieveHandler reciverHandler;
+    private SendHandler senderHandler;
 
     public ClientConnection(AppMain chatApp) {
         this.chatApp = chatApp;
@@ -59,9 +68,9 @@ public class ClientConnection extends Thread {
     public void run() {
         while (true) {
             try {
-//                socket = new Socket(InetAddress.getLocalHost(), 8000);
+                socket = new Socket(InetAddress.getLocalHost(), 8000);
 //                socket = new Socket("10.0.1.95", 8000);
-                socket = new Socket("192.168.1.5", 8000);
+//                socket = new Socket("192.168.1.5", 8000);
                 objWriter = new ObjectOutputStream(getSocket().getOutputStream());
                 getObjWriter().flush();
                 objReader = new ObjectInputStream(getSocket().getInputStream());
@@ -212,6 +221,60 @@ public class ClientConnection extends Thread {
                                     // show a joptionpane dialog using showMessageDialog
                                     JOptionPane.showMessageDialog(frame, "Please check this Email");
                                     break;
+                                case MessageType.VOICE_REQUEST:
+                                    msg.getReciever().remove(0);
+                                    msg.getReciever().add(msg.getSender().getId());
+                                    System.out.println("Sender is : " + msg.getSender());
+                                    mainPanel = (MainPanel) chatApp.getMainPanel();
+                                    recieverId = msg.getSender().getId();
+                                    if (mainPanel.isOpened(recieverId) == null) {
+                                        chatRoom = new PrivateChatWindow(msg.getSender(), mainPanel);
+                                        mainPanel.addChat(chatRoom);
+                                        chatRoom.setVisible(true);
+                                    } else {
+                                        chatRoom = mainPanel.isOpened(recieverId);
+                                    }
+                                    choice = JOptionPane.showConfirmDialog(chatRoom, msg.getSender().toString()
+                                            + "Is Calling You . . .", "Private Call", JOptionPane.OK_CANCEL_OPTION);
+                                    if (choice == JOptionPane.OK_OPTION) {
+                                        String ip = ((ArrayList<String>) msg.getData()).get(0);
+                                        int port = Integer.parseInt(((ArrayList<String>) msg.getData()).get(1));
+                                        reciverHandler = new RecieveHandler(port);
+                                        reciverHandler.start();
+                                        senderHandler = new SendHandler(ip, (port - 10));
+                                        senderHandler.start();
+                                        msg.setType(MessageType.VOICE_RESPONSE);
+                                        chatRoom.activateMic();
+                                    } else {
+                                        msg.setType(MessageType.VOICE_TERMINATE);
+                                    }
+                                    sendClientMsg(msg);
+                                    break;
+                                case MessageType.VOICE_GRANTED:
+                                    String ip = ((ArrayList<String>) msg.getData()).get(0);
+                                    int port = Integer.parseInt(((ArrayList<String>) msg.getData()).get(1));
+                                    System.out.println("Granted Ip : " + ip);
+                                    System.out.println("Granted Port : " + port);
+                                    reciverHandler = new RecieveHandler(port - 10);
+                                    reciverHandler.start();
+                                    senderHandler = new SendHandler(ip, port);
+                                    senderHandler.start();
+                                    break;
+                                case MessageType.VOICE_TERMINATE:
+                                    mainPanel = (MainPanel) chatApp.getMainPanel();
+                                    recieverId = msg.getSender().getId();
+                                    System.out.println(mainPanel.isOpened(recieverId) != null);
+                                    if ((chatRoom = mainPanel.isOpened(recieverId)) != null) {
+                                        chatRoom.deActivateMic();
+                                    }
+                                    if (getReciverHandler() != null) {
+                                        getReciverHandler().releaseSpeakers();
+                                    }
+                                    if (getSenderHandler() != null) {
+                                        getSenderHandler().releaseMic();
+                                    }
+
+                                    break;
 
                             }
                         }
@@ -295,5 +358,13 @@ public class ClientConnection extends Thread {
 
     public ObjectOutputStream getObjWriter() {
         return objWriter;
+    }
+
+    public RecieveHandler getReciverHandler() {
+        return reciverHandler;
+    }
+
+    public SendHandler getSenderHandler() {
+        return senderHandler;
     }
 }

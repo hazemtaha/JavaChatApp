@@ -26,6 +26,10 @@ public interface MessageType {
     public static final String FILE_REQUEST = "FILE_REQUEST";
     public static final String FILE_RESPONSE = "FILE_RESPONSE";
     public static final String DELETE = "DELETE";
+    public static final String VOICE_REQUEST = "VOICE_REQUEST";
+    public static final String VOICE_RESPONSE = "VOICE_RESPONSE";
+    public static final String VOICE_GRANTED = "VOICE_GRANTED";
+    public static final String VOICE_TERMINATE = "VOICE_TERMINATE";
     public static final String ANNOUNCEMENT = "ANNOUNCEMENT";
 
 }

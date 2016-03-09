@@ -201,9 +201,7 @@ public class ClientHandler extends Thread {
                         case MessageType.FILE_REQUEST:
                             int recieverId = ((ArrayList<Integer>) msg.getReciever()).get(0);
                             msg.setSender(user);
-                            if (getClients().containsKey(recieverId)) {
-                                getClients().get(recieverId).sendMsg(msg);
-                            }
+                            getClients().get(recieverId).sendMsg(msg);
                             break;
                         case MessageType.FILE_RESPONSE:
                             String reciverIp = getSocket().getInetAddress().getHostAddress();
@@ -245,6 +243,36 @@ public class ClientHandler extends Thread {
                                 clients.get(selectedUser.getId()).sendMsg(new Message(MessageType.UPDATE_CONTACT_LIST, user));
                             }
 
+                            break;
+                        case MessageType.VOICE_REQUEST:
+                            msg.setType(MessageType.VOICE_REQUEST);
+                            msg.setSender(user);
+                            String ip = getSocket().getInetAddress().getHostAddress();
+//                            int port = (int) (1050 * ((int) (Math.random() * 5)));
+                            int port = 1050 + (int) (Math.random() * ((15000 - 1050) + 1));
+                            ArrayList<String> msgData = new ArrayList<>();
+                            msgData.add(ip);
+                            msgData.add(String.valueOf(port));
+                            System.out.println("IP is :" + ip);
+                            System.out.println("Port is :" + port);
+                            msg.setData(msgData);
+                            clients.get(msg.getReciever().get(0)).sendMsg(msg);
+                            break;
+                        case MessageType.VOICE_RESPONSE:
+                            msg.setType(MessageType.VOICE_GRANTED);
+                            msg.setSender(user);
+                            ip = getSocket().getInetAddress().getHostAddress();
+                            msgData = new ArrayList<>();
+                            msgData.add(ip);
+                            msgData.add(((ArrayList<String>) msg.getData()).get(1));
+                            msg.setData(msgData);
+                            clients.get(msg.getReciever().get(0)).sendMsg(msg);
+                            break;
+                        case MessageType.VOICE_TERMINATE:
+                            msg.getReciever().remove(0);
+                            msg.getReciever().add(msg.getSender().getId());
+                            msg.setSender(user);
+                            clients.get(msg.getReciever().get(0)).sendMsg(msg);
                             break;
                     }
                 }
