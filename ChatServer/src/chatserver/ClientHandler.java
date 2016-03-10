@@ -12,6 +12,7 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
 import java.net.SocketException;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Hashtable;
 import java.util.logging.Level;
@@ -142,8 +143,16 @@ public class ClientHandler extends Thread {
                         case MessageType.REGISTER:
                             //recieving the incoming message into the new Hashtable
                             Hashtable<String, String> userData = (Hashtable< String, String>) msg.getData();
-                            //we already take an object from the User Class and DbHandler class
-                            dbHandler.register(userData.get("firstName"), userData.get("lastName"), userData.get("age"), userData.get("email"), userData.get("password"));
+                             {
+                                try {
+                                    //we already take an object from the User Class and DbHandler class
+                                    dbHandler.register(userData.get("firstName"), userData.get("lastName"), userData.get("age"), userData.get("email"), userData.get("password"));
+                                    sendMsg(new Message(MessageType.REGISTER_OK));
+                                } catch (SQLException ex) {
+//                                    Logger.getLogger(ClientHandler.class.getName()).log(Level.SEVERE, null, ex);
+                                    sendMsg(new Message(MessageType.REGISTER_DENIED));
+                                }
+                            }
                             String numberReg = dbHandler.countRegistered();
                             serverApp.regLbl.setText(numberReg);
 

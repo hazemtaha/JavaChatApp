@@ -13,6 +13,8 @@ public interface MessageType {
 
     public static final String LOGIN = "LOGIN";
     public static final String REGISTER = "REGISTER";
+    public static final String REGISTER_DENIED = "REGISTER_DENIED";
+    public static final String REGISTER_OK = "REGISTER_OK";
     public static final String DISCONNECT = "DISCONNECT";
     public static final String MESSAGE = "MESSAGE";
     public static final String AUTH_YES = "AUTH_YES";

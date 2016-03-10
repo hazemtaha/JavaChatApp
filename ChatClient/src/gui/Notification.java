@@ -34,6 +34,7 @@ public class Notification extends javax.swing.JFrame {
     public Notification(String content, int type) {
         initComponents();
         notificationInit(content, type);
+        setResizable(false);
     }
 
     private void notificationInit(String content, int type) {

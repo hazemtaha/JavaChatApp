@@ -35,6 +35,7 @@ public class GroupChatWindow extends javax.swing.JFrame {
      */
     public GroupChatWindow(List<User> chatUsers, MainPanel parent, int chatId) {
         initComponents();
+        setResizable(false);
         chatBox.setEnabled(false);
         this.parent = parent;
         this.chatUsers = chatUsers;
@@ -146,11 +147,13 @@ public class GroupChatWindow extends javax.swing.JFrame {
     }//GEN-LAST:event_msgBoxActionPerformed
 
     private void sendBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_sendBtnActionPerformed
-        ArrayList<Integer> reciever = new ArrayList<Integer>();
-        for (User user : chatUsers) {
-            reciever.add(user.getId());
+        if (!msgBox.getText().trim().equals("")) {
+            ArrayList<Integer> reciever = new ArrayList<Integer>();
+            for (User user : chatUsers) {
+                reciever.add(user.getId());
+            }
+            clientConnection.sendClientMsg(new Message(MessageType.MESSAGE, msgBox.getText(), reciever));
         }
-        clientConnection.sendClientMsg(new Message(MessageType.MESSAGE, msgBox.getText(), reciever));
         msgBox.setText("");
     }//GEN-LAST:event_sendBtnActionPerformed
 

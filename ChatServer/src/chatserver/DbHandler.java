@@ -65,23 +65,18 @@ public class DbHandler {
     }
 
     //New method Declaration to enter the data into the database
-    public void register(String firstName, String lastName, String age, String email, String password) {
+    public void register(String firstName, String lastName, String age, String email, String password) throws SQLException {
         //open the connection with the database
         //as we will put try and catch for any exceptions through our connection
-        try {
-            Statement stmt = dbConnection.createStatement();
-            PreparedStatement register = dbConnection.prepareStatement("insert into users (firstName, lastName, age, email, password, status) values (?, ?, ?, ?, ?, ?)");
-            register.setString(1, firstName);
-            register.setString(2, lastName);
-            register.setString(3, age);
-            register.setString(4, email);
-            register.setString(5, password);
-            register.setInt(6, UserStatues.UNAVAILABLE);
-            register.executeUpdate();
-
-        } catch (SQLException ex) {
-            Logger.getLogger(DbHandler.class.getName()).log(Level.SEVERE, null, ex);
-        }
+        Statement stmt = dbConnection.createStatement();
+        PreparedStatement register = dbConnection.prepareStatement("insert into users (firstName, lastName, age, email, password, status) values (?, ?, ?, ?, ?, ?)");
+        register.setString(1, firstName);
+        register.setString(2, lastName);
+        register.setString(3, age);
+        register.setString(4, email);
+        register.setString(5, password);
+        register.setInt(6, UserStatues.UNAVAILABLE);
+        register.executeUpdate();
 
     }
 

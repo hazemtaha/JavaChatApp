@@ -47,6 +47,7 @@ public class MainPanel extends javax.swing.JPanel {
         this.parent = parent;
         chats = new ArrayList<>();
         groupChats = new ArrayList<>();
+
     }
 
     /**

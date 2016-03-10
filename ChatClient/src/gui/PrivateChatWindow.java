@@ -55,6 +55,7 @@ public class PrivateChatWindow extends javax.swing.JFrame {
      */
     public PrivateChatWindow(User chatUser, MainPanel parent) {
         initComponents();
+        setResizable(false);
         this.parent = parent;
         this.chatUser = chatUser;
         chatBox.setEditable(false);
@@ -198,12 +199,12 @@ public class PrivateChatWindow extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void sendButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_sendButtonActionPerformed
-        if (!msgBox.getText().isEmpty()) {
+        if (!msgBox.getText().trim().equals("")) {
             ArrayList<Integer> reciever = new ArrayList<Integer>();
             reciever.add(chatUser.getId());
             clientConnection.sendClientMsg(new Message(MessageType.MESSAGE, msgBox.getText(), reciever));
-            msgBox.setText("");
         }
+        msgBox.setText("");
     }//GEN-LAST:event_sendButtonActionPerformed
 
     private void formWindowClosing(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosing

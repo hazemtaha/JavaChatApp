@@ -33,10 +33,12 @@ public class AppMain extends javax.swing.JFrame {
      * Creates new form RegLogList
      */
     public AppMain() {
-        
+
         initComponents();
         clientConnection = new ClientConnection(this);
         clientConnection.start();
+        setResizable(false);
+
     }
 
     /**
@@ -338,15 +340,15 @@ public class AppMain extends javax.swing.JFrame {
                 EmailValidator emailValidator = new EmailValidator();
                 //trim() ->> Returns a copy of the string, with leading and trailing whitespace omitted.
                 if (!emailValidator.validate(emailReg.getText().trim())) {
-                    JFrame frame = new JFrame("JOptionPane showMessageDialog example");
-                    JOptionPane.showMessageDialog(frame, "Invalid Email ID");
+//                    JFrame frame = new JFrame("JOptionPane showMessageDialog example");
+                    JOptionPane.showMessageDialog(this, "Invalid Email Address");
                 } else {
                     //check on kage || casting the string into integer to be able to check
                     Integer age = Integer.valueOf(ageSpinner.getText());
 
                     if (age < 18 || age > 80) {
-                        JFrame frame = new JFrame("JOptionPane showMessageDialog example");
-                        JOptionPane.showMessageDialog(frame, "Age must be between 18 ~ 80");
+//                        JFrame frame = new JFrame("JOptionPane showMessageDialog example");
+                        JOptionPane.showMessageDialog(this, "Age must be between 18 ~ 80");
                     } else {
                         System.out.println(firstNameReg.getText());
                         //////////////////////////////////////////////////////Testing getting the object
@@ -367,13 +369,13 @@ public class AppMain extends javax.swing.JFrame {
                         clientConnection.sendClientMsg(register);
                         //it's already sent handle it through clientHandler on server
                         //////////////////////////////////////////////////////////////////////
-                        ((java.awt.CardLayout) (panelGroup.getLayout())).next(panelGroup);
+//                        ((java.awt.CardLayout) (panelGroup.getLayout())).next(panelGroup);
                     }
                 }
             } else {
                 System.out.println("Not matched");
-                JFrame frame = new JFrame("JOptionPane showMessageDialog example");
-                JOptionPane.showMessageDialog(frame, "Password dosen't match");
+//                JFrame frame = new JFrame("JOptionPane showMessageDialog example");
+                JOptionPane.showMessageDialog(this, "Password dosen't match");
             }
         }
     }//GEN-LAST:event_registerBtnActionPerformed

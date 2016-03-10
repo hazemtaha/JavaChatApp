@@ -217,8 +217,9 @@ public class ServerFrame extends javax.swing.JFrame {
     }//GEN-LAST:event_toggleButtonActionPerformed
 
     private void sendBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_sendBtnActionPerformed
-
-        broadcastMsg(msgBox.getText());
+        if (!msgBox.getText().trim().equals("")) {
+            broadcastMsg(msgBox.getText());
+        }
         msgBox.setText("");
     }//GEN-LAST:event_sendBtnActionPerformed
 

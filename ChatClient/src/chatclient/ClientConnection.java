@@ -219,7 +219,7 @@ public class ClientConnection extends Thread {
                                 case MessageType.EMAIL_INVALID:
                                     JFrame frame = new JFrame("JOptionPane showMessageDialog example");
                                     // show a joptionpane dialog using showMessageDialog
-                                    JOptionPane.showMessageDialog(frame, "Please check this Email");
+                                    JOptionPane.showMessageDialog(frame, "Invalid Email Address");
                                     break;
                                 case MessageType.VOICE_REQUEST:
                                     msg.getReciever().remove(0);
@@ -273,7 +273,13 @@ public class ClientConnection extends Thread {
                                     if (getSenderHandler() != null) {
                                         getSenderHandler().releaseMic();
                                     }
-
+                                    break;
+                                case MessageType.REGISTER_OK:
+                                    prentPanel = ((AppMain) chatApp).getPanelGroup();
+                                    ((CardLayout) prentPanel.getLayout()).show(prentPanel, "loginPanel");
+                                    break;
+                                case MessageType.REGISTER_DENIED:
+                                    JOptionPane.showMessageDialog(chatApp, "Email Already Registred", "Error", JOptionPane.ERROR_MESSAGE);
                                     break;
 
                             }
